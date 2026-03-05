@@ -1,0 +1,65 @@
+[
+    {
+        "id": "d9ce3332-66bd-4144-b2a8-34da63354e24",
+        "sport_name": "running",
+        "start_time": "2026-03-01T19:57:00.685Z",
+        "end_time": "2026-03-01T20:29:38.577Z",
+        "avg_heart_rate": 138,
+        "calories": 295,
+        "distance_meter": 51.698162
+    },
+    {
+        "id": "77581c34-c722-4402-a159-9c50da9165b6",
+        "sport_name": "weightlifting",
+        "start_time": "2026-03-01T20:30:29.093Z",
+        "end_time": "2026-03-01T20:48:59.001Z",
+        "avg_heart_rate": 134,
+        "calories": 137,
+        "distance_meter": null
+    },
+    {
+        "id": "fb38721d-0fbc-4d75-aab4-c6ccb7ff2c75",
+        "sport_name": "running",
+        "start_time": "2026-03-03T11:17:53.382Z",
+        "end_time": "2026-03-03T11:42:17.503Z",
+        "avg_heart_rate": 148,
+        "calories": 280,
+        "distance_meter": 3.8635702
+    },
+    {
+        "id": "cfe2d265-ded7-4faa-a5a9-9dfec7d06ec7",
+        "sport_name": "weightlifting",
+        "start_time": "2026-03-03T11:44:46.966Z",
+        "end_time": "2026-03-03T12:01:39.960Z",
+        "avg_heart_rate": 129,
+        "calories": 105,
+        "distance_meter": null
+    },
+    {
+        "id": "60aae8b8-1172-42b6-be34-9bd5d87c8133",
+        "sport_name": "running",
+        "start_time": "2026-03-04T11:21:15.329Z",
+        "end_time": "2026-03-04T11:46:05.052Z",
+        "avg_heart_rate": 154,
+        "calories": 316,
+        "distance_meter": 2.6346605
+    },
+    {
+        "id": "60e429dd-0a4c-4da6-90d1-ea69dc25cad9",
+        "sport_name": "weightlifting",
+        "start_time": "2026-03-04T11:47:43.440Z",
+        "end_time": "2026-03-04T11:54:01.612Z",
+        "avg_heart_rate": 124,
+        "calories": 32,
+        "distance_meter": null
+    },
+    {
+        "id": "a6e59001-45e7-4680-8381-d9c76fcf3e84",
+        "sport_name": "hiit",
+        "start_time": "2026-03-04T11:47:43.440Z",
+        "end_time": "2026-03-04T11:54:01.612Z",
+        "avg_heart_rate": 137,
+        "calories": 241,
+        "distance_meter": null
+    }
+]
