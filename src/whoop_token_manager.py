@@ -6,14 +6,15 @@ import webbrowser
 import secrets
 import string
 from urllib.parse import urlparse, parse_qs
+from logger import get_logger
+
+log = get_logger("whoop_token_manager")
 
 class WhoopTokenManager:
     def __init__(self, config_path='meta-data/whconfig.json'):
         self.config_path = config_path
-        # AUTHENTICATED ENDPOINTS FROM DOCS
         self.auth_url = "https://api.prod.whoop.com/oauth/oauth2/auth"
         self.token_url = "https://api.prod.whoop.com/oauth/oauth2/token"
-        
         self.config = self._load_config()
 
     def _load_config(self):
@@ -26,28 +27,37 @@ class WhoopTokenManager:
         with open(self.config_path, 'w') as f:
             json.dump(self.config, f, indent=4)
 
+    def _clear_tokens(self):
+        """Clear stored tokens from config and save — triggers re-auth on next run."""
+        self.config['access_token'] = ''
+        self.config['refresh_token'] = ''
+        self.config['expires_at'] = 0
+        self._save_config()
+        log.warning("Tokens cleared from whconfig.json")
+
     def bootstrap(self):
         """Standard OAuth2 flow using mandatory state parameter."""
         state = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
-        # Including 'offline' scope is essential for getting a refresh_token
         scopes = "offline read:recovery read:cycles read:sleep read:workout read:profile read:body_measurement"
-        
-        auth_link = (f"{self.auth_url}?client_id={self.config['client_id']}"
-                     f"&redirect_uri={self.config['redirect_uri']}"
-                     f"&response_type=code&scope={scopes}&state={state}")
-        
-        print(f"\n1. Authorize here: {auth_link}")
+
+        auth_link = (
+            f"{self.auth_url}?client_id={self.config['client_id']}"
+            f"&redirect_uri={self.config['redirect_uri']}"
+            f"&response_type=code&scope={scopes}&state={state}"
+        )
+
+        log.info("No valid tokens. Starting WHOOP authorization flow...")
+        print(f"\n1. Authorize here:\n{auth_link}")
         webbrowser.open(auth_link)
-        
+
         full_url = input("\n2. Paste the FULL redirect URL here: ").strip()
-        
         parsed_url = urlparse(full_url)
         code = parse_qs(parsed_url.query).get('code', [None])[0]
-        
+
         if code:
             self._exchange_code(code)
         else:
-            print("Error: Authorization code not found in URL.")
+            log.error("Authorization code not found in redirect URL.")
 
     def _exchange_code(self, code):
         data = {
@@ -60,7 +70,8 @@ class WhoopTokenManager:
         self._send_token_request(data)
 
     def refresh_access_token(self):
-        print("Refreshing token via WHOOP...")
+        """Attempt to refresh the access token. Returns True on success, False on failure."""
+        log.info("Refreshing WHOOP access token...")
         data = {
             'grant_type': 'refresh_token',
             'refresh_token': self.config['refresh_token'],
@@ -68,35 +79,54 @@ class WhoopTokenManager:
             'client_secret': self.config['client_secret'],
             'scope': 'offline'
         }
-        self._send_token_request(data)
+        return self._send_token_request(data)
 
     def _send_token_request(self, data):
-        """Sends x-www-form-urlencoded request to the correct /oauth2/token endpoint."""
+        """Sends x-www-form-urlencoded request to the token endpoint. Returns True on success."""
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         response = requests.post(self.token_url, data=data, headers=headers)
-        
+
         if response.status_code == 200:
             res_data = response.json()
             self.config['access_token'] = res_data['access_token']
             self.config['refresh_token'] = res_data['refresh_token']
             self.config['expires_at'] = time.time() + res_data['expires_in']
             self._save_config()
-            print("Success: whconfig.json updated.")
+            log.info("WHOOP tokens refreshed and saved to whconfig.json")
+            return True
         else:
-            print(f"Error {response.status_code}: {response.text}")
+            log.error(f"WHOOP token request failed ({response.status_code}): {response.text[:200]}")
+            return False
 
     def get_auth_header(self):
-        """The main entry point for data collection scripts."""
+        """Main entry point for data collection scripts.
+
+        Flow:
+          1. If no refresh token → run bootstrap (full login)
+          2. If token is missing or expiring soon → try refresh
+             - If refresh fails → clear tokens → run bootstrap (full login)
+          3. Return Authorization header
+        """
+        # No refresh token at all — need a full login
         if not self.config.get('refresh_token'):
+            log.warning("No WHOOP refresh token found. Starting full login...")
             self.bootstrap()
-        
-        # Check if token is missing or expiring within 5 minutes
-        if not self.config.get('access_token') or time.time() >= (self.config.get('expires_at', 0) - 300):
-            self.refresh_access_token()
-            
+            self.config = self._load_config()
+
+        # Token is missing or expiring within 5 minutes — try to refresh
+        token_expiring = time.time() >= (self.config.get('expires_at', 0) - 300)
+        if not self.config.get('access_token') or token_expiring:
+            success = self.refresh_access_token()
+            if not success:
+                # Refresh failed (token revoked / expired) — clear and re-login
+                log.warning("WHOOP refresh failed. Clearing tokens and starting fresh login...")
+                self._clear_tokens()
+                self.bootstrap()
+                self.config = self._load_config()
+
         return {'Authorization': f"Bearer {self.config['access_token']}"}
 
 if __name__ == "__main__":
     manager = WhoopTokenManager()
     header = manager.get_auth_header()
-    print("Authentication confirmed.")
+    log.info("WHOOP authentication confirmed.")
