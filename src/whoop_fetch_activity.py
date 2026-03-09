@@ -37,24 +37,12 @@ def save_workout_idempotent(workout_obj):
         final_list = sorted(existing_records.values(), key=lambda x: x['start_time'])
         json.dump(final_list, f, indent=4)
 
-def get_workout_summary():
-    start_dt = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-
-    if len(sys.argv) > 1:
-        date_input = sys.argv[1]
-        try:
-            if len(date_input) == 10:
-                start_dt = datetime.strptime(date_input, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-            elif len(date_input) == 7:
-                start_dt = datetime.strptime(date_input, "%Y-%m").replace(tzinfo=timezone.utc)
-        except ValueError:
-            log.error("Invalid date argument. Use YYYY-MM-DD or YYYY-MM.")
-            return
-
+def fetch_workouts(start_dt, interactive=True):
+    """Core fetch logic. Raises WhoopTokenManager.AuthRequired if non-interactive and auth is needed."""
     log.info(f"Fetching WHOOP workouts from {start_dt.strftime('%Y-%m-%d')}...")
 
     manager = WhoopTokenManager()
-    headers = manager.get_auth_header()
+    headers = manager.get_auth_header(interactive=interactive)
     url = "https://api.prod.whoop.com/developer/v2/activity/workout"
 
     params = {
@@ -100,6 +88,35 @@ def get_workout_summary():
             break
 
     log.info(f"WHOOP fetch complete. Total workouts processed: {all_processed}")
+    return all_processed
+
+
+def get_workout_summary_programmatic(start_dt=None):
+    """Called by the scheduler — fetches workouts from start_dt, non-interactive."""
+    if start_dt is None:
+        start_dt = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+    # Ensure timezone-aware for the API call
+    if start_dt.tzinfo is None:
+        start_dt = start_dt.replace(tzinfo=timezone.utc)
+    return fetch_workouts(start_dt, interactive=False)
+
+
+def get_workout_summary():
+    start_dt = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if len(sys.argv) > 1:
+        date_input = sys.argv[1]
+        try:
+            if len(date_input) == 10:
+                start_dt = datetime.strptime(date_input, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            elif len(date_input) == 7:
+                start_dt = datetime.strptime(date_input, "%Y-%m").replace(tzinfo=timezone.utc)
+        except ValueError:
+            log.error("Invalid date argument. Use YYYY-MM-DD or YYYY-MM.")
+            return
+
+    fetch_workouts(start_dt, interactive=True)
+
 
 if __name__ == "__main__":
     get_workout_summary()

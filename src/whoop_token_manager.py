@@ -10,6 +10,12 @@ from logger import get_logger
 
 log = get_logger("whoop_token_manager")
 
+
+class AuthRequired(Exception):
+    """Raised when interactive re-authentication is needed but not possible."""
+    pass
+
+
 class WhoopTokenManager:
     def __init__(self, config_path='meta-data/whconfig.json'):
         self.config_path = config_path
@@ -98,17 +104,22 @@ class WhoopTokenManager:
             log.error(f"WHOOP token request failed ({response.status_code}): {response.text[:200]}")
             return False
 
-    def get_auth_header(self):
+    def get_auth_header(self, interactive=True):
         """Main entry point for data collection scripts.
 
         Flow:
-          1. If no refresh token → run bootstrap (full login)
+          1. If no refresh token → run bootstrap (full login) or raise AuthRequired
           2. If token is missing or expiring soon → try refresh
-             - If refresh fails → clear tokens → run bootstrap (full login)
+             - If refresh fails → clear tokens → run bootstrap or raise AuthRequired
           3. Return Authorization header
         """
         # No refresh token at all — need a full login
         if not self.config.get('refresh_token'):
+            if not interactive:
+                raise AuthRequired(
+                    "WHOOP tokens are missing and require manual re-authentication. "
+                    "Run: python whoop_token_manager.py"
+                )
             log.warning("No WHOOP refresh token found. Starting full login...")
             self.bootstrap()
             self.config = self._load_config()
@@ -118,6 +129,12 @@ class WhoopTokenManager:
         if not self.config.get('access_token') or token_expiring:
             success = self.refresh_access_token()
             if not success:
+                if not interactive:
+                    self._clear_tokens()
+                    raise AuthRequired(
+                        "WHOOP token refresh failed and requires manual re-authentication. "
+                        "Run: python whoop_token_manager.py"
+                    )
                 # Refresh failed (token revoked / expired) — clear and re-login
                 log.warning("WHOOP refresh failed. Clearing tokens and starting fresh login...")
                 self._clear_tokens()

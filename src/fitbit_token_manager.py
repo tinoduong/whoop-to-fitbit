@@ -6,6 +6,11 @@ from logger import get_logger
 
 log = get_logger("fitbit_token_manager")
 
+
+class AuthRequired(Exception):
+    """Raised when interactive re-authentication is needed but not possible."""
+    pass
+
 CONFIG_PATH = os.path.join("./meta-data", "config.json")
 
 def load_config():
@@ -28,7 +33,7 @@ def clear_tokens(config):
         json.dump(config, f, indent=4)
     log.warning("Tokens cleared from config.json")
 
-def get_valid_token():
+def get_valid_token(interactive=True):
     config = load_config()
 
     # If we have a refresh token, try to use it
@@ -41,7 +46,12 @@ def get_valid_token():
         clear_tokens(config)
         config = load_config()  # reload after clearing
 
-    # No valid tokens — do the manual one-time setup
+    # No valid tokens — need manual auth
+    if not interactive:
+        raise AuthRequired(
+            "Fitbit tokens are missing or expired and require manual re-authentication. "
+            "Run: python fitbit_token_manager.py"
+        )
     return manual_auth(config)
 
 def manual_auth(config):

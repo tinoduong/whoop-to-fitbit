@@ -1,0 +1,185 @@
+[
+    {
+        "logged_at": "2026-03-08T18:04:47.430743",
+        "date": "2026-03-08",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "1/4 cup blueberries, 1/2 nonfat greek yogurt. 1/4 cup homemade granola",
+        "items": [
+            {
+                "foodName": "Blueberries",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38230761681
+            },
+            {
+                "foodName": "Nonfat Greek Yogurt",
+                "calories": 65,
+                "protein": 11.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231013836
+            },
+            {
+                "foodName": "Homemade Granola",
+                "calories": 120,
+                "protein": 3.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 5.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231344550
+            }
+        ],
+        "total_calories": 206,
+        "total_protein": 14.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-08T18:07:33.644853",
+        "date": "2026-03-08",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "dimsum that included 1 soup dumpling, 3 shrimp dumplings, 2 sumai pork and shrimp dumplings, 1 bbq bao bun, 1 ozs of fried bread",
+        "items": [
+            {
+                "foodName": "Soup Dumpling",
+                "calories": 85,
+                "protein": 4.2,
+                "totalCarbohydrate": 8.5,
+                "totalFat": 4.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231354479
+            },
+            {
+                "foodName": "Shrimp Dumplings",
+                "calories": 210,
+                "protein": 12.6,
+                "totalCarbohydrate": 21.0,
+                "totalFat": 8.7,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231383904
+            },
+            {
+                "foodName": "Shumai Pork and Shrimp Dumplings",
+                "calories": 140,
+                "protein": 8.4,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 7.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38230437587
+            },
+            {
+                "foodName": "BBQ Pork Bao Bun",
+                "calories": 200,
+                "protein": 8.5,
+                "totalCarbohydrate": 28.0,
+                "totalFat": 6.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231600100
+            },
+            {
+                "foodName": "Fried Bread",
+                "calories": 80,
+                "protein": 2.1,
+                "totalCarbohydrate": 8.2,
+                "totalFat": 4.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231944012
+            }
+        ],
+        "total_calories": 715,
+        "total_protein": 35.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-08T20:41:19.097969",
+        "date": "2026-03-08",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "4.5 oz ribeye steak, 2 cups grilled egg plant, 1/2 cup roasted sweet potato, 2 x 12 oz Pauliner beer",
+        "items": [
+            {
+                "foodName": "Ribeye Steak",
+                "calories": 340,
+                "protein": 25.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 25.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38232124124
+            },
+            {
+                "foodName": "Grilled Eggplant",
+                "calories": 70,
+                "protein": 2.8,
+                "totalCarbohydrate": 16.4,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38232232268
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 51,
+                "protein": 1.1,
+                "totalCarbohydrate": 11.8,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38231770322
+            },
+            {
+                "foodName": "Paulaner Beer",
+                "calories": 300,
+                "protein": 4.8,
+                "totalCarbohydrate": 24.0,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38232232270
+            }
+        ],
+        "total_calories": 761,
+        "total_protein": 33.9,
+        "all_uploaded": true,
+        "amended": false
+    }
+]
