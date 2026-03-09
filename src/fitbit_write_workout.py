@@ -134,12 +134,11 @@ def sync_whoop_to_fitbit(start_filter_dt):
                 log.info(f"Uploading: {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}")
 
                 headers = {
-                    "Authorization": f"Bearer {access_token}",
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Authorization": f"Bearer {access_token}"
                 }
 
                 try:
-                    resp = requests.post("https://api.fitbit.com/1/user/-/activities.json", headers=headers, data=payload)
+                    resp = requests.post("https://api.fitbit.com/1/user/-/activities.json", headers=headers, params=payload)
 
                     if resp.status_code in [200, 201]:
                         log.info(f"Upload successful: {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}")

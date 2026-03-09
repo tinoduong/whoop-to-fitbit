@@ -32,7 +32,7 @@ def get_meal_db_path(dt=None):
         dt = datetime.now()
     year = dt.strftime("%Y")
     month = dt.strftime("%m")
-    folder = os.path.join("fitbit_data", year, month)
+    folder = os.path.join("fitbit-data", year, month)
     os.makedirs(folder, exist_ok=True)
     return os.path.join(folder, f"{month}-meals.json")
 
@@ -159,15 +159,15 @@ def merge_meal_description(existing_items, amendment):
 def upload_food_item(access_token, item, meal_type_id, date_str):
     """
     POST /1/user/-/foods/log.json
-    Parameters are passed as query string per Fitbit API spec.
-    Nutrition fields use Fitbit's documented parameter names.
+    All params passed as query string per Fitbit API spec.
+    Nutrition param names are plain (protein, totalCarbohydrate, totalFat) —
+    the (g)/(mg) in the docs table are unit labels only, not part of the param name.
     """
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"
     }
 
-    # Required params
     params = {
         "foodName": item["foodName"],
         "calories": int(item["calories"]),
@@ -177,13 +177,12 @@ def upload_food_item(access_token, item, meal_type_id, date_str):
         "date": date_str
     }
 
-    # Optional nutrition params — Fitbit's documented field names
     if item.get("protein") is not None:
-        params["protein(g)"] = round(item["protein"], 1)
+        params["protein"] = round(item["protein"], 1)
     if item.get("totalCarbohydrate") is not None:
-        params["totalCarbohydrate(g)"] = round(item["totalCarbohydrate"], 1)
+        params["totalCarbohydrate"] = round(item["totalCarbohydrate"], 1)
     if item.get("totalFat") is not None:
-        params["totalFat(g)"] = round(item["totalFat"], 1)
+        params["totalFat"] = round(item["totalFat"], 1)
 
     log_id = None
     try:
@@ -197,10 +196,7 @@ def upload_food_item(access_token, item, meal_type_id, date_str):
 
         if success:
             try:
-                data = resp.json()
-                # Fitbit inconsistently returns loggedFood or logged_food
-                food_log = data.get("foodLog") or data.get("food_log", {})
-                log_id = food_log.get("logId") or food_log.get("log_id")
+                log_id = resp.json().get("foodLog", {}).get("logId")
             except (ValueError, KeyError) as e:
                 log.warning(f"Could not extract logId from response: {e}")
 
