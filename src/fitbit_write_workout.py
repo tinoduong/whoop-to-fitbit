@@ -54,7 +54,7 @@ def convert_whoop_to_fitbit(workout):
 
         payload = {
             "manualCalories": int(cals),
-            "startTime": start_dt.strftime("%H:%M:%S"),
+            "startTime": start_dt.strftime("%H:%M"),
             "date": start_dt.strftime("%Y-%m-%d"),
             "durationMillis": duration_ms
         }
@@ -142,6 +142,8 @@ def sync_whoop_to_fitbit(start_filter_dt):
 
                     if resp.status_code in [200, 201]:
                         log.info(f"Upload successful: {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}")
+                        # log.info(f"API payload: {payload}") 
+                        # log.info(f"API response: {resp.text}") 
                         new_ids_successfully_synced.append({"id": w_id})
                         total_uploaded += 1
                     else:
