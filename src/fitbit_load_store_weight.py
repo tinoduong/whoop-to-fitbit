@@ -14,7 +14,7 @@ def save_weight_data(entry):
     month_str = log_date.strftime("%m")
 
     base_dir = os.path.join("fitbit-data", year_str, month_str)
-    file_path = os.path.join(base_dir, f"{month_str}.json")
+    file_path = os.path.join(base_dir, f"{month_str}-weight.json")
 
     os.makedirs(base_dir, exist_ok=True)
 

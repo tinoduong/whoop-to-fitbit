@@ -646,5 +646,225 @@
         "total_protein": 51.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-11T08:14:22.641429",
+        "date": "2026-03-11",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "1 medium size chicken leg with no skin (leg and thigh); 3/4 cup of yucca fries, 1tsp of verde sauce",
+        "items": [
+            {
+                "foodName": "Chicken leg and thigh, skinless",
+                "calories": 180,
+                "protein": 25.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38249679218
+            },
+            {
+                "foodName": "Yucca fries",
+                "calories": 142,
+                "protein": 1.9,
+                "totalCarbohydrate": 28.1,
+                "totalFat": 3.2,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38250052674
+            },
+            {
+                "foodName": "Verde sauce",
+                "calories": 3,
+                "protein": 0.1,
+                "totalCarbohydrate": 0.5,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38248853625
+            }
+        ],
+        "total_calories": 325,
+        "total_protein": 27.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-11T18:53:38.076686",
+        "date": "2026-03-11",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2x tuna sashimi (.75 oz of tuna each); 2 x salmon sushi (.75 oz salmon each); 2.5 oz of seared beef; 2 shrimp tempura; 1 yam tempura; .75 tempura shrimp roll; 2 pieces of california roll; 2 peices tuna roll; 2 pieces of dikon pickle roll",
+        "items": [
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 62,
+                "protein": 13.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.6,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38253122564
+            },
+            {
+                "foodName": "Salmon Sushi",
+                "calories": 78,
+                "protein": 10.8,
+                "totalCarbohydrate": 3.2,
+                "totalFat": 2.8,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38253250546
+            },
+            {
+                "foodName": "Seared Beef",
+                "calories": 178,
+                "protein": 26.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.7,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38252582081
+            },
+            {
+                "foodName": "Shrimp Tempura",
+                "calories": 134,
+                "protein": 12.4,
+                "totalCarbohydrate": 8.6,
+                "totalFat": 6.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38253270089
+            },
+            {
+                "foodName": "Yam Tempura",
+                "calories": 95,
+                "protein": 1.8,
+                "totalCarbohydrate": 18.2,
+                "totalFat": 2.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38252228254
+            },
+            {
+                "foodName": "Tempura Shrimp Roll",
+                "calories": 142,
+                "protein": 6.8,
+                "totalCarbohydrate": 18.4,
+                "totalFat": 4.9,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38253270090
+            },
+            {
+                "foodName": "California Roll",
+                "calories": 58,
+                "protein": 2.9,
+                "totalCarbohydrate": 8.7,
+                "totalFat": 1.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38252199064
+            },
+            {
+                "foodName": "Tuna Roll",
+                "calories": 46,
+                "protein": 3.8,
+                "totalCarbohydrate": 7.2,
+                "totalFat": 0.4,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38253171851
+            },
+            {
+                "foodName": "Daikon Pickle Roll",
+                "calories": 42,
+                "protein": 1.6,
+                "totalCarbohydrate": 9.1,
+                "totalFat": 0.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38252916100
+            }
+        ],
+        "total_calories": 835,
+        "total_protein": 79.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-11T18:54:15.955493",
+        "date": "2026-03-11",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 medium size green apple",
+        "items": [
+            {
+                "foodName": "Green Apple",
+                "calories": 39,
+                "protein": 0.2,
+                "totalCarbohydrate": 10.4,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38252257738
+            }
+        ],
+        "total_calories": 39,
+        "total_protein": 0.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-11T18:54:38.062657",
+        "date": "2026-03-11",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 Saporo beer regular can",
+        "items": [
+            {
+                "foodName": "Sapporo Beer Regular Can",
+                "calories": 140,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.9,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38253299536
+            }
+        ],
+        "total_calories": 140,
+        "total_protein": 1.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

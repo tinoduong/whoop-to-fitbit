@@ -24,6 +24,7 @@ from fitbit_token_manager import get_valid_token, AuthRequired as FitbitAuthRequ
 from whoop_token_manager import AuthRequired as WhoopAuthRequired
 from whoop_fetch_activity import get_workout_summary_programmatic
 from fitbit_write_workout import sync_whoop_to_fitbit
+from fitbit_load_store_weight import fetch_data as fetch_weight_data
 from logger import get_logger
 
 log = get_logger("scheduler")
@@ -120,6 +121,10 @@ def run_sync():
         sync_whoop_to_fitbit(start_dt)
     else:
         log.info("No new WHOOP workouts — skipping Fitbit API call.")
+
+    # 4. Fetch and store Fitbit weight data
+    log.info("Fetching and storing Fitbit weight data...")
+    fetch_weight_data()
 
     now = time.time()
     save_last_run(now)
