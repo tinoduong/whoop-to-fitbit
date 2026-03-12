@@ -418,6 +418,30 @@ nav {
   font-size: 0.9rem;
 }
 
+.week-sum-goal {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.week-sum-ate {
+  font-size: 0.7rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.week-sum-delta {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.week-sum-delta.under {
+  color: var(--green);
+}
+
+.week-sum-delta.over {
+  color: var(--red);
+}
+
 .week-sum-weight {
   font-size: 0.75rem;
   font-weight: 700;

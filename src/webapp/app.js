@@ -386,10 +386,12 @@ function renderDailySummary() {
 
       let inner = `<div class="cal-day-num">${dayNum}</div>`;
       if (hasMeals) {
-        inner += `<div class="cal-cals">${day.totalCaloriesIn} kcal</div>`;
+        inner += `<div class="cal-goal-line">🎯 ${targetIntake}</div>`;
+        inner += `<div class="cal-cals">🍽 ${day.totalCaloriesIn}</div>`;
         inner += `<div class="cal-delta ${metGoal ? 'under' : 'over'}">${delta >= 0 ? '▼' + delta : '▲' + Math.abs(delta)}</div>`;
       } else {
-        inner += `<div class="cal-no-data">—</div>`;
+        inner += `<div class="cal-goal-line">🎯 ${targetIntake}</div>`;
+        inner += `<div class="cal-no-data">no meals</div>`;
       }
       if (hasWorkout) {
         inner += `<div class="cal-workout">🏃 ${sportNames.join(', ')}</div>`;
@@ -433,7 +435,9 @@ function renderDailySummary() {
       weeklySummaryHtml = `
         <div class="cal-week-summary ${weekMet ? 'week-met' : 'week-missed'}">
           <div class="week-sum-label">${weekMealDays.length}d logged</div>
-          <div class="week-sum-delta">${weekMet ? '▼' + weekDelta : '▲' + Math.abs(weekDelta)} kcal</div>
+          <div class="week-sum-goal">🎯 ${weekTotalTarget}</div>
+          <div class="week-sum-ate">🍽 ${weekTotalIn}</div>
+          <div class="week-sum-delta ${weekMet ? 'under' : 'over'}">${weekMet ? '▼' + weekDelta : '▲' + Math.abs(weekDelta)}</div>
           ${weightDeltaHtml}
           <div class="week-sum-status">${weekMet ? '✅' : '⚠️'}</div>
         </div>
