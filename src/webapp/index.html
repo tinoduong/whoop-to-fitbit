@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fitness Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🏋️ Fitness Dashboard</h1>
+    <nav>
+      <button class="nav-btn active" data-tab="overview">Overview</button>
+      <button class="nav-btn" data-tab="workouts">Workouts</button>
+      <button class="nav-btn" data-tab="meals">Meals</button>
+      <button class="nav-btn" data-tab="goals">Goals</button>
+    </nav>
+  </header>
+
+  <!-- OVERVIEW TAB -->
+  <section id="tab-overview" class="tab active">
+    <div class="section-header">
+      <h2>Overview</h2>
+    </div>
+
+    <!-- Weight & Fat Chart -->
+    <div class="card">
+      <div class="chart-header">
+        <h3>Weight &amp; Body Fat Over Time</h3>
+        <div class="chart-range-btns">
+          <button class="range-btn active" data-range="month">Month</button>
+          <button class="range-btn" data-range="week">Week</button>
+          <button class="range-btn" data-range="year">Year</button>
+          <button class="range-btn" data-range="all">All</button>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="weightChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Daily Summary Calendar -->
+    <div class="card">
+      <div class="chart-header">
+        <h3>Daily Summary</h3>
+        <div class="month-nav">
+          <button id="prevMonth" class="month-btn">&#8592;</button>
+          <span id="currentMonthLabel" class="month-label"></span>
+          <button id="nextMonth" class="month-btn">&#8594;</button>
+        </div>
+      </div>
+      <p class="hint">🟢 Calorie deficit &nbsp; 🔴 Calorie surplus &nbsp; 🏃 Workout day</p>
+      <div id="dailySummary" class="daily-grid"></div>
+    </div>
+  </section>
+
+  <!-- WORKOUTS TAB -->
+  <section id="tab-workouts" class="tab">
+    <div class="section-header">
+      <h2>Workouts</h2>
+      <div class="filters">
+        <input type="text" id="workoutSearch" placeholder="Search sport..." />
+        <select id="workoutSportFilter">
+          <option value="">All Sports</option>
+        </select>
+        <input type="date" id="workoutDateFrom" />
+        <span>to</span>
+        <input type="date" id="workoutDateTo" />
+        <button id="workoutFilterBtn">Filter</button>
+        <button id="workoutResetBtn">Reset</button>
+      </div>
+    </div>
+    <div class="card">
+      <table id="workoutsTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Sport</th>
+            <th>Start</th>
+            <th>Duration</th>
+            <th>Avg HR</th>
+            <th>Calories</th>
+            <th>Distance (m)</th>
+          </tr>
+        </thead>
+        <tbody id="workoutsBody"></tbody>
+      </table>
+      <div class="pagination" id="workoutsPagination"></div>
+    </div>
+  </section>
+
+  <!-- MEALS TAB -->
+  <section id="tab-meals" class="tab">
+    <div class="section-header">
+      <h2>Meals</h2>
+      <div class="filters">
+        <input type="text" id="mealSearch" placeholder="Search food..." />
+        <select id="mealTypeFilter">
+          <option value="">All Types</option>
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+        <input type="date" id="mealDateFrom" />
+        <span>to</span>
+        <input type="date" id="mealDateTo" />
+        <button id="mealFilterBtn">Filter</button>
+        <button id="mealResetBtn">Reset</button>
+      </div>
+    </div>
+    <div id="mealsContainer"></div>
+    <div class="pagination" id="mealsPagination"></div>
+  </section>
+
+  <!-- GOALS TAB -->
+  <section id="tab-goals" class="tab">
+    <div class="section-header">
+      <h2>Goals</h2>
+    </div>
+    <div class="card goals-card">
+      <form id="goalsForm">
+        <div class="goal-section-title">🎯 Targets</div>
+        <div class="goal-row">
+          <label>Target Weight (lbs)</label>
+          <input type="number" id="targetWeight" step="0.1" placeholder="e.g. 132.0" />
+        </div>
+        <div class="goal-row">
+          <label>Target Body Fat (%)</label>
+          <input type="number" id="targetFat" step="0.1" placeholder="e.g. 15.0" />
+        </div>
+        <div class="goal-row">
+          <label>Goal Date</label>
+          <input type="date" id="goalDate" />
+        </div>
+        <div class="goal-section-title" style="margin-top:20px">⚙️ Your Stats (for TDEE)</div>
+        <div class="goal-row">
+          <label>Date of Birth</label>
+          <input type="date" id="dob" value="1979-03-11" />
+        </div>
+        <div class="goal-row">
+          <label>Height (inches)</label>
+          <input type="number" id="heightIn" step="0.5" placeholder="e.g. 66" value="66" />
+        </div>
+        <div class="goal-row">
+          <label>Sex</label>
+          <select id="sex">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <button type="submit" class="save-btn">Save &amp; Recalculate</button>
+        <span id="goalsSaved" class="saved-msg"></span>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Current Progress</h3>
+      <div id="goalProgress"></div>
+    </div>
+
+    <div class="card" id="tdeeCard">
+      <h3>📊 Calorie Plan</h3>
+      <div id="tdeeDetails"></div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
