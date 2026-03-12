@@ -398,9 +398,29 @@ function renderDailySummary() {
       return `<div class="cal-cell ${cardClass}" title="${date}">${inner}</div>`;
     }).join('');
 
-    // Weekly summary: only count days in this month that have meals
+    // Weekly summary: calorie delta + weight delta (Sun to Sat, or Sun to today)
     const weekDaysInMonth = week.filter(d => getYearMonth(d) === ym);
     const weekMealDays = weekDaysInMonth.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
+    const todayStr = new Date().toISOString().substring(0, 10);
+
+    // Weight delta: find weight on Sunday (or nearest after) and Saturday (or nearest before / today)
+    const weekSunday = week[0];
+    const weekSaturday = week[6];
+    const weekEnd = weekSaturday > todayStr ? todayStr : weekSaturday;
+
+    // Find closest weight entry on or after Sunday within the week
+    const weekWeightEntries = allWeight.filter(w => w.date >= weekSunday && w.date <= weekEnd);
+    let weightDeltaHtml = '';
+    if (weekWeightEntries.length >= 2) {
+      const startW = kgToLbs(weekWeightEntries[0].weight);
+      const endW = kgToLbs(weekWeightEntries[weekWeightEntries.length - 1].weight);
+      const wDelta = +(endW - startW).toFixed(1);
+      const wColor = wDelta <= 0 ? 'var(--green)' : 'var(--red)';
+      weightDeltaHtml = `<div class="week-sum-weight" style="color:${wColor}">${wDelta > 0 ? '+' : ''}${wDelta} lbs</div>`;
+    } else if (weekWeightEntries.length === 1) {
+      weightDeltaHtml = `<div class="week-sum-weight" style="color:var(--text-muted)">${kgToLbs(weekWeightEntries[0].weight)} lbs</div>`;
+    }
+
     let weeklySummaryHtml = '';
     if (weekMealDays.length > 0) {
       const weekTotalIn = weekMealDays.reduce((s, d) => s + (dailyMap[d].totalCaloriesIn || 0), 0);
@@ -413,12 +433,13 @@ function renderDailySummary() {
       weeklySummaryHtml = `
         <div class="cal-week-summary ${weekMet ? 'week-met' : 'week-missed'}">
           <div class="week-sum-label">${weekMealDays.length}d logged</div>
-          <div class="week-sum-delta">${weekMet ? '▼' + weekDelta : '▲' + Math.abs(weekDelta)}</div>
+          <div class="week-sum-delta">${weekMet ? '▼' + weekDelta : '▲' + Math.abs(weekDelta)} kcal</div>
+          ${weightDeltaHtml}
           <div class="week-sum-status">${weekMet ? '✅' : '⚠️'}</div>
         </div>
       `;
     } else {
-      weeklySummaryHtml = `<div class="cal-week-summary week-empty">—</div>`;
+      weeklySummaryHtml = `<div class="cal-week-summary week-empty">${weightDeltaHtml || '—'}</div>`;
     }
 
     return `<div class="cal-row">${weekDayCells}<div class="cal-week-col">${weeklySummaryHtml}</div></div>`;
