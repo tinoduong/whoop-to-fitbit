@@ -327,43 +327,104 @@ function renderDailySummary() {
     return;
   }
 
-  container.innerHTML = sortedDates.map(date => {
-    const day = dailyMap[date];
+  // Build a helper to compute per-day data
+  function getDayData(date) {
+    const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
     const hasMeals = day.totalCaloriesIn > 0;
     const hasWorkout = day.workouts.length > 0;
     const sportNames = [...new Set(day.workouts.map(w => w.sport_name))];
-
-    // Target daily intake = TDEE + that day's workout calories (if any), minus deficit
     const targetIntake = baseTDEE > 0
       ? (baseTDEE + day.workoutCalories) - dailyDeficitNeeded
       : (goals.daily_calorie_goal || 2000) + day.workoutCalories;
-
-    // Met goal if meals calories <= targetIntake (i.e., deficit >= dailyDeficitNeeded)
     const delta = targetIntake - day.totalCaloriesIn;
-    const metGoal = hasMeals && delta >= dailyDeficitNeeded;
+    const metGoal = hasMeals && delta >= 0;
+    return { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal };
+  }
 
-    let badges = '';
-    if (hasWorkout) badges += `<span class="badge badge-workout">🏃 ${sportNames.join(', ')}</span>`;
-    if (hasMeals) {
-      badges += metGoal
-        ? `<span class="badge badge-deficit">✅ Goal Met</span>`
-        : `<span class="badge badge-surplus">⚠️ Goal Not Met</span>`;
+  // Group sortedDates into calendar weeks (Sun–Sat)
+  // Find the Sunday on or before the first date in the month
+  const firstDate = new Date(sortedDates[0] + 'T00:00:00');
+  const lastDate = new Date(sortedDates[sortedDates.length - 1] + 'T00:00:00');
+
+  // Start from the Sunday of the first week
+  const startSunday = new Date(firstDate);
+  startSunday.setDate(firstDate.getDate() - firstDate.getDay());
+
+  // End on the Saturday of the last week
+  const endSaturday = new Date(lastDate);
+  endSaturday.setDate(lastDate.getDate() + (6 - lastDate.getDay()));
+
+  const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Build weeks array
+  const weeks = [];
+  let cur = new Date(startSunday);
+  while (cur <= endSaturday) {
+    const week = [];
+    for (let i = 0; i < 7; i++) {
+      week.push(cur.toISOString().substring(0, 10));
+      cur.setDate(cur.getDate() + 1);
+    }
+    weeks.push(week);
+  }
+
+  // Header row
+  let html = `<div class="cal-header">${DAY_NAMES.map(d => `<div class="cal-hdr-cell">${d}</div>`).join('')}<div class="cal-hdr-cell cal-week-summary-hdr">Week</div></div>`;
+
+  html += weeks.map(week => {
+    const weekDayCells = week.map(date => {
+      const inMonth = getYearMonth(date) === ym;
+      const d = new Date(date + 'T00:00:00');
+      const dayNum = d.getDate();
+
+      if (!inMonth) {
+        return `<div class="cal-cell cal-cell-out"></div>`;
+      }
+
+      const { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal } = getDayData(date);
+      const cardClass = hasMeals ? (metGoal ? 'met' : 'missed') : '';
+
+      let inner = `<div class="cal-day-num">${dayNum}</div>`;
+      if (hasMeals) {
+        inner += `<div class="cal-cals">${day.totalCaloriesIn} kcal</div>`;
+        inner += `<div class="cal-delta ${metGoal ? 'under' : 'over'}">${delta >= 0 ? '▼' + delta : '▲' + Math.abs(delta)}</div>`;
+      } else {
+        inner += `<div class="cal-no-data">—</div>`;
+      }
+      if (hasWorkout) {
+        inner += `<div class="cal-workout">🏃 ${sportNames.join(', ')}</div>`;
+      }
+
+      return `<div class="cal-cell ${cardClass}" title="${date}">${inner}</div>`;
+    }).join('');
+
+    // Weekly summary: only count days in this month that have meals
+    const weekDaysInMonth = week.filter(d => getYearMonth(d) === ym);
+    const weekMealDays = weekDaysInMonth.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
+    let weeklySummaryHtml = '';
+    if (weekMealDays.length > 0) {
+      const weekTotalIn = weekMealDays.reduce((s, d) => s + (dailyMap[d].totalCaloriesIn || 0), 0);
+      const weekTotalTarget = weekMealDays.reduce((s, d) => {
+        const { targetIntake } = getDayData(d);
+        return s + targetIntake;
+      }, 0);
+      const weekDelta = weekTotalTarget - weekTotalIn;
+      const weekMet = weekDelta >= 0;
+      weeklySummaryHtml = `
+        <div class="cal-week-summary ${weekMet ? 'week-met' : 'week-missed'}">
+          <div class="week-sum-label">${weekMealDays.length}d logged</div>
+          <div class="week-sum-delta">${weekMet ? '▼' + weekDelta : '▲' + Math.abs(weekDelta)}</div>
+          <div class="week-sum-status">${weekMet ? '✅' : '⚠️'}</div>
+        </div>
+      `;
+    } else {
+      weeklySummaryHtml = `<div class="cal-week-summary week-empty">—</div>`;
     }
 
-    const cardClass = hasMeals ? (metGoal ? 'deficit' : 'surplus') : '';
-
-    return `
-      <div class="day-card ${cardClass}">
-        <div class="day-date">${formatDate(date)}</div>
-        ${hasMeals
-          ? `<div class="day-cals">🍽 ${day.totalCaloriesIn} kcal in</div>`
-          : '<div class="day-cals" style="color:var(--text-muted)">No meals logged</div>'}
-        ${hasWorkout ? `<div class="day-meta">🔥 ${day.workoutCalories} kcal burned</div>` : ''}
-        ${hasMeals ? `<div class="day-meta">Target: ${targetIntake} kcal · ${delta >= 0 ? delta + ' under' : Math.abs(delta) + ' over'}</div>` : ''}
-        <div class="day-badges">${badges}</div>
-      </div>
-    `;
+    return `<div class="cal-row">${weekDayCells}<div class="cal-week-col">${weeklySummaryHtml}</div></div>`;
   }).join('');
+
+  container.innerHTML = `<div class="cal-grid">${html}</div>`;
 }
 
 // ===== WORKOUTS =====

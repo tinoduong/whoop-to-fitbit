@@ -261,13 +261,164 @@ nav {
   height: 320px;
 }
 
-/* ===== DAILY SUMMARY GRID ===== */
-.daily-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+/* ===== CALENDAR GRID ===== */
+.cal-grid {
+  width: 100%;
+  overflow-x: auto;
 }
 
+.cal-header,
+.cal-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr) 110px;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.cal-hdr-cell {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 4px 0;
+}
+
+.cal-week-summary-hdr {
+  color: var(--accent2);
+}
+
+.cal-cell {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: border-color 0.15s;
+}
+
+.cal-cell:hover {
+  border-color: var(--accent);
+}
+
+.cal-cell.met {
+  border-left: 3px solid var(--green);
+}
+
+.cal-cell.missed {
+  border-left: 3px solid var(--red);
+}
+
+.cal-cell-out {
+  background: transparent;
+  border-color: transparent;
+  min-height: 72px;
+}
+
+.cal-day-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.cal-cals {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cal-delta {
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.cal-delta.under {
+  color: var(--green);
+}
+
+.cal-delta.over {
+  color: var(--red);
+}
+
+.cal-no-data {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.cal-workout {
+  font-size: 0.65rem;
+  color: var(--accent);
+  margin-top: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Weekly summary column */
+.cal-week-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cal-week-summary {
+  border-radius: 8px;
+  padding: 6px 8px;
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.cal-week-summary.week-met {
+  background: rgba(46, 204, 113, 0.08);
+  border-color: var(--green);
+}
+
+.cal-week-summary.week-missed {
+  background: rgba(231, 76, 60, 0.08);
+  border-color: var(--red);
+}
+
+.cal-week-summary.week-empty {
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.week-sum-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.week-sum-delta {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.week-met .week-sum-delta {
+  color: var(--green);
+}
+
+.week-missed .week-sum-delta {
+  color: var(--red);
+}
+
+.week-sum-status {
+  font-size: 0.9rem;
+}
+
+/* Legacy day-card kept for any other uses */
 .day-card {
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -277,11 +428,6 @@ nav {
   flex: 1 1 160px;
   max-width: 220px;
   transition: transform 0.15s;
-}
-
-.day-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
 }
 
 .day-card.deficit {
