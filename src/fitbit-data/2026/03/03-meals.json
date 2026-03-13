@@ -866,5 +866,127 @@
         "total_protein": 1.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-12T08:34:16.480598",
+        "date": "2026-03-12",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "1 oz genoa salama (110 calories per oz); .7 oz sharp cheddar; 4 crackers (70 calories per 4 crackers); 3.5oz of fresh strawberries; .36oz of pecans",
+        "items": [
+            {
+                "foodName": "Genoa Salami",
+                "calories": 110,
+                "protein": 6.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 9.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38259299988
+            },
+            {
+                "foodName": "Sharp Cheddar Cheese",
+                "calories": 80,
+                "protein": 5.6,
+                "totalCarbohydrate": 0.4,
+                "totalFat": 6.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38258434173
+            },
+            {
+                "foodName": "Crackers",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38260106780
+            },
+            {
+                "foodName": "Fresh Strawberries",
+                "calories": 32,
+                "protein": 0.7,
+                "totalCarbohydrate": 7.7,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38260195415
+            },
+            {
+                "foodName": "Pecans",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 7.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38257892922
+            }
+        ],
+        "total_calories": 362,
+        "total_protein": 14.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-12T21:05:29.707458",
+        "date": "2026-03-12",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5 oz of roasted pork loin glazed with honey; 1/2 cup of mashed potatoes; 1/2 cup of roasted beets and cauliflower",
+        "items": [
+            {
+                "foodName": "Roasted Pork Loin with Honey Glaze",
+                "calories": 275,
+                "protein": 35.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 11.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38262430583
+            },
+            {
+                "foodName": "Mashed Potatoes",
+                "calories": 105,
+                "protein": 2.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38262646884
+            },
+            {
+                "foodName": "Roasted Beets and Cauliflower",
+                "calories": 35,
+                "protein": 2.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38262725535
+            }
+        ],
+        "total_calories": 415,
+        "total_protein": 39.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
