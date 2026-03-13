@@ -297,6 +297,11 @@ function renderDailySummary() {
   prevBtn.disabled = currentMonthIndex <= 0;
   nextBtn.disabled = currentMonthIndex >= availableMonths.length - 1;
 
+  if (!ym) {
+    container.innerHTML = '<div class="empty-state">No data available</div>';
+    return;
+  }
+
   const dailyMap = buildDailyMap();
 
   // Compute TDEE and daily deficit needed for per-day target calculation
@@ -317,14 +322,12 @@ function renderDailySummary() {
     }
   }
 
-  // Filter to current month
-  const sortedDates = Object.keys(dailyMap)
-    .filter(d => getYearMonth(d) === ym)
-    .sort();
-
-  if (sortedDates.length === 0) {
-    container.innerHTML = '<div class="empty-state">No data for this month</div>';
-    return;
+  // Generate every day in the month regardless of data
+  const [ymYear, ymMonth] = ym.split('-').map(Number);
+  const daysInMonth = new Date(ymYear, ymMonth, 0).getDate();
+  const sortedDates = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    sortedDates.push(`${ym}-${String(d).padStart(2, '0')}`);
   }
 
   // Build a helper to compute per-day data
@@ -342,7 +345,6 @@ function renderDailySummary() {
   }
 
   // Group sortedDates into calendar weeks (Sun–Sat)
-  // Find the Sunday on or before the first date in the month
   const firstDate = new Date(sortedDates[0] + 'T00:00:00');
   const lastDate = new Date(sortedDates[sortedDates.length - 1] + 'T00:00:00');
 
@@ -400,17 +402,15 @@ function renderDailySummary() {
       return `<div class="cal-cell ${cardClass}" title="${date}">${inner}</div>`;
     }).join('');
 
-    // Weekly summary: calorie delta + weight delta (Sun to Sat, or Sun to today)
+    // Weekly summary
     const weekDaysInMonth = week.filter(d => getYearMonth(d) === ym);
     const weekMealDays = weekDaysInMonth.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
     const todayStr = new Date().toISOString().substring(0, 10);
 
-    // Weight delta: find weight on Sunday (or nearest after) and Saturday (or nearest before / today)
     const weekSunday = week[0];
     const weekSaturday = week[6];
     const weekEnd = weekSaturday > todayStr ? todayStr : weekSaturday;
 
-    // Find closest weight entry on or after Sunday within the week
     const weekWeightEntries = allWeight.filter(w => w.date >= weekSunday && w.date <= weekEnd);
     let weightDeltaHtml = '';
     if (weekWeightEntries.length >= 2) {
@@ -652,7 +652,6 @@ function renderPagination(el, currentPage, totalPages, onPageChange) {
   let html = '';
   html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">&#8592;</button>`;
 
-  // Show page numbers with ellipsis
   const pages = [];
   for (let i = 1; i <= totalPages; i++) {
     if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
@@ -680,9 +679,6 @@ function renderPagination(el, currentPage, totalPages, onPageChange) {
 }
 
 // ===== TDEE CALCULATIONS =====
-// Mifflin-St Jeor BMR, then multiply by activity factor
-// Height in inches -> cm: * 2.54
-// Weight in lbs -> kg: / 2.20462
 function calcAge(dobStr) {
   const dob = new Date(dobStr);
   const today = new Date();
@@ -702,15 +698,12 @@ function calcBMR(weightLbs, heightIn, age, sex) {
   }
 }
 
-// Lightly active (1-3 days/week exercise) = 1.375
-// We'll use 1.375 as baseline since user exercises regularly
 const ACTIVITY_FACTOR = 1.375;
 
 function calcTDEE(weightLbs, heightIn, age, sex) {
   return Math.round(calcBMR(weightLbs, heightIn, age, sex) * ACTIVITY_FACTOR);
 }
 
-// Average workout calories burned per day over last 30 days
 function avgDailyWorkoutCals() {
   if (!allWorkouts.length) return 0;
   const now = new Date();
@@ -718,9 +711,6 @@ function avgDailyWorkoutCals() {
   const recent = allWorkouts.filter(w => new Date(w.start_time) >= cutoff);
   if (!recent.length) return 0;
   const totalCals = recent.reduce((s, w) => s + (w.calories || 0), 0);
-  // Count distinct workout days
-  const days = new Set(recent.map(w => getDateFromISO(w.start_time))).size;
-  // Spread over 30 days
   return Math.round(totalCals / 30);
 }
 
@@ -744,7 +734,6 @@ function renderTDEEPlan() {
 
   const tdee = calcTDEE(latestWeight, heightIn, age, sex);
   const bmr = Math.round(calcBMR(latestWeight, heightIn, age, sex));
-  // Effective daily budget = TDEE only (no avg workout calories added)
   const effectiveTDEE = tdee;
 
   let html = `
@@ -767,7 +756,6 @@ function renderTDEEPlan() {
     </div>
   `;
 
-  // Goal-based deficit calculation
   if (goals.target_weight && goals.goal_date) {
     const today = new Date();
     const goalDate = new Date(goals.goal_date);
@@ -775,14 +763,12 @@ function renderTDEEPlan() {
     const currentLbs = latestWeight;
     const targetLbs = goals.target_weight;
     const lbsToLose = currentLbs - targetLbs;
-    // 1 lb of fat ≈ 3500 kcal
     const totalCalDeficitNeeded = lbsToLose * 3500;
     const dailyDeficitNeeded = Math.round(totalCalDeficitNeeded / daysLeft);
-    // Target daily intake = TDEE + that day's workout calories (shown as baseline here; per-day shown in daily summary)
     const targetDailyIntake = effectiveTDEE - dailyDeficitNeeded;
     const weeklyLoss = (dailyDeficitNeeded * 7 / 3500).toFixed(2);
 
-    const feasible = dailyDeficitNeeded <= 1000; // >1000 kcal/day deficit is unsafe
+    const feasible = dailyDeficitNeeded <= 1000;
     const deficitColor = feasible ? 'var(--green)' : 'var(--danger)';
     const warning = !feasible ? ' ⚠️ This deficit exceeds the safe limit of 1000 kcal/day. Consider extending your goal date.' : '';
 
@@ -851,7 +837,6 @@ function renderGoalProgress() {
   const firstLbs = kgToLbs(first.weight);
   let html = '';
 
-  // Weight progress (goals stored in lbs)
   if (goals.target_weight) {
     const targetLbs = goals.target_weight;
     const totalChange = Math.abs(firstLbs - targetLbs);
@@ -877,7 +862,6 @@ function renderGoalProgress() {
     html += `<div class="progress-item"><div class="progress-note">Set a target weight in Goals to track progress.</div></div>`;
   }
 
-  // Fat progress
   if (goals.target_fat) {
     const startF = first.fat;
     const currentF = latest.fat;
@@ -924,13 +908,11 @@ function setupGoalsForm() {
     const heightIn = document.getElementById('heightIn').value;
     const sex = document.getElementById('sex').value;
 
-    // Derive a daily calorie goal from TDEE - deficit if we have enough info
     let dailyCalorieGoal = 2000;
     if (dob && heightIn && tw && gd && allWeight.length) {
       const age = calcAge(dob);
       const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
       const tdee = calcTDEE(latestLbs, parseFloat(heightIn), age, sex);
-      // Effective budget = TDEE only
       const effectiveTDEE = tdee;
       const today = new Date();
       const goalDate = new Date(gd);
