@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupGoalsForm();
   setupChartRangeBtns();
   setupMonthNav();
+  setupDayModal();
 });
 
 // ===== DATA LOADING =====
@@ -399,7 +400,7 @@ function renderDailySummary() {
         inner += `<div class="cal-workout">🏃 ${sportNames.join(', ')}</div>`;
       }
 
-      return `<div class="cal-cell ${cardClass}" title="${date}">${inner}</div>`;
+      return `<div class="cal-cell ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer">${inner}</div>`;
     }).join('');
 
     // Weekly summary
@@ -567,9 +568,13 @@ function renderMeals() {
       const items = meal.items || [];
       const totalCarbs = items.reduce((s, i) => s + (i.totalCarbohydrate || 0), 0);
       const totalFat = items.reduce((s, i) => s + (i.totalFat || 0), 0);
+      const protein = meal.total_protein || 0;
       const itemChips = items.map(item =>
         `<span class="meal-item-chip">${item.foodName}<span class="item-cals">${item.calories} kcal</span></span>`
       ).join('');
+
+      const chartId = `macro-pie-${meal.id || (date + '-' + meal.meal_type + '-' + Math.random().toString(36).slice(2))}`;
+      setTimeout(() => renderMacroPie(chartId, protein, totalCarbs, totalFat), 0);
 
       return `
         <div class="meal-entry">
@@ -579,10 +584,15 @@ function renderMeals() {
           </div>
           <div class="meal-description">${meal.raw_description}</div>
           <div class="meal-items">${itemChips}</div>
-          <div class="meal-macros">
-            <span class="macro-p">P: ${meal.total_protein.toFixed(1)}g</span>
-            <span class="macro-c">C: ${totalCarbs.toFixed(1)}g</span>
-            <span class="macro-f">F: ${totalFat.toFixed(1)}g</span>
+          <div class="meal-entry-bottom">
+            <div class="meal-macros">
+              <span class="macro-p">P: ${protein.toFixed(1)}g</span>
+              <span class="macro-c">C: ${totalCarbs.toFixed(1)}g</span>
+              <span class="macro-f">F: ${totalFat.toFixed(1)}g</span>
+            </div>
+            <div class="meal-pie-wrap">
+              <canvas id="${chartId}" width="80" height="80"></canvas>
+            </div>
           </div>
         </div>
       `;
@@ -676,6 +686,278 @@ function renderPagination(el, currentPage, totalPages, onPageChange) {
   el.querySelectorAll('.page-btn:not([disabled])').forEach(btn => {
     btn.addEventListener('click', () => onPageChange(parseInt(btn.dataset.page)));
   });
+}
+
+// ===== MACRO PIE CHART =====
+function renderMacroPie(canvasId, protein, carbs, fat) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  // Destroy existing chart on this canvas if any
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  const ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Protein', 'Carbs', 'Fat'],
+      datasets: [{
+        data: [
+          parseFloat(protein.toFixed(1)),
+          parseFloat(carbs.toFixed(1)),
+          parseFloat(fat.toFixed(1)),
+        ],
+        backgroundColor: ['#6c63ff', '#00d4aa', '#ff6b6b'],
+        borderColor: '#1a1d27',
+        borderWidth: 2,
+        hoverOffset: 4,
+      }],
+    },
+    options: {
+      responsive: false,
+      cutout: '55%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.raw}g`,
+          },
+          backgroundColor: '#1a1d27',
+          borderColor: '#2e3250',
+          borderWidth: 1,
+          titleColor: '#e8eaf0',
+          bodyColor: '#8b90a8',
+        },
+      },
+    },
+  });
+}
+
+// ===== DAY MODAL =====
+function setupDayModal() {
+  // Inject modal HTML into the page if not already present
+  if (!document.getElementById('dayModal')) {
+    const modalEl = document.createElement('div');
+    modalEl.id = 'dayModal';
+    modalEl.className = 'day-modal-overlay';
+    modalEl.style.display = 'none';
+    modalEl.innerHTML = `
+      <div class="day-modal" id="dayModalInner">
+        <button class="day-modal-close" id="dayModalCloseBtn">✕</button>
+        <div id="dayModalContent"></div>
+      </div>
+    `;
+    document.body.appendChild(modalEl);
+
+    // Inject modal CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      .day-modal-overlay {
+        position: fixed; inset: 0; z-index: 1000;
+        background: rgba(10, 11, 20, 0.88);
+        backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .day-modal {
+        background: #1a1d27;
+        border: 1px solid #2e3250;
+        border-radius: 16px;
+        width: min(760px, 95vw);
+        max-height: 88vh;
+        overflow-y: auto;
+        padding: 28px 32px;
+        position: relative;
+        scrollbar-width: thin;
+        scrollbar-color: #2e3250 transparent;
+      }
+      .day-modal::-webkit-scrollbar { width: 6px; }
+      .day-modal::-webkit-scrollbar-track { background: transparent; }
+      .day-modal::-webkit-scrollbar-thumb { background: #2e3250; border-radius: 3px; }
+      .day-modal-close {
+        position: absolute; top: 16px; right: 20px;
+        background: transparent; border: none;
+        color: #8b90a8; font-size: 18px; cursor: pointer;
+        padding: 4px 8px; line-height: 1; border-radius: 6px;
+        transition: color 0.15s, background 0.15s;
+      }
+      .day-modal-close:hover { color: #e8eaf0; background: rgba(255,255,255,0.06); }
+      .day-modal h2 { margin: 0 0 20px; font-size: 1.2rem; color: #e8eaf0; padding-right: 32px; }
+      .day-modal-section { margin-bottom: 24px; }
+      .day-modal-section:last-child { margin-bottom: 0; }
+      .day-modal-section h3 {
+        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.09em;
+        color: #8b90a8; margin: 0 0 10px;
+        padding-bottom: 8px; border-bottom: 1px solid #2e3250;
+      }
+      .day-modal-workout-row {
+        display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+        background: rgba(108,99,255,0.06); border: 1px solid rgba(108,99,255,0.15);
+        border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
+      }
+      .day-modal-workout-row span { font-size: 0.83rem; color: #c8cbdf; }
+      .day-modal-empty { color: #8b90a8; font-size: 0.85rem; padding: 8px 0; }
+      .modal-day-macro-row {
+        display: flex; align-items: center; gap: 20px;
+        background: rgba(108,99,255,0.05); border: 1px solid rgba(108,99,255,0.14);
+        border-radius: 10px; padding: 14px 18px; margin-bottom: 14px;
+      }
+      .modal-macro-info { display: flex; flex-direction: column; gap: 5px; }
+      .modal-macro-info .modal-macro-title {
+        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em;
+        color: #8b90a8; margin-bottom: 4px;
+      }
+      .modal-macro-info span { font-size: 0.84rem; }
+      .modal-meal-entry {
+        display: flex; align-items: center; gap: 16px;
+        background: rgba(255,255,255,0.02); border: 1px solid #2e3250;
+        border-radius: 10px; padding: 12px 16px; margin-bottom: 8px;
+      }
+      .modal-meal-entry:last-child { margin-bottom: 0; }
+      .modal-meal-entry-info { flex: 1; min-width: 0; }
+      .modal-meal-entry-header {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+      }
+      .modal-meal-entry-header strong { font-size: 0.9rem; color: #e8eaf0; }
+      .modal-meal-desc { font-size: 0.8rem; color: #8b90a8; margin-bottom: 6px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .modal-meal-macros { display: flex; gap: 10px; }
+      .modal-meal-macros span { font-size: 0.8rem; }
+      /* Layout tweak for meal entries in meals tab */
+      .meal-entry-bottom {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; margin-top: 6px;
+      }
+      .meal-pie-wrap { flex-shrink: 0; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Event listeners
+  document.getElementById('dayModalCloseBtn').addEventListener('click', closeDayModal);
+  document.getElementById('dayModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('dayModal')) closeDayModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDayModal();
+  });
+}
+
+function closeDayModal() {
+  const modal = document.getElementById('dayModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function openDayModal(date) {
+  const dailyMap = buildDailyMap();
+  const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
+  const dayMeals = allMeals.filter(m => m.date === date);
+
+  // Aggregate day-level macros
+  const totalProtein = dayMeals.reduce((s, m) => s + (m.total_protein || 0), 0);
+  const totalCarbs   = dayMeals.reduce((s, m) =>
+    s + (m.items || []).reduce((si, i) => si + (i.totalCarbohydrate || 0), 0), 0);
+  const totalFat     = dayMeals.reduce((s, m) =>
+    s + (m.items || []).reduce((si, i) => si + (i.totalFat || 0), 0), 0);
+
+  // Compute target intake for the day
+  let baseTDEE = 0;
+  let dailyDeficitNeeded = 0;
+  if (goals.dob && goals.height_in && allWeight.length) {
+    const age = calcAge(goals.dob);
+    const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
+    baseTDEE = calcTDEE(latestLbs, goals.height_in, age, goals.sex || 'male');
+    if (goals.target_weight && goals.goal_date) {
+      const today = new Date();
+      const goalDate = new Date(goals.goal_date);
+      const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
+      const lbsToLose = latestLbs - goals.target_weight;
+      if (lbsToLose > 0) {
+        dailyDeficitNeeded = Math.round((lbsToLose * 3500) / daysLeft);
+      }
+    }
+  }
+  const targetIntake = baseTDEE > 0
+    ? (baseTDEE + day.workoutCalories) - dailyDeficitNeeded
+    : (goals.daily_calorie_goal || 2000) + day.workoutCalories;
+  const delta = targetIntake - day.totalCaloriesIn;
+  const metGoal = day.totalCaloriesIn > 0 && delta >= 0;
+
+  // Workouts section
+  const workoutsHtml = day.workouts.length
+    ? day.workouts.map(w => `
+        <div class="day-modal-workout-row">
+          <span><span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span></span>
+          <span>⏱ ${formatDuration(w.start_time, w.end_time)}</span>
+          <span>❤️ ${w.avg_heart_rate} bpm avg</span>
+          <span>🔥 ${w.calories} kcal</span>
+          ${w.distance_meter != null ? `<span>📍 ${(w.distance_meter / 1609.34).toFixed(2)} mi</span>` : ''}
+        </div>`).join('')
+    : `<div class="day-modal-empty">No workouts logged</div>`;
+
+  // Per-meal rows with individual pie charts
+  const dayPieId = `modal-day-pie-${date}`;
+  const mealsHtml = dayMeals.length
+    ? dayMeals.map((meal, idx) => {
+        const items = meal.items || [];
+        const mCarbs = items.reduce((s, i) => s + (i.totalCarbohydrate || 0), 0);
+        const mFat   = items.reduce((s, i) => s + (i.totalFat || 0), 0);
+        const mProt  = meal.total_protein || 0;
+        const pieId  = `modal-meal-pie-${date}-${idx}`;
+        setTimeout(() => renderMacroPie(pieId, mProt, mCarbs, mFat), 0);
+        return `
+          <div class="modal-meal-entry">
+            <canvas id="${pieId}" width="72" height="72" style="flex-shrink:0"></canvas>
+            <div class="modal-meal-entry-info">
+              <div class="modal-meal-entry-header">
+                <span class="meal-type-label meal-${meal.meal_type}">${meal.meal_type}</span>
+                <strong>${meal.total_calories} kcal</strong>
+              </div>
+              <div class="modal-meal-desc" title="${meal.raw_description}">${meal.raw_description}</div>
+              <div class="modal-meal-macros">
+                <span class="macro-p">P: ${mProt.toFixed(1)}g</span>
+                <span class="macro-c">C: ${mCarbs.toFixed(1)}g</span>
+                <span class="macro-f">F: ${mFat.toFixed(1)}g</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('')
+    : `<div class="day-modal-empty">No meals logged</div>`;
+
+  const calStatus = day.totalCaloriesIn > 0
+    ? `<span style="color:${metGoal ? '#00d4aa' : '#ff6b6b'};margin-left:10px;font-size:0.85rem">
+        ${metGoal ? '▼ ' + delta + ' under' : '▲ ' + Math.abs(delta) + ' over'} target
+       </span>`
+    : '';
+
+  document.getElementById('dayModalContent').innerHTML = `
+    <h2>📅 ${formatDate(date)}</h2>
+
+    <div class="day-modal-section">
+      <h3>🏋️ Workouts · ${day.workoutCalories} kcal burned</h3>
+      ${workoutsHtml}
+    </div>
+
+    <div class="day-modal-section">
+      <h3>🍽 Nutrition · ${day.totalCaloriesIn} kcal consumed · 🎯 ${targetIntake} target ${calStatus}</h3>
+      ${dayMeals.length ? `
+        <div class="modal-day-macro-row">
+          <canvas id="${dayPieId}" width="96" height="96" style="flex-shrink:0"></canvas>
+          <div class="modal-macro-info">
+            <div class="modal-macro-title">Day Total Macros</div>
+            <span class="macro-p">Protein: ${totalProtein.toFixed(1)}g</span>
+            <span class="macro-c">Carbs: ${totalCarbs.toFixed(1)}g</span>
+            <span class="macro-f">Fat: ${totalFat.toFixed(1)}g</span>
+          </div>
+        </div>` : ''}
+      ${mealsHtml}
+    </div>
+  `;
+
+  document.getElementById('dayModal').style.display = 'flex';
+
+  // Render day-level pie after DOM update
+  if (dayMeals.length) {
+    setTimeout(() => renderMacroPie(dayPieId, totalProtein, totalCarbs, totalFat), 0);
+  }
 }
 
 // ===== TDEE CALCULATIONS =====
