@@ -6,16 +6,23 @@ Serves data from fitbit-data and whoop-data JSON files
 
 import json
 import os
+import sys
 import glob
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Allow importing from the src directory (where fitbit_add_meal.py lives)
+SRC_DIR = BASE_DIR
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
 FITBIT_DATA_DIR = os.path.join(BASE_DIR, "fitbit-data")
 WHOOP_DATA_DIR = os.path.join(BASE_DIR, "whoop-data")
 WEBAPP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 GOALS_FILE = os.path.join(WEBAPP_DIR, "goals.json")
+
 
 
 def load_goals():
@@ -50,7 +57,6 @@ def load_all_weight():
             data = json.load(f)
             if "weight" in data:
                 weights.extend(data["weight"])
-    # Sort by date
     weights.sort(key=lambda x: x["date"])
     return weights
 
@@ -63,7 +69,6 @@ def load_all_meals():
         with open(filepath) as f:
             data = json.load(f)
             meals.extend(data)
-    # Sort by date
     meals.sort(key=lambda x: x["date"])
     return meals
 
@@ -122,6 +127,27 @@ class FitnessHandler(BaseHTTPRequestHandler):
             goals = json.loads(body)
             save_goals(goals)
             self.send_json({"status": "ok"})
+
+        elif path == "/api/log-meal":
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length)
+            payload = json.loads(body)
+            user_input = payload.get("input", "").strip()
+            if not user_input:
+                self.send_json({"status": "error", "message": "No input provided."}, status=400)
+                return
+            try:
+                orig_dir = os.getcwd()
+                os.chdir(SRC_DIR)
+                try:
+                    import fitbit_add_meal
+                    fitbit_add_meal.process(user_input)
+                finally:
+                    os.chdir(orig_dir)
+                self.send_json({"status": "ok"})
+            except Exception as e:
+                self.send_json({"status": "error", "message": str(e)}, status=500)
+
         else:
             self.send_response(404)
             self.end_headers()

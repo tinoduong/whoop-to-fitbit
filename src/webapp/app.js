@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupChartRangeBtns();
   setupMonthNav();
   setupDayModal();
+  setupLogMealModal();
 });
 
 // ===== DATA LOADING =====
@@ -827,6 +828,138 @@ function setupDayModal() {
         gap: 12px; margin-top: 6px;
       }
       .meal-pie-wrap { flex-shrink: 0; }
+
+      /* ===== LOG MEAL MODAL ===== */
+      .log-meal-btn {
+        background: linear-gradient(135deg, #6c63ff, #5a52d5);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 0.03em;
+        transition: opacity 0.15s;
+        white-space: nowrap;
+      }
+      .log-meal-btn:hover { opacity: 0.85; }
+
+      .log-meal-overlay {
+        position: fixed; inset: 0; z-index: 1100;
+        background: rgba(10, 11, 20, 0.9);
+        backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .log-meal-modal {
+        background: #1a1d27;
+        border: 1px solid #2e3250;
+        border-radius: 16px;
+        width: min(520px, 95vw);
+        padding: 28px 32px;
+        position: relative;
+      }
+      .log-meal-modal h2 {
+        margin: 0 0 6px;
+        font-size: 1.1rem;
+        color: #e8eaf0;
+        padding-right: 28px;
+      }
+      .log-meal-modal .log-meal-hint {
+        font-size: 0.78rem;
+        color: #8b90a8;
+        margin: 0 0 16px;
+      }
+      .log-meal-modal textarea {
+        width: 100%;
+        box-sizing: border-box;
+        background: #12131e;
+        border: 1px solid #2e3250;
+        border-radius: 10px;
+        color: #e8eaf0;
+        font-size: 0.88rem;
+        font-family: inherit;
+        padding: 12px 14px;
+        resize: vertical;
+        min-height: 90px;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .log-meal-modal textarea:focus { border-color: #6c63ff; }
+      .log-meal-modal textarea:disabled { opacity: 0.5; }
+      .log-meal-actions {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 10px; margin-top: 14px;
+      }
+      .log-meal-cancel-btn {
+        background: transparent;
+        border: 1px solid #2e3250;
+        color: #8b90a8;
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s;
+      }
+      .log-meal-cancel-btn:hover { border-color: #8b90a8; color: #e8eaf0; }
+      .log-meal-submit-btn {
+        background: linear-gradient(135deg, #6c63ff, #5a52d5);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 18px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .log-meal-submit-btn:hover:not(:disabled) { opacity: 0.85; }
+      .log-meal-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+      .log-meal-progress {
+        margin-top: 14px;
+        display: flex;
+        gap: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #2e3250;
+      }
+      .log-meal-step {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+        font-size: 0.75rem;
+        color: #8b90a8;
+        background: #12131e;
+        border-right: 1px solid #2e3250;
+        transition: background 0.2s, color 0.2s;
+      }
+      .log-meal-step:last-child { border-right: none; }
+      .log-meal-step.active {
+        background: rgba(108,99,255,0.15);
+        color: #6c63ff;
+        font-weight: 600;
+      }
+      .log-meal-step.done {
+        background: rgba(0,212,170,0.1);
+        color: #00d4aa;
+      }
+      .log-meal-error {
+        margin-top: 12px;
+        padding: 10px 14px;
+        background: rgba(255,107,107,0.1);
+        border: 1px solid rgba(255,107,107,0.3);
+        border-radius: 8px;
+        color: #ff6b6b;
+        font-size: 0.8rem;
+      }
+      .log-meal-modal-close {
+        position: absolute; top: 16px; right: 20px;
+        background: transparent; border: none;
+        color: #8b90a8; font-size: 18px; cursor: pointer;
+        padding: 4px 8px; line-height: 1; border-radius: 6px;
+        transition: color 0.15s, background 0.15s;
+      }
+      .log-meal-modal-close:hover { color: #e8eaf0; background: rgba(255,255,255,0.06); }
     `;
     document.head.appendChild(style);
   }
@@ -957,6 +1090,168 @@ function openDayModal(date) {
   // Render day-level pie after DOM update
   if (dayMeals.length) {
     setTimeout(() => renderMacroPie(dayPieId, totalProtein, totalCarbs, totalFat), 0);
+  }
+}
+
+// ===== LOG MEAL MODAL =====
+function setupLogMealModal() {
+  // Inject the modal HTML
+  if (!document.getElementById('logMealOverlay')) {
+    const el = document.createElement('div');
+    el.id = 'logMealOverlay';
+    el.className = 'log-meal-overlay';
+    el.style.display = 'none';
+    el.innerHTML = `
+      <div class="log-meal-modal" id="logMealModal">
+        <button class="log-meal-modal-close" id="logMealCloseBtn">✕</button>
+        <h2>🍽 Log a Meal</h2>
+        <p class="log-meal-hint">
+          Describe your meal naturally — type, items, quantities, and date if not today.<br>
+          e.g. "dinner: 6oz grilled salmon, 1 cup rice, steamed broccoli"<br>
+          or "update lunch today to add a cookie"
+        </p>
+        <textarea id="logMealInput" placeholder="dinner: grilled chicken, roasted potatoes, glass of wine" rows="4"></textarea>
+        <div id="logMealProgress" class="log-meal-progress" style="display:none">
+          <div class="log-meal-step" id="lmStep1">1 · Parsing</div>
+          <div class="log-meal-step" id="lmStep2">2 · Uploading</div>
+          <div class="log-meal-step" id="lmStep3">3 · Done</div>
+        </div>
+        <div id="logMealError" class="log-meal-error" style="display:none"></div>
+        <div class="log-meal-actions">
+          <button class="log-meal-cancel-btn" id="logMealCancelBtn">Cancel</button>
+          <button class="log-meal-submit-btn" id="logMealSubmitBtn">Log Meal</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(el);
+  }
+
+  // Inject the "+ Log Meal" button into the meals tab filter bar
+  // Looks for the meals filter row; appends button after the reset button
+  const mealResetBtn = document.getElementById('mealResetBtn');
+  if (mealResetBtn && !document.getElementById('openLogMealBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'openLogMealBtn';
+    btn.className = 'log-meal-btn';
+    btn.textContent = '+ Log Meal';
+    btn.addEventListener('click', openLogMealModal);
+    mealResetBtn.parentNode.insertBefore(btn, mealResetBtn.nextSibling);
+  }
+
+  // Wire up modal controls
+  document.getElementById('logMealCloseBtn').addEventListener('click', closeLogMealModal);
+  document.getElementById('logMealCancelBtn').addEventListener('click', closeLogMealModal);
+  document.getElementById('logMealOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('logMealOverlay')) closeLogMealModal();
+  });
+  document.getElementById('logMealSubmitBtn').addEventListener('click', submitLogMeal);
+  document.getElementById('logMealInput').addEventListener('keydown', e => {
+    // Cmd/Ctrl+Enter to submit
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') submitLogMeal();
+  });
+}
+
+function openLogMealModal() {
+  const overlay = document.getElementById('logMealOverlay');
+  const input = document.getElementById('logMealInput');
+  const progress = document.getElementById('logMealProgress');
+  const error = document.getElementById('logMealError');
+  const submitBtn = document.getElementById('logMealSubmitBtn');
+
+  // Reset state
+  input.value = '';
+  input.disabled = false;
+  progress.style.display = 'none';
+  error.style.display = 'none';
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Log Meal';
+  ['lmStep1', 'lmStep2', 'lmStep3'].forEach(id => {
+    document.getElementById(id).className = 'log-meal-step';
+  });
+
+  overlay.style.display = 'flex';
+  setTimeout(() => input.focus(), 50);
+}
+
+function closeLogMealModal() {
+  document.getElementById('logMealOverlay').style.display = 'none';
+}
+
+function setLogMealStep(step) {
+  // step: 1 = parsing, 2 = uploading, 3 = done
+  ['lmStep1', 'lmStep2', 'lmStep3'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (i + 1 < step) {
+      el.className = 'log-meal-step done';
+    } else if (i + 1 === step) {
+      el.className = 'log-meal-step active';
+    } else {
+      el.className = 'log-meal-step';
+    }
+  });
+}
+
+async function submitLogMeal() {
+  const input = document.getElementById('logMealInput');
+  const progress = document.getElementById('logMealProgress');
+  const error = document.getElementById('logMealError');
+  const submitBtn = document.getElementById('logMealSubmitBtn');
+
+  const userInput = input.value.trim();
+  if (!userInput) {
+    input.focus();
+    return;
+  }
+
+  // Lock UI
+  input.disabled = true;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Logging…';
+  error.style.display = 'none';
+  progress.style.display = 'flex';
+  setLogMealStep(1);
+
+  // Step 2 indicator fires after a short delay (Claude parsing typically takes 2-4s)
+  const step2Timer = setTimeout(() => setLogMealStep(2), 3000);
+
+  try {
+    const res = await fetch('/api/log-meal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input: userInput }),
+    });
+
+    clearTimeout(step2Timer);
+    const data = await res.json();
+
+    if (!res.ok || data.status === 'error') {
+      throw new Error(data.message || `Server error ${res.status}`);
+    }
+
+    // Success
+    setLogMealStep(3);
+    submitBtn.textContent = '✓ Logged';
+
+    // Reload meals data and re-render after short delay
+    setTimeout(async () => {
+      const mealsRes = await fetch('/api/meals');
+      allMeals = await mealsRes.json();
+      buildAvailableMonths();
+      mealsFiltered = groupedMealDates(allMeals);
+      mealsPage = 1;
+      renderMeals();
+      renderDailySummary();
+      closeLogMealModal();
+    }, 800);
+
+  } catch (err) {
+    clearTimeout(step2Timer);
+    progress.style.display = 'none';
+    error.textContent = `Error: ${err.message}`;
+    error.style.display = 'block';
+    input.disabled = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Log Meal';
   }
 }
 
