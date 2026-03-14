@@ -988,5 +988,309 @@
         "total_protein": 39.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-13T08:14:04.681143",
+        "date": "2026-03-13",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "1 oz genoa salama (110 calories per oz); 1 oz sharp cheddar; 5 crackers (70 calories per 4 crackers); 3 oz of fresh strawberries; 1 medium size green apple",
+        "items": [
+            {
+                "foodName": "Genoa Salami",
+                "calories": 110,
+                "protein": 6.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 9.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38265557800
+            },
+            {
+                "foodName": "Sharp Cheddar Cheese",
+                "calories": 113,
+                "protein": 7.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 9.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38264987626
+            },
+            {
+                "foodName": "Crackers",
+                "calories": 88,
+                "protein": 1.5,
+                "totalCarbohydrate": 14.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38265213714
+            },
+            {
+                "foodName": "Fresh Strawberries",
+                "calories": 27,
+                "protein": 0.6,
+                "totalCarbohydrate": 6.5,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38264977687
+            },
+            {
+                "foodName": "Green Apple",
+                "calories": 95,
+                "protein": 0.5,
+                "totalCarbohydrate": 25.0,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38264053228
+            }
+        ],
+        "total_calories": 433,
+        "total_protein": 15.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-13T21:59:00.213406",
+        "date": "2026-03-13",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3x tuna sashimi (.75 oz of tuna each); 3 x salmon sushi (.75 oz salmon each); 2.5 oz teriyaki steak; 2 tempura shrimp; 1 eel sushi; 1 piece yam tempura; 4 pieces of californa roll; 30oz saporor beer;",
+        "items": [
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 155,
+                "protein": 34.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.4,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38266186749
+            },
+            {
+                "foodName": "Salmon Sushi",
+                "calories": 180,
+                "protein": 24.6,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 4.5,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38266845851
+            },
+            {
+                "foodName": "Teriyaki Steak",
+                "calories": 220,
+                "protein": 28.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 8.5,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38265793604
+            },
+            {
+                "foodName": "Tempura Shrimp",
+                "calories": 140,
+                "protein": 12.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 7.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38266757400
+            },
+            {
+                "foodName": "Eel Sushi",
+                "calories": 95,
+                "protein": 8.5,
+                "totalCarbohydrate": 5.0,
+                "totalFat": 4.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38266206537
+            },
+            {
+                "foodName": "Yam Tempura",
+                "calories": 85,
+                "protein": 1.5,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38266049271
+            },
+            {
+                "foodName": "California Roll",
+                "calories": 200,
+                "protein": 12.0,
+                "totalCarbohydrate": 28.0,
+                "totalFat": 6.0,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38265813257
+            },
+            {
+                "foodName": "Sapporo Beer",
+                "calories": 420,
+                "protein": 5.3,
+                "totalCarbohydrate": 42.0,
+                "totalFat": 0.0,
+                "amount": 30,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38266806460
+            }
+        ],
+        "total_calories": 1495,
+        "total_protein": 126.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-14T09:38:13.783278",
+        "date": "2026-03-14",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "2 breakfast sausage links, 3 pieces of small french toast, 1/2 cup of mixed berries, 3/4 tbsp of syrup",
+        "items": [
+            {
+                "foodName": "Breakfast Sausage Links",
+                "calories": 184,
+                "protein": 8.0,
+                "totalCarbohydrate": 0.8,
+                "totalFat": 16.4,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38270682807
+            },
+            {
+                "foodName": "French Toast",
+                "calories": 450,
+                "protein": 13.5,
+                "totalCarbohydrate": 54.0,
+                "totalFat": 18.9,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38270446808
+            },
+            {
+                "foodName": "Mixed Berries",
+                "calories": 40,
+                "protein": 0.5,
+                "totalCarbohydrate": 9.6,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38270004106
+            },
+            {
+                "foodName": "Maple Syrup",
+                "calories": 39,
+                "protein": 0.0,
+                "totalCarbohydrate": 10.1,
+                "totalFat": 0.0,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38270702313
+            }
+        ],
+        "total_calories": 713,
+        "total_protein": 22.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-14T14:57:53.346202",
+        "date": "2026-03-14",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "2 x 16oz lagers; 4 chicken wings, .75 cups of french fries, 1tbps ketchup",
+        "items": [
+            {
+                "foodName": "Lager Beer",
+                "calories": 300,
+                "protein": 2.4,
+                "totalCarbohydrate": 24.0,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38271075094
+            },
+            {
+                "foodName": "Chicken Wings",
+                "calories": 320,
+                "protein": 30.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 22.0,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38271556806
+            },
+            {
+                "foodName": "French Fries",
+                "calories": 220,
+                "protein": 3.0,
+                "totalCarbohydrate": 29.0,
+                "totalFat": 11.0,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38271202859
+            },
+            {
+                "foodName": "Ketchup",
+                "calories": 15,
+                "protein": 0.2,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38270918136
+            }
+        ],
+        "total_calories": 855,
+        "total_protein": 35.6,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

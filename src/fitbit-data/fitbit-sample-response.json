@@ -1,0 +1,256 @@
+{
+    "pagination": {
+        "afterDate": "2026-03-09",
+        "limit": 10,
+        "next": "",
+        "offset": 0,
+        "previous": "",
+        "sort": "asc"
+    },
+    "activities": [
+        {
+            "logId": 2218817488287520768,
+            "activityTypeId": 90019,
+            "activityName": "Treadmill",
+            "calories": 293,
+            "distance": 0.089196,
+            "steps": 220,
+            "speed": 0.23646418929765983,
+            "pace": 15224.292569173505,
+            "duration": 1357946,
+            "activeDuration": 1357946,
+            "activityLevel": [
+                {
+                    "minutes": 1,
+                    "name": "sedentary"
+                },
+                {
+                    "minutes": 0,
+                    "name": "lightly"
+                },
+                {
+                    "minutes": 0,
+                    "name": "fairly"
+                },
+                {
+                    "minutes": 21,
+                    "name": "very"
+                }
+            ],
+            "distanceUnit": "Kilometer",
+            "source": {
+                "type": "api",
+                "name": "Data Fetcher",
+                "id": "23V3V8",
+                "url": "https://www.fitbit.com/user/2DJ3GR",
+                "trackerFeatures": [
+                    "DISTANCE",
+                    "STEPS",
+                    "SPEED",
+                    "CALORIES",
+                    "HEARTRATE"
+                ]
+            },
+            "logType": "manual",
+            "manualValuesSpecified": {
+                "calories": true,
+                "distance": true,
+                "steps": false
+            },
+            "intervalWorkoutData": {
+                "intervalSummaries": [],
+                "numRepeats": 0
+            },
+            "heartRateZones": [
+                {
+                    "minutes": 22,
+                    "caloriesOut": 286.65824,
+                    "name": "Out of Range",
+                    "min": 30,
+                    "max": 220
+                },
+                {
+                    "minutes": 0,
+                    "caloriesOut": 0.0,
+                    "name": "Fat Burn",
+                    "min": 30,
+                    "max": 220
+                },
+                {
+                    "minutes": 0,
+                    "caloriesOut": 0.0,
+                    "name": "Cardio",
+                    "min": 30,
+                    "max": 220
+                },
+                {
+                    "minutes": 0,
+                    "caloriesOut": 0.0,
+                    "name": "Peak",
+                    "min": 30,
+                    "max": 220
+                }
+            ],
+            "activeZoneMinutes": {
+                "totalMinutes": 0,
+                "minutesInHeartRateZones": [
+                    {
+                        "minutes": 0,
+                        "zoneName": "Out of Range",
+                        "order": 0,
+                        "type": "OUT_OF_ZONE",
+                        "minuteMultiplier": 0
+                    },
+                    {
+                        "minutes": 0,
+                        "zoneName": "Fat Burn",
+                        "order": 1,
+                        "type": "FAT_BURN",
+                        "minuteMultiplier": 1
+                    },
+                    {
+                        "minutes": 0,
+                        "zoneName": "Cardio",
+                        "order": 2,
+                        "type": "CARDIO",
+                        "minuteMultiplier": 2
+                    },
+                    {
+                        "minutes": 0,
+                        "zoneName": "Peak",
+                        "order": 3,
+                        "type": "PEAK",
+                        "minuteMultiplier": 2
+                    }
+                ]
+            },
+            "inProgress": false,
+            "caloriesLink": "https://api.fitbit.com/1/user/-/activities/calories/date/2026-03-10/2026-03-10/1min/time/10:41/11:03.json",
+            "lastModified": "2026-03-10T21:40:56.319Z",
+            "startTime": "2026-03-10T10:41:00.000-04:00",
+            "originalStartTime": "2026-03-10T10:41:00.000-04:00",
+            "originalDuration": 1357946,
+            "elevationGain": 0.0,
+            "hasActiveZoneMinutes": true
+        },
+        {
+            "logId": 3947264663826918448,
+            "activityTypeId": 2131,
+            "activityName": "Weights",
+            "calories": 86,
+            "steps": 0,
+            "duration": 902284,
+            "activeDuration": 902284,
+            "activityLevel": [
+                {
+                    "minutes": 1,
+                    "name": "sedentary"
+                },
+                {
+                    "minutes": 0,
+                    "name": "lightly"
+                },
+                {
+                    "minutes": 14,
+                    "name": "fairly"
+                },
+                {
+                    "minutes": 0,
+                    "name": "very"
+                }
+            ],
+            "source": {
+                "type": "api",
+                "name": "Data Fetcher",
+                "id": "23V3V8",
+                "url": "https://www.fitbit.com/user/2DJ3GR",
+                "trackerFeatures": [
+                    "STEPS",
+                    "CALORIES",
+                    "HEARTRATE"
+                ]
+            },
+            "logType": "manual",
+            "manualValuesSpecified": {
+                "calories": true,
+                "distance": false,
+                "steps": false
+            },
+            "intervalWorkoutData": {
+                "intervalSummaries": [],
+                "numRepeats": 0
+            },
+            "heartRateZones": [
+                {
+                    "minutes": 15,
+                    "caloriesOut": 85.7956,
+                    "name": "Out of Range",
+                    "min": 30,
+                    "max": 220
+                },
+                {
+                    "minutes": 0,
+                    "caloriesOut": 0.0,
+                    "name": "Fat Burn",
+                    "min": 30,
+                    "max": 220
+                },
+                {
+                    "minutes": 0,
+                    "caloriesOut": 0.0,
+                    "name": "Cardio",
+                    "min": 30,
+                    "max": 220
+                },
+                {
+                    "minutes": 0,
+                    "caloriesOut": 0.0,
+                    "name": "Peak",
+                    "min": 30,
+                    "max": 220
+                }
+            ],
+            "activeZoneMinutes": {
+                "totalMinutes": 0,
+                "minutesInHeartRateZones": [
+                    {
+                        "minutes": 0,
+                        "zoneName": "Out of Range",
+                        "order": 0,
+                        "type": "OUT_OF_ZONE",
+                        "minuteMultiplier": 0
+                    },
+                    {
+                        "minutes": 0,
+                        "zoneName": "Fat Burn",
+                        "order": 1,
+                        "type": "FAT_BURN",
+                        "minuteMultiplier": 1
+                    },
+                    {
+                        "minutes": 0,
+                        "zoneName": "Cardio",
+                        "order": 2,
+                        "type": "CARDIO",
+                        "minuteMultiplier": 2
+                    },
+                    {
+                        "minutes": 0,
+                        "zoneName": "Peak",
+                        "order": 3,
+                        "type": "PEAK",
+                        "minuteMultiplier": 2
+                    }
+                ]
+            },
+            "inProgress": false,
+            "caloriesLink": "https://api.fitbit.com/1/user/-/activities/calories/date/2026-03-10/2026-03-10/1min/time/11:04/11:19.json",
+            "lastModified": "2026-03-10T12:04:54.717Z",
+            "startTime": "2026-03-10T11:04:00.000-04:00",
+            "originalStartTime": "2026-03-10T11:04:00.000-04:00",
+            "originalDuration": 902284,
+            "elevationGain": 0.0,
+            "hasActiveZoneMinutes": true
+        }
+    ]
+}

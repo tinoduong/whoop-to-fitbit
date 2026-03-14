@@ -142,5 +142,32 @@
         "avg_heart_rate": 134,
         "calories": 173,
         "distance_meter": null
+    },
+    {
+        "id": "8bb38ebb-86d6-45a4-b018-4f87bd2b19b2",
+        "sport_name": "running",
+        "start_time": "2026-03-13T10:13:45.074Z",
+        "end_time": "2026-03-13T10:39:24.465Z",
+        "avg_heart_rate": 154,
+        "calories": 326,
+        "distance_meter": 4.60346
+    },
+    {
+        "id": "4f98a328-306b-4727-a37b-2b25dbf00a36",
+        "sport_name": "weightlifting",
+        "start_time": "2026-03-13T10:40:06.495Z",
+        "end_time": "2026-03-13T11:02:54.159Z",
+        "avg_heart_rate": 132,
+        "calories": 171,
+        "distance_meter": null
+    },
+    {
+        "id": "6e378c73-fe7a-4c75-ba42-7100cacc12b6",
+        "sport_name": "running",
+        "start_time": "2026-03-14T15:33:57.659Z",
+        "end_time": "2026-03-14T16:26:38.033Z",
+        "avg_heart_rate": 142,
+        "calories": 524,
+        "distance_meter": 17.70895
     }
 ]
