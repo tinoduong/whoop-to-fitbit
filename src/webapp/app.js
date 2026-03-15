@@ -108,6 +108,11 @@ function sportClass(sport) {
   return map[sport] || 'sport-other';
 }
 
+// ===== FROZEN GOAL SNAPSHOT =====
+// All calorie targets use the values snapshotted at the time goals were saved,
+// not live weight. This prevents daily fluctuation from changing historical numbers.
+// goals.saved_tdee, goals.saved_deficit, goals.saved_target_intake are written on Save.
+
 function buildDailyMap() {
   const map = {};
   allMeals.forEach(meal => {
@@ -122,6 +127,23 @@ function buildDailyMap() {
     map[d].workoutCalories += w.calories || 0;
   });
   return map;
+}
+
+// Returns { targetIntake, tdee, deficit } for a given day's workout calories.
+// Uses frozen snapshot values saved at goal-save time — never live weight.
+// goals.saved_tdee and goals.saved_deficit are written once when you hit Save in Goals.
+function getTargetIntakeForDate(_date, workoutCalories) {
+  const tdee = goals.saved_tdee || null;
+  const deficit = goals.saved_deficit || 0;
+  if (tdee) {
+    return { targetIntake: (tdee + workoutCalories) - deficit, tdee, deficit };
+  }
+  // Fallback: goals never saved with a snapshot (legacy data or no goals set)
+  return {
+    targetIntake: (goals.daily_calorie_goal || 2000) + workoutCalories,
+    tdee: null,
+    deficit: 0,
+  };
 }
 
 // ===== AVAILABLE MONTHS =====
@@ -306,24 +328,6 @@ function renderDailySummary() {
 
   const dailyMap = buildDailyMap();
 
-  // Compute TDEE and daily deficit needed for per-day target calculation
-  let baseTDEE = 0;
-  let dailyDeficitNeeded = 0;
-  if (goals.dob && goals.height_in && allWeight.length) {
-    const age = calcAge(goals.dob);
-    const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
-    baseTDEE = calcTDEE(latestLbs, goals.height_in, age, goals.sex || 'male');
-    if (goals.target_weight && goals.goal_date) {
-      const today = new Date();
-      const goalDate = new Date(goals.goal_date);
-      const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
-      const lbsToLose = latestLbs - goals.target_weight;
-      if (lbsToLose > 0) {
-        dailyDeficitNeeded = Math.round((lbsToLose * 3500) / daysLeft);
-      }
-    }
-  }
-
   // Generate every day in the month regardless of data
   const [ymYear, ymMonth] = ym.split('-').map(Number);
   const daysInMonth = new Date(ymYear, ymMonth, 0).getDate();
@@ -332,15 +336,13 @@ function renderDailySummary() {
     sortedDates.push(`${ym}-${String(d).padStart(2, '0')}`);
   }
 
-  // Build a helper to compute per-day data
+  // Build a helper to compute per-day data using date-specific weight/deficit
   function getDayData(date) {
     const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
     const hasMeals = day.totalCaloriesIn > 0;
     const hasWorkout = day.workouts.length > 0;
     const sportNames = [...new Set(day.workouts.map(w => w.sport_name))];
-    const targetIntake = baseTDEE > 0
-      ? (baseTDEE + day.workoutCalories) - dailyDeficitNeeded
-      : (goals.daily_calorie_goal || 2000) + day.workoutCalories;
+    const { targetIntake } = getTargetIntakeForDate(date, day.workoutCalories);
     const delta = targetIntake - day.totalCaloriesIn;
     const metGoal = hasMeals && delta >= 0;
     return { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal };
@@ -448,7 +450,6 @@ function renderDailySummary() {
       weeklySummaryHtml = `<div class="cal-week-summary week-empty">${weightDeltaHtml || '—'}</div>`;
     }
 
-    // ===== WEEK COLUMN — now clickable =====
     return `<div class="cal-row">${weekDayCells}<div class="cal-week-col" onclick="openWeekModal('${weekSunday}')" style="cursor:pointer">${weeklySummaryHtml}</div></div>`;
   }).join('');
 
@@ -998,31 +999,13 @@ function openDayModal(date) {
 
   // Aggregate day-level macros
   const totalProtein = dayMeals.reduce((s, m) => s + (m.total_protein || 0), 0);
-  const totalCarbs   = dayMeals.reduce((s, m) =>
+  const totalCarbs = dayMeals.reduce((s, m) =>
     s + (m.items || []).reduce((si, i) => si + (i.totalCarbohydrate || 0), 0), 0);
-  const totalFat     = dayMeals.reduce((s, m) =>
+  const totalFat = dayMeals.reduce((s, m) =>
     s + (m.items || []).reduce((si, i) => si + (i.totalFat || 0), 0), 0);
 
-  // Compute target intake for the day
-  let baseTDEE = 0;
-  let dailyDeficitNeeded = 0;
-  if (goals.dob && goals.height_in && allWeight.length) {
-    const age = calcAge(goals.dob);
-    const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
-    baseTDEE = calcTDEE(latestLbs, goals.height_in, age, goals.sex || 'male');
-    if (goals.target_weight && goals.goal_date) {
-      const today = new Date();
-      const goalDate = new Date(goals.goal_date);
-      const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
-      const lbsToLose = latestLbs - goals.target_weight;
-      if (lbsToLose > 0) {
-        dailyDeficitNeeded = Math.round((lbsToLose * 3500) / daysLeft);
-      }
-    }
-  }
-  const targetIntake = baseTDEE > 0
-    ? (baseTDEE + day.workoutCalories) - dailyDeficitNeeded
-    : (goals.daily_calorie_goal || 2000) + day.workoutCalories;
+  // Use date-stable target intake
+  const { targetIntake } = getTargetIntakeForDate(date, day.workoutCalories);
   const delta = targetIntake - day.totalCaloriesIn;
   const metGoal = day.totalCaloriesIn > 0 && delta >= 0;
 
@@ -1042,13 +1025,13 @@ function openDayModal(date) {
   const dayPieId = `modal-day-pie-${date}`;
   const mealsHtml = dayMeals.length
     ? dayMeals.map((meal, idx) => {
-        const items = meal.items || [];
-        const mCarbs = items.reduce((s, i) => s + (i.totalCarbohydrate || 0), 0);
-        const mFat   = items.reduce((s, i) => s + (i.totalFat || 0), 0);
-        const mProt  = meal.total_protein || 0;
-        const pieId  = `modal-meal-pie-${date}-${idx}`;
-        setTimeout(() => renderMacroPie(pieId, mProt, mCarbs, mFat), 0);
-        return `
+      const items = meal.items || [];
+      const mCarbs = items.reduce((s, i) => s + (i.totalCarbohydrate || 0), 0);
+      const mFat = items.reduce((s, i) => s + (i.totalFat || 0), 0);
+      const mProt = meal.total_protein || 0;
+      const pieId = `modal-meal-pie-${date}-${idx}`;
+      setTimeout(() => renderMacroPie(pieId, mProt, mCarbs, mFat), 0);
+      return `
           <div class="modal-meal-entry">
             <canvas id="${pieId}" width="72" height="72" style="flex-shrink:0"></canvas>
             <div class="modal-meal-entry-info">
@@ -1064,7 +1047,7 @@ function openDayModal(date) {
               </div>
             </div>
           </div>`;
-      }).join('')
+    }).join('')
     : `<div class="day-modal-empty">No meals logged</div>`;
 
   const calStatus = day.totalCaloriesIn > 0
@@ -1124,30 +1107,13 @@ function openWeekModal(weekSunday) {
   const weekEnd = weekSaturday > todayStr ? todayStr : weekSaturday;
   const dailyMap = buildDailyMap();
 
-  // ---- Calorie targets (reuse same logic as calendar) ----
-  let baseTDEE = 0, dailyDeficitNeeded = 0;
-  if (goals.dob && goals.height_in && allWeight.length) {
-    const age = calcAge(goals.dob);
-    const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
-    baseTDEE = calcTDEE(latestLbs, goals.height_in, age, goals.sex || 'male');
-    if (goals.target_weight && goals.goal_date) {
-      const today = new Date();
-      const goalDate = new Date(goals.goal_date);
-      const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
-      const lbsToLose = latestLbs - goals.target_weight;
-      if (lbsToLose > 0) dailyDeficitNeeded = Math.round((lbsToLose * 3500) / daysLeft);
-    }
-  }
-
-  // ---- Calorie totals ----
+  // ---- Calorie totals using date-stable targets ----
   const daysWithMeals = weekDates.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
   const totalCaloriesIn = daysWithMeals.reduce((s, d) => s + dailyMap[d].totalCaloriesIn, 0);
   const totalTarget = daysWithMeals.reduce((s, d) => {
     const woCals = (dailyMap[d] || {}).workoutCalories || 0;
-    const target = baseTDEE > 0
-      ? (baseTDEE + woCals) - dailyDeficitNeeded
-      : (goals.daily_calorie_goal || 2000) + woCals;
-    return s + target;
+    const { targetIntake } = getTargetIntakeForDate(d, woCals);
+    return s + targetIntake;
   }, 0);
   const weekDelta = totalTarget - totalCaloriesIn;
   const weekMet = weekDelta >= 0;
@@ -1162,7 +1128,7 @@ function openWeekModal(weekSunday) {
   let weightHtml = '<div class="day-modal-empty">No weight data this week</div>';
   if (weekWeightEntries.length >= 2) {
     const startW = weekWeightEntries[0];
-    const endW   = weekWeightEntries[weekWeightEntries.length - 1];
+    const endW = weekWeightEntries[weekWeightEntries.length - 1];
     const wDelta = +(kgToLbs(endW.weight) - kgToLbs(startW.weight)).toFixed(1);
     const fDelta = +(endW.fat - startW.fat).toFixed(2);
     const wColor = wDelta <= 0 ? 'var(--green)' : 'var(--red)';
@@ -1212,8 +1178,8 @@ function openWeekModal(weekSunday) {
   // ---- Workouts list ----
   const workoutsHtml = allWeekWorkouts.length
     ? allWeekWorkouts
-        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
-        .map(w => `
+      .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+      .map(w => `
           <div class="day-modal-workout-row">
             <span style="color:var(--text-muted);min-width:70px">${formatDate(getDateFromISO(w.start_time))}</span>
             <span><span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span></span>
@@ -1224,24 +1190,22 @@ function openWeekModal(weekSunday) {
           </div>`).join('')
     : '<div class="day-modal-empty">No workouts this week</div>';
 
-  // ---- Per-day calorie breakdown table ----
+  // ---- Per-day calorie breakdown table using date-stable targets ----
   const dayRowsHtml = weekDates.map(date => {
     if (date > todayStr) return ''; // skip future days
     const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
     const hasAnyData = day.totalCaloriesIn > 0 || day.workouts.length > 0;
     if (!hasAnyData) return '';
     const woCals = day.workoutCalories;
-    const target = baseTDEE > 0
-      ? (baseTDEE + woCals) - dailyDeficitNeeded
-      : (goals.daily_calorie_goal || 2000) + woCals;
-    const d = target - day.totalCaloriesIn;
+    const { targetIntake } = getTargetIntakeForDate(date, woCals);
+    const d = targetIntake - day.totalCaloriesIn;
     const met = day.totalCaloriesIn > 0 && d >= 0;
     const sports = [...new Set(day.workouts.map(w => w.sport_name))];
     return `
       <tr style="border-bottom:1px solid var(--border)">
         <td style="padding:7px 6px;color:var(--text-muted);font-size:0.82rem;white-space:nowrap">${formatDate(date)}</td>
         <td style="padding:7px 6px;text-align:right;font-size:0.84rem">${day.totalCaloriesIn > 0 ? day.totalCaloriesIn : '—'}</td>
-        <td style="padding:7px 6px;text-align:right;font-size:0.84rem">${day.totalCaloriesIn > 0 ? target : '—'}</td>
+        <td style="padding:7px 6px;text-align:right;font-size:0.84rem">${day.totalCaloriesIn > 0 ? targetIntake : '—'}</td>
         <td style="padding:7px 6px;text-align:right;font-size:0.84rem;color:${day.totalCaloriesIn > 0 ? (met ? 'var(--green)' : 'var(--red)') : 'var(--text-muted)'}">
           ${day.totalCaloriesIn > 0 ? (d >= 0 ? '▼' + d : '▲' + Math.abs(d)) : '—'}
         </td>
@@ -1507,12 +1471,87 @@ function avgDailyWorkoutCals() {
 
 function renderTDEEPlan() {
   const container = document.getElementById('tdeeDetails');
+
+  // Show frozen snapshot if available
+  if (goals.saved_tdee) {
+    const tdee = goals.saved_tdee;
+    const bmr = goals.saved_bmr || '—';
+    const deficit = goals.saved_deficit || 0;
+    const targetIntake = goals.saved_target_intake || (tdee - deficit);
+    const savedDate = goals.saved_date ? formatDate(goals.saved_date) : 'unknown date';
+    const savedLbs = goals.saved_weight_lbs || '—';
+    const weeklyLoss = deficit > 0 ? (deficit * 7 / 3500).toFixed(2) : '0';
+    const feasible = deficit <= 1000;
+    const deficitColor = feasible ? 'var(--green)' : 'var(--danger)';
+    const warning = !feasible ? ' ⚠️ Deficit exceeds 1000 kcal/day — consider extending your goal date.' : '';
+
+    // Days left from today (display only — doesn't affect any targets)
+    let daysLeftHtml = '';
+    if (goals.goal_date) {
+      const daysLeft = Math.max(0, Math.round((new Date(goals.goal_date) - new Date()) / (1000 * 60 * 60 * 24)));
+      const currentLbs = allWeight.length ? kgToLbs(allWeight[allWeight.length - 1].weight) : null;
+      const lbsLeft = currentLbs && goals.target_weight
+        ? (currentLbs - goals.target_weight).toFixed(1)
+        : '—';
+
+      daysLeftHtml = `
+        <div class="tdee-stat">
+          <div class="stat-label">Days Remaining</div>
+          <div class="stat-value">${daysLeft}</div>
+          <div class="stat-sub">to ${goals.goal_date}</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">Lbs Left to Goal</div>
+          <div class="stat-value">${lbsLeft > 0 ? lbsLeft : '0'} lbs</div>
+          <div class="stat-sub">as of save date</div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px">
+        📌 Locked in on ${savedDate} at ${savedLbs} lbs — re-save Goals to recalculate.
+      </div>
+      <div class="tdee-grid">
+        <div class="tdee-stat">
+          <div class="stat-label">BMR (at rest)</div>
+          <div class="stat-value">${bmr}</div>
+          <div class="stat-sub">kcal/day if sedentary</div>
+        </div>
+        <div class="tdee-stat highlight">
+          <div class="stat-label">TDEE (baseline)</div>
+          <div class="stat-value">${tdee}</div>
+          <div class="stat-sub">kcal/day (lightly active)</div>
+        </div>
+        <div class="tdee-stat" style="border-color:${deficitColor}">
+          <div class="stat-label">Daily Deficit</div>
+          <div class="stat-value" style="color:${deficitColor}">${deficit > 0 ? deficit : 0} kcal</div>
+          <div class="stat-sub">${weeklyLoss > 0 ? weeklyLoss + ' lbs/week' : 'At goal!'}</div>
+        </div>
+        <div class="tdee-stat highlight-green">
+          <div class="stat-label">Target Daily Intake</div>
+          <div class="stat-value">${targetIntake > 0 ? targetIntake : '—'}</div>
+          <div class="stat-sub">kcal/day (+ workout cals)</div>
+        </div>
+        ${daysLeftHtml}
+      </div>
+      <div class="tdee-breakdown">
+        <strong>How this is calculated:</strong><br>
+        TDEE of <strong>${tdee} kcal</strong> (Mifflin-St Jeor, lightly active) minus a daily deficit of
+        <strong>${deficit} kcal</strong> = <strong>${targetIntake} kcal/day</strong> base target.
+        On workout days, add that day's burned calories to your target.${warning}
+      </div>
+    `;
+    return;
+  }
+
+  // No snapshot yet — show form-driven preview so user knows what they'll be saving
   const dob = document.getElementById('dob').value;
   const heightIn = parseFloat(document.getElementById('heightIn').value);
   const sex = document.getElementById('sex').value;
 
   if (!dob || !heightIn) {
-    container.innerHTML = '<div class="tdee-no-goal">Fill in your stats above to see your calorie plan.</div>';
+    container.innerHTML = '<div class="tdee-no-goal">Fill in your stats above and hit Save to lock in your calorie plan.</div>';
     return;
   }
 
@@ -1525,9 +1564,13 @@ function renderTDEEPlan() {
 
   const tdee = calcTDEE(latestWeight, heightIn, age, sex);
   const bmr = Math.round(calcBMR(latestWeight, heightIn, age, sex));
-  const effectiveTDEE = tdee;
+  const tw = parseFloat(document.getElementById('targetWeight').value);
+  const gd = document.getElementById('goalDate').value;
 
-  let html = `
+  let previewHtml = `
+    <div style="font-size:0.75rem;color:var(--accent);margin-bottom:12px">
+      ⚠️ Preview only — hit Save to lock these numbers in.
+    </div>
     <div class="tdee-grid">
       <div class="tdee-stat">
         <div class="stat-label">BMR (at rest)</div>
@@ -1539,67 +1582,41 @@ function renderTDEEPlan() {
         <div class="stat-value">${tdee}</div>
         <div class="stat-sub">kcal/day (lightly active)</div>
       </div>
-      <div class="tdee-stat highlight-green">
-        <div class="stat-label">Effective Daily Budget</div>
-        <div class="stat-value">${effectiveTDEE}</div>
-        <div class="stat-sub">kcal/day (your TDEE)</div>
-      </div>
-    </div>
   `;
 
-  if (goals.target_weight && goals.goal_date) {
+  if (tw && gd) {
     const today = new Date();
-    const goalDate = new Date(goals.goal_date);
+    const goalDate = new Date(gd);
     const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
-    const currentLbs = latestWeight;
-    const targetLbs = goals.target_weight;
-    const lbsToLose = currentLbs - targetLbs;
-    const totalCalDeficitNeeded = lbsToLose * 3500;
-    const dailyDeficitNeeded = Math.round(totalCalDeficitNeeded / daysLeft);
-    const targetDailyIntake = effectiveTDEE - dailyDeficitNeeded;
-    const weeklyLoss = (dailyDeficitNeeded * 7 / 3500).toFixed(2);
-
-    const feasible = dailyDeficitNeeded <= 1000;
+    const lbsToLose = latestWeight - tw;
+    const deficit = lbsToLose > 0 ? Math.round((lbsToLose * 3500) / daysLeft) : 0;
+    const targetIntake = tdee - deficit;
+    const feasible = deficit <= 1000;
     const deficitColor = feasible ? 'var(--green)' : 'var(--danger)';
-    const warning = !feasible ? ' ⚠️ This deficit exceeds the safe limit of 1000 kcal/day. Consider extending your goal date.' : '';
-
-    html += `
-      <div class="tdee-grid">
-        <div class="tdee-stat">
-          <div class="stat-label">Days to Goal</div>
-          <div class="stat-value">${daysLeft}</div>
-          <div class="stat-sub">by ${goals.goal_date}</div>
-        </div>
-        <div class="tdee-stat">
-          <div class="stat-label">Weight to Lose</div>
-          <div class="stat-value">${lbsToLose > 0 ? lbsToLose.toFixed(1) : '0'} lbs</div>
-          <div class="stat-sub">${currentLbs} → ${targetLbs} lbs</div>
-        </div>
-        <div class="tdee-stat" style="border-color:${deficitColor}">
-          <div class="stat-label">Daily Deficit Needed</div>
-          <div class="stat-value" style="color:${deficitColor}">${dailyDeficitNeeded > 0 ? dailyDeficitNeeded : 0} kcal</div>
-          <div class="stat-sub">${weeklyLoss > 0 ? weeklyLoss + ' lbs/week' : 'At goal!'}</div>
-        </div>
-        <div class="tdee-stat" style="border-color:var(--accent2)">
-          <div class="stat-label">Target Daily Intake</div>
-          <div class="stat-value" style="color:var(--accent2)">${targetDailyIntake > 0 ? targetDailyIntake : '—'}</div>
-          <div class="stat-sub">kcal/day (+ workout cals on active days)</div>
-        </div>
+    previewHtml += `
+      <div class="tdee-stat" style="border-color:${deficitColor}">
+        <div class="stat-label">Daily Deficit</div>
+        <div class="stat-value" style="color:${deficitColor}">${deficit} kcal</div>
+        <div class="stat-sub">${(deficit * 7 / 3500).toFixed(2)} lbs/week</div>
       </div>
-      <div class="tdee-breakdown">
-        <strong>How this is calculated:</strong><br>
-        Your TDEE of <strong>${tdee} kcal</strong> (Mifflin-St Jeor, lightly active) is your effective daily budget.<br>
-        To lose <strong>${lbsToLose > 0 ? lbsToLose.toFixed(1) : 0} lbs</strong> in <strong>${daysLeft} days</strong>, you need a total deficit of <strong>${Math.round(totalCalDeficitNeeded)} kcal</strong> (3,500 kcal per lb of fat).<br>
-        That means eating <strong>${targetDailyIntake > 0 ? targetDailyIntake : '—'} kcal/day</strong> — a deficit of <strong>${dailyDeficitNeeded > 0 ? dailyDeficitNeeded : 0} kcal/day</strong>. On workout days, add that day's burned calories to your intake target.${warning}
+      <div class="tdee-stat highlight-green">
+        <div class="stat-label">Target Daily Intake</div>
+        <div class="stat-value">${targetIntake > 0 ? targetIntake : '—'}</div>
+        <div class="stat-sub">kcal/day (+ workout cals)</div>
       </div>
     `;
-  } else if (goals.target_weight && !goals.goal_date) {
-    html += `<div class="tdee-no-goal">Set a Goal Date above to see your required daily deficit.</div>`;
   } else {
-    html += `<div class="tdee-no-goal">Set a Target Weight and Goal Date to see your personalized calorie plan.</div>`;
+    previewHtml += `
+      <div class="tdee-stat highlight-green">
+        <div class="stat-label">Effective Daily Budget</div>
+        <div class="stat-value">${tdee}</div>
+        <div class="stat-sub">set target weight + date for deficit</div>
+      </div>
+    `;
   }
 
-  container.innerHTML = html;
+  previewHtml += `</div>`;
+  container.innerHTML = previewHtml;
 }
 
 // ===== GOALS =====
@@ -1699,22 +1716,36 @@ function setupGoalsForm() {
     const heightIn = document.getElementById('heightIn').value;
     const sex = document.getElementById('sex').value;
 
-    let dailyCalorieGoal = 2000;
-    if (dob && heightIn && tw && gd && allWeight.length) {
+    // Snapshot TDEE, deficit, and target intake from today's weight at save time.
+    // These frozen values are used for all calendar/modal calculations going forward
+    // so that daily weight fluctuation doesn't change historical over/under numbers.
+    let savedTDEE = null, savedBMR = null, savedDeficit = 0, savedTargetIntake = null;
+    let savedWeightLbs = null, savedDate = null, dailyCalorieGoal = 2000;
+
+    if (dob && heightIn && allWeight.length) {
       const age = calcAge(dob);
       const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
-      const tdee = calcTDEE(latestLbs, parseFloat(heightIn), age, sex);
-      const effectiveTDEE = tdee;
-      const today = new Date();
-      const goalDate = new Date(gd);
-      const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
-      const lbsToLose = latestLbs - parseFloat(tw);
-      if (lbsToLose > 0) {
-        const dailyDeficit = Math.round((lbsToLose * 3500) / daysLeft);
-        dailyCalorieGoal = Math.max(1200, effectiveTDEE - dailyDeficit);
+      savedWeightLbs = latestLbs;
+      savedDate = new Date().toISOString().substring(0, 10);
+      savedTDEE = calcTDEE(latestLbs, parseFloat(heightIn), age, sex);
+      savedBMR = Math.round(calcBMR(latestLbs, parseFloat(heightIn), age, sex));
+
+      if (tw && gd) {
+        const today = new Date();
+        const goalDate = new Date(gd);
+        const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
+        const lbsToLose = latestLbs - parseFloat(tw);
+        if (lbsToLose > 0) {
+          savedDeficit = Math.round((lbsToLose * 3500) / daysLeft);
+          savedTargetIntake = Math.max(1200, savedTDEE - savedDeficit);
+        } else {
+          savedDeficit = 0;
+          savedTargetIntake = savedTDEE;
+        }
       } else {
-        dailyCalorieGoal = effectiveTDEE;
+        savedTargetIntake = savedTDEE;
       }
+      dailyCalorieGoal = savedTargetIntake;
     }
 
     goals = {
@@ -1725,6 +1756,13 @@ function setupGoalsForm() {
       height_in: heightIn ? parseFloat(heightIn) : null,
       sex: sex || 'male',
       daily_calorie_goal: dailyCalorieGoal,
+      // Frozen snapshot — all calorie target math uses these, not live weight
+      saved_tdee: savedTDEE,
+      saved_bmr: savedBMR,
+      saved_deficit: savedDeficit,
+      saved_target_intake: savedTargetIntake,
+      saved_weight_lbs: savedWeightLbs,
+      saved_date: savedDate,
     };
 
     await fetch('/api/goals', {
