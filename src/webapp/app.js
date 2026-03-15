@@ -448,7 +448,8 @@ function renderDailySummary() {
       weeklySummaryHtml = `<div class="cal-week-summary week-empty">${weightDeltaHtml || '—'}</div>`;
     }
 
-    return `<div class="cal-row">${weekDayCells}<div class="cal-week-col">${weeklySummaryHtml}</div></div>`;
+    // ===== WEEK COLUMN — now clickable =====
+    return `<div class="cal-row">${weekDayCells}<div class="cal-week-col" onclick="openWeekModal('${weekSunday}')" style="cursor:pointer">${weeklySummaryHtml}</div></div>`;
   }).join('');
 
   container.innerHTML = `<div class="cal-grid">${html}</div>`;
@@ -829,6 +830,11 @@ function setupDayModal() {
       }
       .meal-pie-wrap { flex-shrink: 0; }
 
+      /* ===== WEEK MODAL wider ===== */
+      .day-modal.week-modal {
+        width: min(860px, 95vw);
+      }
+
       /* ===== LOG MEAL MODAL ===== */
       .log-meal-btn {
         background: linear-gradient(135deg, #6c63ff, #5a52d5);
@@ -977,9 +983,15 @@ function setupDayModal() {
 function closeDayModal() {
   const modal = document.getElementById('dayModal');
   if (modal) modal.style.display = 'none';
+  // Reset width in case week modal widened it
+  const inner = document.getElementById('dayModalInner');
+  if (inner) inner.classList.remove('week-modal');
 }
 
 function openDayModal(date) {
+  const inner = document.getElementById('dayModalInner');
+  inner.classList.remove('week-modal');
+
   const dailyMap = buildDailyMap();
   const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
   const dayMeals = allMeals.filter(m => m.date === date);
@@ -1093,6 +1105,209 @@ function openDayModal(date) {
   }
 }
 
+// ===== WEEK MODAL =====
+function openWeekModal(weekSunday) {
+  const inner = document.getElementById('dayModalInner');
+  inner.classList.add('week-modal');
+
+  // Build the 7 dates of this week
+  const weekDates = [];
+  const start = new Date(weekSunday + 'T00:00:00');
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    weekDates.push(d.toISOString().substring(0, 10));
+  }
+
+  const todayStr = new Date().toISOString().substring(0, 10);
+  const weekSaturday = weekDates[6];
+  const weekEnd = weekSaturday > todayStr ? todayStr : weekSaturday;
+  const dailyMap = buildDailyMap();
+
+  // ---- Calorie targets (reuse same logic as calendar) ----
+  let baseTDEE = 0, dailyDeficitNeeded = 0;
+  if (goals.dob && goals.height_in && allWeight.length) {
+    const age = calcAge(goals.dob);
+    const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
+    baseTDEE = calcTDEE(latestLbs, goals.height_in, age, goals.sex || 'male');
+    if (goals.target_weight && goals.goal_date) {
+      const today = new Date();
+      const goalDate = new Date(goals.goal_date);
+      const daysLeft = Math.max(1, Math.round((goalDate - today) / (1000 * 60 * 60 * 24)));
+      const lbsToLose = latestLbs - goals.target_weight;
+      if (lbsToLose > 0) dailyDeficitNeeded = Math.round((lbsToLose * 3500) / daysLeft);
+    }
+  }
+
+  // ---- Calorie totals ----
+  const daysWithMeals = weekDates.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
+  const totalCaloriesIn = daysWithMeals.reduce((s, d) => s + dailyMap[d].totalCaloriesIn, 0);
+  const totalTarget = daysWithMeals.reduce((s, d) => {
+    const woCals = (dailyMap[d] || {}).workoutCalories || 0;
+    const target = baseTDEE > 0
+      ? (baseTDEE + woCals) - dailyDeficitNeeded
+      : (goals.daily_calorie_goal || 2000) + woCals;
+    return s + target;
+  }, 0);
+  const weekDelta = totalTarget - totalCaloriesIn;
+  const weekMet = weekDelta >= 0;
+
+  // ---- Workout totals ----
+  const allWeekWorkouts = weekDates.flatMap(d => (dailyMap[d] || {}).workouts || []);
+  const workoutDays = [...new Set(allWeekWorkouts.map(w => getDateFromISO(w.start_time)))];
+  const totalWorkoutCals = allWeekWorkouts.reduce((s, w) => s + (w.calories || 0), 0);
+
+  // ---- Weight / body fat ----
+  const weekWeightEntries = allWeight.filter(w => w.date >= weekSunday && w.date <= weekEnd);
+  let weightHtml = '<div class="day-modal-empty">No weight data this week</div>';
+  if (weekWeightEntries.length >= 2) {
+    const startW = weekWeightEntries[0];
+    const endW   = weekWeightEntries[weekWeightEntries.length - 1];
+    const wDelta = +(kgToLbs(endW.weight) - kgToLbs(startW.weight)).toFixed(1);
+    const fDelta = +(endW.fat - startW.fat).toFixed(2);
+    const wColor = wDelta <= 0 ? 'var(--green)' : 'var(--red)';
+    const fColor = fDelta <= 0 ? 'var(--green)' : 'var(--red)';
+    weightHtml = `
+      <div class="tdee-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="tdee-stat">
+          <div class="stat-label">Start Weight</div>
+          <div class="stat-value">${kgToLbs(startW.weight)} lbs</div>
+          <div class="stat-sub">${formatDate(startW.date)}</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">End Weight</div>
+          <div class="stat-value">${kgToLbs(endW.weight)} lbs</div>
+          <div class="stat-sub">${formatDate(endW.date)}</div>
+        </div>
+        <div class="tdee-stat" style="border-color:${wColor}">
+          <div class="stat-label">Weight Δ</div>
+          <div class="stat-value" style="color:${wColor}">${wDelta > 0 ? '+' : ''}${wDelta} lbs</div>
+          <div class="stat-sub">${endW.fat?.toFixed(2)}% fat now</div>
+        </div>
+        <div class="tdee-stat" style="border-color:${fColor}">
+          <div class="stat-label">Body Fat Δ</div>
+          <div class="stat-value" style="color:${fColor}">${fDelta > 0 ? '+' : ''}${fDelta}%</div>
+          <div class="stat-sub">${startW.fat?.toFixed(2)}% → ${endW.fat?.toFixed(2)}%</div>
+        </div>
+      </div>
+    `;
+  } else if (weekWeightEntries.length === 1) {
+    const w = weekWeightEntries[0];
+    weightHtml = `
+      <div class="tdee-grid" style="grid-template-columns:repeat(2,1fr)">
+        <div class="tdee-stat">
+          <div class="stat-label">Weight</div>
+          <div class="stat-value">${kgToLbs(w.weight)} lbs</div>
+          <div class="stat-sub">${formatDate(w.date)}</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">Body Fat</div>
+          <div class="stat-value">${w.fat?.toFixed(2)}%</div>
+          <div class="stat-sub">single reading this week</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- Workouts list ----
+  const workoutsHtml = allWeekWorkouts.length
+    ? allWeekWorkouts
+        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+        .map(w => `
+          <div class="day-modal-workout-row">
+            <span style="color:var(--text-muted);min-width:70px">${formatDate(getDateFromISO(w.start_time))}</span>
+            <span><span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span></span>
+            <span>⏱ ${formatDuration(w.start_time, w.end_time)}</span>
+            <span>❤️ ${w.avg_heart_rate} bpm</span>
+            <span>🔥 ${w.calories} kcal</span>
+            ${w.distance_meter != null ? `<span>📍 ${(w.distance_meter / 1609.34).toFixed(2)} mi</span>` : ''}
+          </div>`).join('')
+    : '<div class="day-modal-empty">No workouts this week</div>';
+
+  // ---- Per-day calorie breakdown table ----
+  const dayRowsHtml = weekDates.map(date => {
+    if (date > todayStr) return ''; // skip future days
+    const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
+    const hasAnyData = day.totalCaloriesIn > 0 || day.workouts.length > 0;
+    if (!hasAnyData) return '';
+    const woCals = day.workoutCalories;
+    const target = baseTDEE > 0
+      ? (baseTDEE + woCals) - dailyDeficitNeeded
+      : (goals.daily_calorie_goal || 2000) + woCals;
+    const d = target - day.totalCaloriesIn;
+    const met = day.totalCaloriesIn > 0 && d >= 0;
+    const sports = [...new Set(day.workouts.map(w => w.sport_name))];
+    return `
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:7px 6px;color:var(--text-muted);font-size:0.82rem;white-space:nowrap">${formatDate(date)}</td>
+        <td style="padding:7px 6px;text-align:right;font-size:0.84rem">${day.totalCaloriesIn > 0 ? day.totalCaloriesIn : '—'}</td>
+        <td style="padding:7px 6px;text-align:right;font-size:0.84rem">${day.totalCaloriesIn > 0 ? target : '—'}</td>
+        <td style="padding:7px 6px;text-align:right;font-size:0.84rem;color:${day.totalCaloriesIn > 0 ? (met ? 'var(--green)' : 'var(--red)') : 'var(--text-muted)'}">
+          ${day.totalCaloriesIn > 0 ? (d >= 0 ? '▼' + d : '▲' + Math.abs(d)) : '—'}
+        </td>
+        <td style="padding:7px 6px;text-align:right;font-size:0.82rem;color:var(--text-muted)">${woCals > 0 ? '🔥 ' + woCals : '—'}</td>
+        <td style="padding:7px 6px;font-size:0.8rem">${sports.map(s => `<span class="sport-tag ${sportClass(s)}">${s.replace(/-/g, ' ')}</span>`).join(' ') || '—'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const weekLabel = `${formatDate(weekSunday)} – ${formatDate(weekSaturday)}`;
+
+  document.getElementById('dayModalContent').innerHTML = `
+    <h2>📆 Week of ${weekLabel}</h2>
+
+    <div class="day-modal-section">
+      <h3>🍽 Calories · ${daysWithMeals.length} days logged</h3>
+      <div class="tdee-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:${daysWithMeals.length ? '14px' : '0'}">
+        <div class="tdee-stat">
+          <div class="stat-label">Total Consumed</div>
+          <div class="stat-value">${totalCaloriesIn || '—'}</div>
+          <div class="stat-sub">kcal across ${daysWithMeals.length} day${daysWithMeals.length !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">Total Target</div>
+          <div class="stat-value">${totalTarget || '—'}</div>
+          <div class="stat-sub">kcal (deficit-adjusted)</div>
+        </div>
+        <div class="tdee-stat" style="border-color:${daysWithMeals.length ? (weekMet ? 'var(--green)' : 'var(--red)') : 'var(--border)'}">
+          <div class="stat-label">Weekly ${weekMet ? 'Surplus' : 'Overage'}</div>
+          <div class="stat-value" style="color:${daysWithMeals.length ? (weekMet ? 'var(--green)' : 'var(--red)') : 'var(--text-muted)'}">
+            ${daysWithMeals.length ? (weekMet ? '▼' : '▲') + ' ' + Math.abs(weekDelta) : '—'}
+          </div>
+          <div class="stat-sub">${daysWithMeals.length ? 'kcal ' + (weekMet ? 'under' : 'over') + ' budget' : 'no meals logged'}</div>
+        </div>
+      </div>
+      ${daysWithMeals.length > 0 ? `
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="text-align:left;padding:6px;font-size:0.75rem;color:var(--text-muted);font-weight:500">Day</th>
+              <th style="text-align:right;padding:6px;font-size:0.75rem;color:var(--text-muted);font-weight:500">Ate</th>
+              <th style="text-align:right;padding:6px;font-size:0.75rem;color:var(--text-muted);font-weight:500">Target</th>
+              <th style="text-align:right;padding:6px;font-size:0.75rem;color:var(--text-muted);font-weight:500">Δ</th>
+              <th style="text-align:right;padding:6px;font-size:0.75rem;color:var(--text-muted);font-weight:500">Burned</th>
+              <th style="padding:6px;font-size:0.75rem;color:var(--text-muted);font-weight:500">Workouts</th>
+            </tr>
+          </thead>
+          <tbody>${dayRowsHtml}</tbody>
+        </table>
+      ` : ''}
+    </div>
+
+    <div class="day-modal-section">
+      <h3>🏋️ Workouts · ${workoutDays.length} day${workoutDays.length !== 1 ? 's' : ''} · ${totalWorkoutCals} kcal burned</h3>
+      ${workoutsHtml}
+    </div>
+
+    <div class="day-modal-section">
+      <h3>⚖️ Weight & Body Composition</h3>
+      ${weightHtml}
+    </div>
+  `;
+
+  document.getElementById('dayModal').style.display = 'flex';
+}
+
 // ===== LOG MEAL MODAL =====
 function setupLogMealModal() {
   // Inject the modal HTML
@@ -1127,7 +1342,6 @@ function setupLogMealModal() {
   }
 
   // Inject the "+ Log Meal" button into the meals tab filter bar
-  // Looks for the meals filter row; appends button after the reset button
   const mealResetBtn = document.getElementById('mealResetBtn');
   if (mealResetBtn && !document.getElementById('openLogMealBtn')) {
     const btn = document.createElement('button');

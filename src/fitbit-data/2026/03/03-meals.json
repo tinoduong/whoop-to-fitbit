@@ -1292,5 +1292,138 @@
         "total_protein": 35.6,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-15T08:59:08.018116",
+        "date": "2026-03-14",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2.5 glasses of red wine; 2.5oz french bread; 1.5 oz of foie terrine; 10 candied pecans; 2 small figs; 1 tsp of pepper jelly; 1 serving of cassoulet; 1 chocolate soufflet, 1/2 scoop of raspberry sherbert, 1/4 cup mixed berries",
+        "items": [
+            {
+                "foodName": "Red Wine",
+                "calories": 313,
+                "protein": 0.3,
+                "totalCarbohydrate": 7.8,
+                "totalFat": 0.0,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38275075723
+            },
+            {
+                "foodName": "French Bread",
+                "calories": 195,
+                "protein": 6.8,
+                "totalCarbohydrate": 36.4,
+                "totalFat": 3.2,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38273815447
+            },
+            {
+                "foodName": "Foie Gras Terrine",
+                "calories": 203,
+                "protein": 8.1,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 18.3,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38275095417
+            },
+            {
+                "foodName": "Candied Pecans",
+                "calories": 200,
+                "protein": 2.7,
+                "totalCarbohydrate": 16.0,
+                "totalFat": 15.0,
+                "amount": 10,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38274888871
+            },
+            {
+                "foodName": "Fresh Figs",
+                "calories": 74,
+                "protein": 0.8,
+                "totalCarbohydrate": 19.1,
+                "totalFat": 0.3,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38273953316
+            },
+            {
+                "foodName": "Pepper Jelly",
+                "calories": 18,
+                "protein": 0.0,
+                "totalCarbohydrate": 4.5,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38274269451
+            },
+            {
+                "foodName": "Cassoulet",
+                "calories": 420,
+                "protein": 28.0,
+                "totalCarbohydrate": 35.0,
+                "totalFat": 18.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38274485714
+            },
+            {
+                "foodName": "Chocolate Souffle",
+                "calories": 340,
+                "protein": 8.5,
+                "totalCarbohydrate": 32.0,
+                "totalFat": 20.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38275075731
+            },
+            {
+                "foodName": "Raspberry Sherbet",
+                "calories": 65,
+                "protein": 0.5,
+                "totalCarbohydrate": 16.0,
+                "totalFat": 1.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38274505322
+            },
+            {
+                "foodName": "Mixed Berries",
+                "calories": 20,
+                "protein": 0.3,
+                "totalCarbohydrate": 4.8,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38274485716
+            }
+        ],
+        "total_calories": 1848,
+        "total_protein": 56.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
