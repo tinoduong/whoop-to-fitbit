@@ -348,24 +348,27 @@ function renderDailySummary() {
     return { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal };
   }
 
-  // Group sortedDates into calendar weeks (Sun–Sat)
+  // Group sortedDates into calendar weeks (Mon–Sun)
   const firstDate = new Date(sortedDates[0] + 'T00:00:00');
   const lastDate = new Date(sortedDates[sortedDates.length - 1] + 'T00:00:00');
 
-  // Start from the Sunday of the first week
-  const startSunday = new Date(firstDate);
-  startSunday.setDate(firstDate.getDate() - firstDate.getDay());
+  // Start from the Monday of the first week
+  // getDay(): 0=Sun, 1=Mon, ..., 6=Sat
+  // (dow + 6) % 7 maps Sun->6, Mon->0, Tue->1, ..., Sat->5
+  const startMonday = new Date(firstDate);
+  startMonday.setDate(firstDate.getDate() - ((firstDate.getDay() + 6) % 7));
 
-  // End on the Saturday of the last week
-  const endSaturday = new Date(lastDate);
-  endSaturday.setDate(lastDate.getDate() + (6 - lastDate.getDay()));
+  // End on the Sunday of the last week
+  const lastDow = lastDate.getDay(); // 0=Sun means already end of week
+  const endSunday = new Date(lastDate);
+  endSunday.setDate(lastDate.getDate() + ((7 - lastDow) % 7));
 
-  const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  // Build weeks array
+  // Build weeks array (each week: Mon[0] … Sun[6])
   const weeks = [];
-  let cur = new Date(startSunday);
-  while (cur <= endSaturday) {
+  let cur = new Date(startMonday);
+  while (cur <= endSunday) {
     const week = [];
     for (let i = 0; i < 7; i++) {
       week.push(cur.toISOString().substring(0, 10));
@@ -411,11 +414,11 @@ function renderDailySummary() {
     const weekMealDays = weekDaysInMonth.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
     const todayStr = new Date().toISOString().substring(0, 10);
 
-    const weekSunday = week[0];
-    const weekSaturday = week[6];
-    const weekEnd = weekSaturday > todayStr ? todayStr : weekSaturday;
+    const weekMonday = week[0];
+    const weekSunday = week[6];
+    const weekEnd = weekSunday > todayStr ? todayStr : weekSunday;
 
-    const weekWeightEntries = allWeight.filter(w => w.date >= weekSunday && w.date <= weekEnd);
+    const weekWeightEntries = allWeight.filter(w => w.date >= weekMonday && w.date <= weekEnd);
     let weightDeltaHtml = '';
     if (weekWeightEntries.length >= 2) {
       const startW = kgToLbs(weekWeightEntries[0].weight);
@@ -450,7 +453,7 @@ function renderDailySummary() {
       weeklySummaryHtml = `<div class="cal-week-summary week-empty">${weightDeltaHtml || '—'}</div>`;
     }
 
-    return `<div class="cal-row">${weekDayCells}<div class="cal-week-col" onclick="openWeekModal('${weekSunday}')" style="cursor:pointer">${weeklySummaryHtml}</div></div>`;
+    return `<div class="cal-row">${weekDayCells}<div class="cal-week-col" onclick="openWeekModal('${weekMonday}')" style="cursor:pointer">${weeklySummaryHtml}</div></div>`;
   }).join('');
 
   container.innerHTML = `<div class="cal-grid">${html}</div>`;
@@ -1089,13 +1092,14 @@ function openDayModal(date) {
 }
 
 // ===== WEEK MODAL =====
-function openWeekModal(weekSunday) {
+// weekMonday: ISO date string of the Monday that starts this week
+function openWeekModal(weekMonday) {
   const inner = document.getElementById('dayModalInner');
   inner.classList.add('week-modal');
 
-  // Build the 7 dates of this week
+  // Build the 7 dates of this week (Mon–Sun)
   const weekDates = [];
-  const start = new Date(weekSunday + 'T00:00:00');
+  const start = new Date(weekMonday + 'T00:00:00');
   for (let i = 0; i < 7; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
@@ -1103,8 +1107,8 @@ function openWeekModal(weekSunday) {
   }
 
   const todayStr = new Date().toISOString().substring(0, 10);
-  const weekSaturday = weekDates[6];
-  const weekEnd = weekSaturday > todayStr ? todayStr : weekSaturday;
+  const weekSunday = weekDates[6];
+  const weekEnd = weekSunday > todayStr ? todayStr : weekSunday;
   const dailyMap = buildDailyMap();
 
   // ---- Calorie totals using date-stable targets ----
@@ -1124,7 +1128,7 @@ function openWeekModal(weekSunday) {
   const totalWorkoutCals = allWeekWorkouts.reduce((s, w) => s + (w.calories || 0), 0);
 
   // ---- Weight / body fat ----
-  const weekWeightEntries = allWeight.filter(w => w.date >= weekSunday && w.date <= weekEnd);
+  const weekWeightEntries = allWeight.filter(w => w.date >= weekMonday && w.date <= weekEnd);
   let weightHtml = '<div class="day-modal-empty">No weight data this week</div>';
   if (weekWeightEntries.length >= 2) {
     const startW = weekWeightEntries[0];
@@ -1215,7 +1219,7 @@ function openWeekModal(weekSunday) {
     `;
   }).join('');
 
-  const weekLabel = `${formatDate(weekSunday)} – ${formatDate(weekSaturday)}`;
+  const weekLabel = `${formatDate(weekMonday)} – ${formatDate(weekSunday)}`;
 
   document.getElementById('dayModalContent').innerHTML = `
     <h2>📆 Week of ${weekLabel}</h2>

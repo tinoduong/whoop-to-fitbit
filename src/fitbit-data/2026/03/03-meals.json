@@ -1386,5 +1386,140 @@
         "total_protein": 15.7,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-15T17:44:38.414552",
+        "date": "2026-03-15",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 amaretto sour cocktail",
+        "items": [
+            {
+                "foodName": "Amaretto Sour Cocktail",
+                "calories": 165,
+                "protein": 0.1,
+                "totalCarbohydrate": 16.5,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38277204916
+            }
+        ],
+        "total_calories": 165,
+        "total_protein": 0.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-15T19:29:56.614829",
+        "date": "2026-03-15",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1 medium skinless roasted chicken thigh, 1 medium skinless roasted chicken drumstick, 1/2 cup of roast sweet potato, 1 cup roasted carrots, .75 cup roasted brussel sprouts",
+        "items": [
+            {
+                "foodName": "Skinless Roasted Chicken Thigh",
+                "calories": 180,
+                "protein": 25.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38278495937
+            },
+            {
+                "foodName": "Skinless Roasted Chicken Drumstick",
+                "calories": 76,
+                "protein": 12.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38278338425
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 51,
+                "protein": 1.1,
+                "totalCarbohydrate": 11.8,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38276469272
+            },
+            {
+                "foodName": "Roasted Carrots",
+                "calories": 55,
+                "protein": 1.2,
+                "totalCarbohydrate": 12.8,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38278190851
+            },
+            {
+                "foodName": "Roasted Brussels Sprouts",
+                "calories": 28,
+                "protein": 2.0,
+                "totalCarbohydrate": 5.5,
+                "totalFat": 0.2,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38278033489
+            }
+        ],
+        "total_calories": 390,
+        "total_protein": 41.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-15T19:31:19.806099",
+        "date": "2026-03-15",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "7.2 oz Chimay Red beer, 1 oz chick liver",
+        "items": [
+            {
+                "foodName": "Chimay Red beer",
+                "calories": 155,
+                "protein": 1.4,
+                "totalCarbohydrate": 11.2,
+                "totalFat": 0.0,
+                "amount": 7.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38277620220
+            },
+            {
+                "foodName": "Chicken liver",
+                "calories": 47,
+                "protein": 6.8,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 1.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38277551391
+            }
+        ],
+        "total_calories": 202,
+        "total_protein": 8.2,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
