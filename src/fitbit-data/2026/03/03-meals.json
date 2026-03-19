@@ -2109,5 +2109,116 @@
         "total_protein": 15.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-19T07:59:41.723051",
+        "date": "2026-03-19",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "5.6 oz kirkland lightly breaded chicken chunks (140 calories per 3oz), 1/4 cup of black lentils, 1/4 chickpeas, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Kirkland Lightly Breaded Chicken Chunks",
+                "calories": 261,
+                "protein": 28.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 11.2,
+                "amount": 5.6,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38301104978
+            },
+            {
+                "foodName": "Black Lentils",
+                "calories": 57,
+                "protein": 4.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38302274094
+            },
+            {
+                "foodName": "Chickpeas",
+                "calories": 67,
+                "protein": 3.0,
+                "totalCarbohydrate": 11.0,
+                "totalFat": 1.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38300791162
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38301045859
+            }
+        ],
+        "total_calories": 390,
+        "total_protein": 36.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-19T08:27:55.159058",
+        "date": "2026-03-19",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/4 roasted sweet potato",
+        "items": [
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 51,
+                "protein": 1.1,
+                "totalCarbohydrate": 11.8,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38301970873
+            }
+        ],
+        "total_calories": 51,
+        "total_protein": 1.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-19T19:39:14.043956",
+        "date": "2026-03-19",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1 Chicken Harissa bowl with quinoa and brown rice (40g protein and 780 calories)",
+        "items": [
+            {
+                "foodName": "Chicken Harissa bowl with quinoa and brown rice",
+                "calories": 780,
+                "protein": 40.0,
+                "totalCarbohydrate": 85.0,
+                "totalFat": 22.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38306904978
+            }
+        ],
+        "total_calories": 780,
+        "total_protein": 40.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

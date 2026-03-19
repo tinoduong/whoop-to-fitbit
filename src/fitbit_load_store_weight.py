@@ -9,6 +9,9 @@ from logger import get_logger
 log = get_logger("fitbit_load_store_weight")
 
 def save_weight_data(entry):
+    if entry.get("source") == "API":
+        return "skipped_api"
+
     log_date = datetime.strptime(entry["date"], "%Y-%m-%d")
     year_str = log_date.strftime("%Y")
     month_str = log_date.strftime("%m")
@@ -67,14 +70,27 @@ def fetch_data(start_date_arg=None):
             return
 
         added_count = 0
+        skipped_api_count = 0
+        skipped_dup_count = 0
+
         for entry in logs:
-            if save_weight_data(entry):
+            result = save_weight_data(entry)
+            if result == "skipped_api":
+                skipped_api_count += 1
+                log.info(f"Skipped API entry: {entry.get('date')} | {entry.get('weight')} lbs | logId={entry.get('logId')}")
+            elif result:
                 added_count += 1
                 log.info(f"Saved weight entry: {entry.get('date')} | {entry.get('weight')} lbs")
             else:
+                skipped_dup_count += 1
                 log.debug(f"Skipped duplicate weight entry: {entry.get('date')} | logId={entry.get('logId')}")
 
-        log.info(f"Weight sync complete. Processed: {len(logs)} | Added: {added_count} | Skipped: {len(logs) - added_count}")
+        log.info(
+            f"Weight sync complete. Processed: {len(logs)} | "
+            f"Added: {added_count} | "
+            f"Skipped (API): {skipped_api_count} | "
+            f"Skipped (duplicate): {skipped_dup_count}"
+        )
 
     elif res.status_code == 401:
         log.error("Fitbit API returned 401 Unauthorized. Token may be invalid.")
