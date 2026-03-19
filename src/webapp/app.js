@@ -108,6 +108,26 @@ function sportClass(sport) {
   return map[sport] || 'sport-other';
 }
 
+// ===== WEIGHT LOOKUP HELPERS =====
+// Returns the weight entry for a specific date, or null if none exists.
+function getWeightForDate(date) {
+  return allWeight.find(w => w.date === date) || null;
+}
+
+// Returns the most recent weight entry on or before the given date.
+// Falls back to the earliest entry if all entries are after the date.
+function getLastKnownWeightBeforeDate(date) {
+  if (!allWeight.length) return null;
+  // allWeight assumed sorted ascending by date
+  let best = null;
+  for (const w of allWeight) {
+    if (w.date <= date) best = w;
+    else break;
+  }
+  // If nothing at or before this date, return the earliest available
+  return best || allWeight[0];
+}
+
 // ===== FROZEN GOAL SNAPSHOT =====
 // All calorie targets use the values snapshotted at the time goals were saved,
 // not live weight. This prevents daily fluctuation from changing historical numbers.
@@ -834,6 +854,28 @@ function setupDayModal() {
       }
       .meal-pie-wrap { flex-shrink: 0; }
 
+      /* ===== BODY COMP ROW in day modal ===== */
+      .day-modal-body-comp-row {
+        display: flex; gap: 12px; flex-wrap: wrap;
+        background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.15);
+        border-radius: 10px; padding: 12px 16px;
+      }
+      .day-modal-body-comp-stat {
+        display: flex; flex-direction: column; gap: 2px; min-width: 90px;
+      }
+      .day-modal-body-comp-stat .bcs-label {
+        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em;
+        color: #8b90a8;
+      }
+      .day-modal-body-comp-stat .bcs-value {
+        font-size: 1rem; font-weight: 600; color: #e8eaf0;
+      }
+      .day-modal-body-comp-stat .bcs-sub {
+        font-size: 0.75rem; color: #8b90a8;
+      }
+      .day-modal-body-comp-stat .bcs-value.exact { color: #00d4aa; }
+      .day-modal-body-comp-stat .bcs-value.estimated { color: #c8cbdf; }
+
       /* ===== WEEK MODAL wider ===== */
       .day-modal.week-modal {
         width: min(860px, 95vw);
@@ -1012,6 +1054,47 @@ function openDayModal(date) {
   const delta = targetIntake - day.totalCaloriesIn;
   const metGoal = day.totalCaloriesIn > 0 && delta >= 0;
 
+  // ===== BODY COMPOSITION for this day =====
+  // Use exact reading if available, otherwise fall back to last known entry.
+  const exactWeightEntry = getWeightForDate(date);
+  const weightEntry = exactWeightEntry || getLastKnownWeightBeforeDate(date);
+  const isExactReading = !!exactWeightEntry;
+
+  let bodyCompHtml = '';
+  if (weightEntry) {
+    const lbs = kgToLbs(weightEntry.weight);
+    const fat = weightEntry.fat != null ? weightEntry.fat.toFixed(2) : null;
+    const bmi = weightEntry.bmi != null ? weightEntry.bmi : null;
+    const valueClass = isExactReading ? 'exact' : 'estimated';
+    const sourceLabel = isExactReading
+      ? 'Aria scale reading'
+      : `Last known · ${formatDate(weightEntry.date)}`;
+
+    bodyCompHtml = `
+      <div class="day-modal-body-comp-row">
+        <div class="day-modal-body-comp-stat">
+          <div class="bcs-label">Weight</div>
+          <div class="bcs-value ${valueClass}">${lbs} lbs</div>
+          <div class="bcs-sub">${sourceLabel}</div>
+        </div>
+        ${fat != null ? `
+        <div class="day-modal-body-comp-stat">
+          <div class="bcs-label">Body Fat</div>
+          <div class="bcs-value ${valueClass}">${fat}%</div>
+          <div class="bcs-sub">${isExactReading ? 'Aria scale reading' : `Last known · ${formatDate(weightEntry.date)}`}</div>
+        </div>` : ''}
+        ${bmi != null ? `
+        <div class="day-modal-body-comp-stat">
+          <div class="bcs-label">BMI</div>
+          <div class="bcs-value ${valueClass}">${bmi}</div>
+          <div class="bcs-sub">${isExactReading ? 'Aria scale reading' : `Last known · ${formatDate(weightEntry.date)}`}</div>
+        </div>` : ''}
+      </div>
+    `;
+  } else {
+    bodyCompHtml = `<div class="day-modal-empty">No weight data available</div>`;
+  }
+
   // Workouts section
   const workoutsHtml = day.workouts.length
     ? day.workouts.map(w => `
@@ -1061,6 +1144,11 @@ function openDayModal(date) {
 
   document.getElementById('dayModalContent').innerHTML = `
     <h2>📅 ${formatDate(date)}</h2>
+
+    <div class="day-modal-section">
+      <h3>⚖️ Body Composition</h3>
+      ${bodyCompHtml}
+    </div>
 
     <div class="day-modal-section">
       <h3>🏋️ Workouts · ${day.workoutCalories} kcal burned</h3>
