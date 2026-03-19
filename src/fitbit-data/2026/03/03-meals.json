@@ -1521,5 +1521,593 @@
         "total_protein": 8.2,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-16T08:11:55.586609",
+        "date": "2026-03-16",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "5 oz roast chicken breast with no skin, 1/4 roasted chic peas, 1/4 roasted sweet potatoes, 1/4 roast brussel sprouts, 1/2 cup roasted beets",
+        "items": [
+            {
+                "foodName": "Roast Chicken Breast (no skin)",
+                "calories": 231,
+                "protein": 43.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.1,
+                "amount": 5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38280957309
+            },
+            {
+                "foodName": "Roasted Chickpeas",
+                "calories": 67,
+                "protein": 3.6,
+                "totalCarbohydrate": 11.0,
+                "totalFat": 1.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38280465731
+            },
+            {
+                "foodName": "Roasted Sweet Potatoes",
+                "calories": 51,
+                "protein": 1.1,
+                "totalCarbohydrate": 11.8,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38279983963
+            },
+            {
+                "foodName": "Roasted Brussels Sprouts",
+                "calories": 11,
+                "protein": 0.8,
+                "totalCarbohydrate": 2.2,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38279482577
+            },
+            {
+                "foodName": "Roasted Beets",
+                "calories": 37,
+                "protein": 1.4,
+                "totalCarbohydrate": 8.5,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38280613198
+            }
+        ],
+        "total_calories": 397,
+        "total_protein": 50.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-16T12:20:22.556945",
+        "date": "2026-03-16",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 small fig",
+        "items": [
+            {
+                "foodName": "Small Fig",
+                "calories": 30,
+                "protein": 0.3,
+                "totalCarbohydrate": 7.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38282057336
+            }
+        ],
+        "total_calories": 30,
+        "total_protein": 0.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-16T19:08:09.943876",
+        "date": "2026-03-16",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "6 oz of roasted pork tenderloin, 1/2 cup of carrots, 1/2 cup of beats, 1tbsp of mixed grain rice, 1/4 grilled onion",
+        "items": [
+            {
+                "foodName": "Roasted Pork Tenderloin",
+                "calories": 298,
+                "protein": 55.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.7,
+                "amount": 6,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283379561
+            },
+            {
+                "foodName": "Carrots",
+                "calories": 25,
+                "protein": 0.6,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283409065
+            },
+            {
+                "foodName": "Beets",
+                "calories": 29,
+                "protein": 1.1,
+                "totalCarbohydrate": 6.8,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38284215313
+            },
+            {
+                "foodName": "Mixed Grain Rice",
+                "calories": 22,
+                "protein": 0.5,
+                "totalCarbohydrate": 4.5,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283084678
+            },
+            {
+                "foodName": "Grilled Onion",
+                "calories": 11,
+                "protein": 0.3,
+                "totalCarbohydrate": 2.6,
+                "totalFat": 0.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283979519
+            }
+        ],
+        "total_calories": 385,
+        "total_protein": 57.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-16T20:10:55.107783",
+        "date": "2026-03-16",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "11 oz muscle milk chocolate protein shake",
+        "items": [
+            {
+                "foodName": "Muscle Milk Chocolate Protein Shake",
+                "calories": 150,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38284315116
+            }
+        ],
+        "total_calories": 150,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-16T21:05:05.194634",
+        "date": "2026-03-17",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "4oz roasted chicken breast without skin, 1/2 cup arugula, 1/4 cup of sweet potato, 1/4 cup of roasted check peas, 1 small fig, 5 candied pecans",
+        "items": [
+            {
+                "foodName": "Roasted Chicken Breast Without Skin",
+                "calories": 185,
+                "protein": 35.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 4.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38284041083
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 3,
+                "protein": 0.3,
+                "totalCarbohydrate": 0.4,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283224668
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 26,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38284227724
+            },
+            {
+                "foodName": "Roasted Chickpeas",
+                "calories": 67,
+                "protein": 3.6,
+                "totalCarbohydrate": 11.0,
+                "totalFat": 1.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283362483
+            },
+            {
+                "foodName": "Fresh Fig",
+                "calories": 37,
+                "protein": 0.4,
+                "totalCarbohydrate": 9.6,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283274148
+            },
+            {
+                "foodName": "Candied Pecans",
+                "calories": 100,
+                "protein": 1.5,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 7.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38283726459
+            }
+        ],
+        "total_calories": 418,
+        "total_protein": 41.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-17T18:55:07.000762",
+        "date": "2026-03-17",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1 serving homemade cassoulet with full duck leg no skin, 1 cup of mixed green salad, 1oz apple, 1/2 oz pickled beats",
+        "items": [
+            {
+                "foodName": "Homemade cassoulet with duck leg no skin",
+                "calories": 485,
+                "protein": 28.5,
+                "totalCarbohydrate": 35.2,
+                "totalFat": 24.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38292204507
+            },
+            {
+                "foodName": "Mixed green salad",
+                "calories": 10,
+                "protein": 1.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38292292890
+            },
+            {
+                "foodName": "Apple",
+                "calories": 15,
+                "protein": 0.1,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38293561425
+            },
+            {
+                "foodName": "Pickled beets",
+                "calories": 9,
+                "protein": 0.2,
+                "totalCarbohydrate": 2.2,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38292302701
+            }
+        ],
+        "total_calories": 519,
+        "total_protein": 29.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-17T19:08:07.474788",
+        "date": "2026-03-17",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "5.2 oz of roasted pork loin",
+        "items": [
+            {
+                "foodName": "Roasted Pork Loin",
+                "calories": 408,
+                "protein": 57.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 18.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38293640394
+            }
+        ],
+        "total_calories": 408,
+        "total_protein": 57.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-17T19:16:05.632478",
+        "date": "2026-03-17",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 of an 11 oz muscle milk chocolate protein shake",
+        "items": [
+            {
+                "foodName": "Muscle Milk Chocolate Protein Shake",
+                "calories": 150,
+                "protein": 16.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 4.5,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38293493062
+            }
+        ],
+        "total_calories": 150,
+        "total_protein": 16.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-18T08:13:46.651797",
+        "date": "2026-03-18",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "5.2 oz skinless chicken breast, 1.8 oz pickled beets, 3.6 oz apple, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Skinless Chicken Breast",
+                "calories": 231,
+                "protein": 43.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38294627505
+            },
+            {
+                "foodName": "Pickled Beets",
+                "calories": 37,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38294489896
+            },
+            {
+                "foodName": "Apple",
+                "calories": 52,
+                "protein": 0.3,
+                "totalCarbohydrate": 14.0,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38294371753
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38294312864
+            }
+        ],
+        "total_calories": 325,
+        "total_protein": 45.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-18T18:42:10.488454",
+        "date": "2026-03-18",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 fried eggs, 1 cup of black lentils, 1/4 cup of white rice, 3/4 cup of ground beef, 1/3 cup of mushrooms and carrots, 1.5 Tbsp of bbq sauce",
+        "items": [
+            {
+                "foodName": "Fried Eggs",
+                "calories": 180,
+                "protein": 12.6,
+                "totalCarbohydrate": 0.8,
+                "totalFat": 13.8,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299783523
+            },
+            {
+                "foodName": "Black Lentils",
+                "calories": 230,
+                "protein": 18.0,
+                "totalCarbohydrate": 40.0,
+                "totalFat": 0.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299252348
+            },
+            {
+                "foodName": "White Rice",
+                "calories": 51,
+                "protein": 1.0,
+                "totalCarbohydrate": 11.2,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299144282
+            },
+            {
+                "foodName": "Ground Beef",
+                "calories": 203,
+                "protein": 18.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 13.5,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38300393056
+            },
+            {
+                "foodName": "Mushrooms and Carrots",
+                "calories": 12,
+                "protein": 1.2,
+                "totalCarbohydrate": 2.4,
+                "totalFat": 0.1,
+                "amount": 0.33,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299183617
+            },
+            {
+                "foodName": "BBQ Sauce",
+                "calories": 21,
+                "protein": 0.2,
+                "totalCarbohydrate": 5.1,
+                "totalFat": 0.1,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299124690
+            }
+        ],
+        "total_calories": 697,
+        "total_protein": 51.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-18T19:20:56.550382",
+        "date": "2026-03-18",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "tuna creations sweet and spicy",
+        "items": [
+            {
+                "foodName": "Tuna Creations Sweet and Spicy",
+                "calories": 90,
+                "protein": 17.0,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 1.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299400670
+            }
+        ],
+        "total_calories": 90,
+        "total_protein": 17.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-18T19:30:49.096211",
+        "date": "2026-03-18",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "tuna creations lemon and pepper",
+        "items": [
+            {
+                "foodName": "Tuna Creations Lemon and Pepper",
+                "calories": 70,
+                "protein": 15.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38299135497
+            }
+        ],
+        "total_calories": 70,
+        "total_protein": 15.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
