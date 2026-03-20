@@ -923,3 +923,63 @@ tbody td {
   .day-card { max-width: 100%; }
   .goals-card { max-width: 100%; }
 }
+
+/* ===== MEAL DAY COLLAPSIBLE HEADER ===== */
+.meal-day-header.meal-day-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.meal-day-header.meal-day-toggle:hover {
+  background: rgba(108, 99, 255, 0.07);
+}
+.meal-day-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.meal-day-toggle-left h4 {
+  margin: 0;
+}
+.meal-day-chevron {
+  font-size: 0.65rem;
+  color: #8b90a8;
+  transition: transform 0.2s, color 0.15s;
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+}
+.meal-day-chevron.chevron-open {
+  color: #6c63ff;
+}
+.meal-day-summary-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.meal-day-summary-macros {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.meal-day-total-cals {
+  color: #e8eaf0;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.meal-day-pie-wrap {
+  flex-shrink: 0;
+}
+.meal-day-collapsible {
+  padding-top: 4px;
+}

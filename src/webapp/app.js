@@ -588,19 +588,25 @@ function renderMeals() {
   container.innerHTML = pageItems.map(({ date, meals: dayMeals }) => {
     const totalCals = dayMeals.reduce((s, m) => s + (m.total_calories || 0), 0);
     const totalProtein = dayMeals.reduce((s, m) => s + (m.total_protein || 0), 0);
+    const totalCarbs = dayMeals.reduce((s, m) =>
+      s + (m.items || []).reduce((si, i) => si + (i.totalCarbohydrate || 0), 0), 0);
+    const totalFat = dayMeals.reduce((s, m) =>
+      s + (m.items || []).reduce((si, i) => si + (i.totalFat || 0), 0), 0);
+
+    const summaryPieId = `day-summary-pie-${date}`;
 
     const mealsHtml = dayMeals.map(meal => {
       const typeClass = `meal-${meal.meal_type}`;
       const items = meal.items || [];
-      const totalCarbs = items.reduce((s, i) => s + (i.totalCarbohydrate || 0), 0);
-      const totalFat = items.reduce((s, i) => s + (i.totalFat || 0), 0);
+      const mealCarbs = items.reduce((s, i) => s + (i.totalCarbohydrate || 0), 0);
+      const mealFat = items.reduce((s, i) => s + (i.totalFat || 0), 0);
       const protein = meal.total_protein || 0;
       const itemChips = items.map(item =>
         `<span class="meal-item-chip">${item.foodName}<span class="item-cals">${item.calories} kcal</span></span>`
       ).join('');
 
       const chartId = `macro-pie-${meal.id || (date + '-' + meal.meal_type + '-' + Math.random().toString(36).slice(2))}`;
-      setTimeout(() => renderMacroPie(chartId, protein, totalCarbs, totalFat), 0);
+      setTimeout(() => renderMacroPie(chartId, protein, mealCarbs, mealFat), 0);
 
       return `
         <div class="meal-entry">
@@ -613,8 +619,8 @@ function renderMeals() {
           <div class="meal-entry-bottom">
             <div class="meal-macros">
               <span class="macro-p">P: ${protein.toFixed(1)}g</span>
-              <span class="macro-c">C: ${totalCarbs.toFixed(1)}g</span>
-              <span class="macro-f">F: ${totalFat.toFixed(1)}g</span>
+              <span class="macro-c">C: ${mealCarbs.toFixed(1)}g</span>
+              <span class="macro-f">F: ${mealFat.toFixed(1)}g</span>
             </div>
             <div class="meal-pie-wrap">
               <canvas id="${chartId}" width="80" height="80"></canvas>
@@ -625,23 +631,55 @@ function renderMeals() {
     }).join('');
 
     return `
-      <div class="meal-day-group">
-        <div class="meal-day-header">
-          <h4>${formatDate(date)}</h4>
-          <div class="day-totals">
-            <span>🍽 ${totalCals} kcal</span>
-            <span class="macro-p">P: ${totalProtein.toFixed(1)}g</span>
+      <div class="meal-day-group" id="meal-group-${date}">
+        <div class="meal-day-header meal-day-toggle" onclick="toggleMealDay('${date}')" title="Click to expand/collapse">
+          <div class="meal-day-toggle-left">
+            <span class="meal-day-chevron" id="chevron-${date}">▶</span>
+            <h4>${formatDate(date)}</h4>
+          </div>
+          <div class="meal-day-summary-right">
+            <div class="meal-day-summary-macros">
+              <span class="macro-p">P: ${totalProtein.toFixed(1)}g</span>
+              <span class="macro-c">C: ${totalCarbs.toFixed(1)}g</span>
+              <span class="macro-f">F: ${totalFat.toFixed(1)}g</span>
+              <span class="meal-day-total-cals">🍽 ${totalCals} kcal</span>
+            </div>
+            <div class="meal-day-pie-wrap">
+              <canvas id="${summaryPieId}" width="52" height="52"></canvas>
+            </div>
           </div>
         </div>
-        <div class="meal-day-body">${mealsHtml}</div>
+        <div class="meal-day-body meal-day-collapsible" id="meal-body-${date}" style="display:none">
+          ${mealsHtml}
+        </div>
       </div>
     `;
   }).join('');
+
+  // Render summary pies after DOM is ready
+  pageItems.forEach(({ date, meals: dayMeals }) => {
+    const p = dayMeals.reduce((s, m) => s + (m.total_protein || 0), 0);
+    const c = dayMeals.reduce((s, m) =>
+      s + (m.items || []).reduce((si, i) => si + (i.totalCarbohydrate || 0), 0), 0);
+    const f = dayMeals.reduce((s, m) =>
+      s + (m.items || []).reduce((si, i) => si + (i.totalFat || 0), 0), 0);
+    setTimeout(() => renderMacroPie(`day-summary-pie-${date}`, p, c, f), 0);
+  });
 
   renderPagination(paginationEl, mealsPage, totalPages, (p) => {
     mealsPage = p;
     renderMeals();
   });
+}
+
+function toggleMealDay(date) {
+  const body = document.getElementById(`meal-body-${date}`);
+  const chevron = document.getElementById(`chevron-${date}`);
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  chevron.textContent = isOpen ? '▶' : '▼';
+  chevron.classList.toggle('chevron-open', !isOpen);
 }
 
 function setupMealFilters() {
