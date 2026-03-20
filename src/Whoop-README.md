@@ -69,7 +69,7 @@ whoop-data/
 
 Each monthly file contains a JSON array of workout objects. Each object is keyed by its unique WHOOP `id` during the save process to ensure idempotency.
 
-**Example Entry:**
+**Example Fitbit Entry:**
 
 ```json
 {
@@ -80,6 +80,41 @@ Each monthly file contains a JSON array of workout objects. Each object is keyed
     "calories": 295
 }
 
+```
+
+**Example Whoop Entry**
+```json
+{
+  "id": "345bef58-8619-4ca1-ab32-bb3e45137639",
+  "v1_id": null,
+  "user_id": "xxxxxxx",
+  "created_at": "2026-03-18T10:43:43.574Z",
+  "updated_at": "2026-03-18T10:44:06.183Z",
+  "start": "2026-03-18T10:16:53.371Z",
+  "end": "2026-03-18T10:43:42.794Z",
+  "timezone_offset": "-04:00",
+  "sport_name": "running",
+  "score_state": "SCORED",
+  "score": {
+    "strain": 11.835943,
+    "average_heart_rate": 149,
+    "max_heart_rate": 178,
+    "kilojoule": 1314.5698,
+    "percent_recorded": 1.0,
+    "distance_meter": 9.273668,
+    "altitude_gain_meter": 1.064788,
+    "altitude_change_meter": 1.064788,
+    "zone_durations": {
+      "zone_zero_milli": 79000,
+      "zone_one_milli": 185000,
+      "zone_two_milli": 367000,
+      "zone_three_milli": 369000,
+      "zone_four_milli": 459000,
+      "zone_five_milli": 151000
+    }
+  },
+  "sport_id": 0
+}
 ```
 
 ### **Key Features**

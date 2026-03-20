@@ -2220,5 +2220,187 @@
         "total_protein": 40.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-20T08:06:18.638793",
+        "date": "2026-03-20",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "1/4 chic pea, 1/4 sweet potatos, 1/4 lentils, 6.2 oz roasted chicken breast, 1 oz salami (120 calories), 1/2 cup kale, 1/2 cup spinach",
+        "items": [
+            {
+                "foodName": "Chickpeas",
+                "calories": 67,
+                "protein": 3.6,
+                "totalCarbohydrate": 11.0,
+                "totalFat": 1.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38308853538
+            },
+            {
+                "foodName": "Sweet Potatoes",
+                "calories": 26,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38308932064
+            },
+            {
+                "foodName": "Lentils",
+                "calories": 57,
+                "protein": 4.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38309325270
+            },
+            {
+                "foodName": "Roasted Chicken Breast",
+                "calories": 290,
+                "protein": 54.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.3,
+                "amount": 6.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38308971455
+            },
+            {
+                "foodName": "Salami",
+                "calories": 120,
+                "protein": 6.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 10.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38308863512
+            },
+            {
+                "foodName": "Kale",
+                "calories": 17,
+                "protein": 2.2,
+                "totalCarbohydrate": 3.3,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38309431457
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 3,
+                "protein": 0.4,
+                "totalCarbohydrate": 0.5,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38308647169
+            }
+        ],
+        "total_calories": 580,
+        "total_protein": 71.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-20T19:27:30.372260",
+        "date": "2026-03-20",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "7.6oz salmon (355 cal, 50g protein), 1/2 cup quinoa (111 cal, 4g protein), 1/2 bell pepper (15 cal, 0.5g protein), 1/4 cup zucchini (5 cal, 0.4g protein), 1/2 cup mango chutney (240 cal, 0.5g protein), 0.75 tbsp brown sugar (33 cal, 0g protein)",
+        "items": [
+            {
+                "foodName": "Salmon",
+                "calories": 355,
+                "protein": 50.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 16.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38312471134
+            },
+            {
+                "foodName": "Quinoa",
+                "calories": 111,
+                "protein": 4.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 1.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38311271937
+            },
+            {
+                "foodName": "Bell Pepper",
+                "calories": 15,
+                "protein": 0.5,
+                "totalCarbohydrate": 3.5,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38312667469
+            },
+            {
+                "foodName": "Zucchini",
+                "calories": 5,
+                "protein": 0.4,
+                "totalCarbohydrate": 1.2,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38312500706
+            },
+            {
+                "foodName": "Mango Chutney",
+                "calories": 30,
+                "protein": 0.5,
+                "totalCarbohydrate": 60.0,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38311674931
+            },
+            {
+                "foodName": "Brown Sugar",
+                "calories": 33,
+                "protein": 0.0,
+                "totalCarbohydrate": 8.5,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38311370252
+            }
+        ],
+        "total_calories": 649,
+        "total_protein": 55.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

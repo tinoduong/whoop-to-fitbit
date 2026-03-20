@@ -65,6 +65,7 @@ def fetch_workouts(start_dt, interactive=True):
                 score = w.get('score', {})
                 kj = score.get('kilojoule', 0)
 
+                # Base object for Fitbit upload — extra fields not included
                 workout_data = {
                     "id": w.get('id'),
                     "sport_name": w.get('sport_name'),
@@ -74,8 +75,18 @@ def fetch_workouts(start_dt, interactive=True):
                     "calories": round(kj / 4.184) if kj else 0,
                     "distance_meter": score.get('distance_meter', 0)
                 }
+
+                # --- Fitbit upload happens here (unchanged) ---
+                # fitbit_write_workout(workout_data)
+
+                # Extend with analytics fields after Fitbit upload
+                workout_data["max_heart_rate"] = score.get('max_heart_rate', 0)
+                workout_data["strain"] = score.get('strain', 0)
+                workout_data["zone_durations"] = score.get('zone_durations', {})
+
                 save_workout_idempotent(workout_data)
                 log.info(f"Saved workout: {workout_data['sport_name']} | {workout_data['start_time']}")
+
                 all_processed += 1
 
             next_token = data.get('next_token')
