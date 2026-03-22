@@ -22,6 +22,9 @@ let mealsFiltered = [];
 let mealsPage = 1;
 const MEALS_PER_PAGE = 7; // days per page
 
+// Workout summary range state
+let workoutSummaryRange = '7d';
+
 // kg -> lbs
 const KG_TO_LBS = 2.20462;
 function kgToLbs(kg) { return +(kg * KG_TO_LBS).toFixed(1); }
@@ -109,30 +112,21 @@ function sportClass(sport) {
 }
 
 // ===== WEIGHT LOOKUP HELPERS =====
-// Returns the weight entry for a specific date, or null if none exists.
 function getWeightForDate(date) {
   return allWeight.find(w => w.date === date) || null;
 }
 
-// Returns the most recent weight entry on or before the given date.
-// Falls back to the earliest entry if all entries are after the date.
 function getLastKnownWeightBeforeDate(date) {
   if (!allWeight.length) return null;
-  // allWeight assumed sorted ascending by date
   let best = null;
   for (const w of allWeight) {
     if (w.date <= date) best = w;
     else break;
   }
-  // If nothing at or before this date, return the earliest available
   return best || allWeight[0];
 }
 
 // ===== FROZEN GOAL SNAPSHOT =====
-// All calorie targets use the values snapshotted at the time goals were saved,
-// not live weight. This prevents daily fluctuation from changing historical numbers.
-// goals.saved_tdee, goals.saved_deficit, goals.saved_target_intake are written on Save.
-
 function buildDailyMap() {
   const map = {};
   allMeals.forEach(meal => {
@@ -149,16 +143,12 @@ function buildDailyMap() {
   return map;
 }
 
-// Returns { targetIntake, tdee, deficit } for a given day's workout calories.
-// Uses frozen snapshot values saved at goal-save time — never live weight.
-// goals.saved_tdee and goals.saved_deficit are written once when you hit Save in Goals.
 function getTargetIntakeForDate(_date, workoutCalories) {
   const tdee = goals.saved_tdee || null;
   const deficit = goals.saved_deficit || 0;
   if (tdee) {
     return { targetIntake: (tdee + workoutCalories) - deficit, tdee, deficit };
   }
-  // Fallback: goals never saved with a snapshot (legacy data or no goals set)
   return {
     targetIntake: (goals.daily_calorie_goal || 2000) + workoutCalories,
     tdee: null,
@@ -173,7 +163,6 @@ function buildAvailableMonths() {
   allWorkouts.forEach(w => monthSet.add(getYearMonth(getDateFromISO(w.start_time))));
   allWeight.forEach(w => monthSet.add(getYearMonth(w.date)));
   availableMonths = [...monthSet].sort();
-  // Default to latest month
   currentMonthIndex = availableMonths.length - 1;
 }
 
@@ -348,7 +337,6 @@ function renderDailySummary() {
 
   const dailyMap = buildDailyMap();
 
-  // Generate every day in the month regardless of data
   const [ymYear, ymMonth] = ym.split('-').map(Number);
   const daysInMonth = new Date(ymYear, ymMonth, 0).getDate();
   const sortedDates = [];
@@ -356,7 +344,6 @@ function renderDailySummary() {
     sortedDates.push(`${ym}-${String(d).padStart(2, '0')}`);
   }
 
-  // Build a helper to compute per-day data using date-specific weight/deficit
   function getDayData(date) {
     const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
     const hasMeals = day.totalCaloriesIn > 0;
@@ -368,24 +355,18 @@ function renderDailySummary() {
     return { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal };
   }
 
-  // Group sortedDates into calendar weeks (Mon–Sun)
   const firstDate = new Date(sortedDates[0] + 'T00:00:00');
   const lastDate = new Date(sortedDates[sortedDates.length - 1] + 'T00:00:00');
 
-  // Start from the Monday of the first week
-  // getDay(): 0=Sun, 1=Mon, ..., 6=Sat
-  // (dow + 6) % 7 maps Sun->6, Mon->0, Tue->1, ..., Sat->5
   const startMonday = new Date(firstDate);
   startMonday.setDate(firstDate.getDate() - ((firstDate.getDay() + 6) % 7));
 
-  // End on the Sunday of the last week
-  const lastDow = lastDate.getDay(); // 0=Sun means already end of week
+  const lastDow = lastDate.getDay();
   const endSunday = new Date(lastDate);
   endSunday.setDate(lastDate.getDate() + ((7 - lastDow) % 7));
 
   const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  // Build weeks array (each week: Mon[0] … Sun[6])
   const weeks = [];
   let cur = new Date(startMonday);
   while (cur <= endSunday) {
@@ -397,7 +378,6 @@ function renderDailySummary() {
     weeks.push(week);
   }
 
-  // Header row
   let html = `<div class="cal-header">${DAY_NAMES.map(d => `<div class="cal-hdr-cell">${d}</div>`).join('')}<div class="cal-hdr-cell cal-week-summary-hdr">Week</div></div>`;
 
   html += weeks.map(week => {
@@ -429,7 +409,6 @@ function renderDailySummary() {
       return `<div class="cal-cell ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer">${inner}</div>`;
     }).join('');
 
-    // Weekly summary
     const weekDaysInMonth = week.filter(d => getYearMonth(d) === ym);
     const weekMealDays = weekDaysInMonth.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
     const todayStr = new Date().toISOString().substring(0, 10);
@@ -484,11 +463,207 @@ function sortedWorkouts(workouts) {
   return [...workouts].sort((a, b) => new Date(b.start_time) - new Date(a.start_time));
 }
 
+function injectWorkoutSummaryStyles() {
+  if (document.getElementById('workoutSummaryStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'workoutSummaryStyles';
+  style.textContent = `
+    .workout-summary-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .workout-summary-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .workout-summary-stat {
+      background: rgba(108,99,255,0.07);
+      border: 1px solid rgba(108,99,255,0.15);
+      border-radius: 10px;
+      padding: 10px 16px;
+      min-width: 110px;
+    }
+    .wss-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #8b90a8;
+      margin-bottom: 3px;
+    }
+    .wss-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e8eaf0;
+    }
+    .wss-sub {
+      font-size: 0.72rem;
+      color: #8b90a8;
+      margin-top: 1px;
+    }
+    .workout-summary-empty {
+      color: #8b90a8;
+      font-size: 0.85rem;
+      padding: 8px 0 16px;
+    }
+    .workout-summary-range-toggle {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .workout-summary-range-btn {
+      background: transparent;
+      border: 1px solid rgba(139,144,168,0.3);
+      color: #8b90a8;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .workout-summary-range-btn:hover {
+      border-color: #6c63ff;
+      color: #e8eaf0;
+    }
+    .workout-summary-range-btn.active {
+      background: rgba(108,99,255,0.15);
+      border-color: #6c63ff;
+      color: #6c63ff;
+      font-weight: 600;
+    }
+    .zone-sparkbar {
+      display: flex;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      gap: 1px;
+      width: 80px;
+    }
+    .zone-sparkbar-seg {
+      height: 100%;
+      border-radius: 1px;
+    }
+    .strain-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .strain-bar-track {
+      flex: 1;
+      min-width: 48px;
+      height: 4px;
+      background: rgba(139,144,168,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .strain-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: #6c63ff;
+    }
+    .strain-bar-num {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #e8eaf0;
+      min-width: 28px;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function setupWorkoutSummaryToggle() {
+  document.querySelectorAll('.workout-summary-range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      workoutSummaryRange = btn.dataset.range;
+      renderWorkoutSummary();
+    });
+  });
+}
+
+function getWorkoutsForSummaryRange() {
+  const now = new Date();
+  const days = workoutSummaryRange === '7d' ? 7 : 30;
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() - days);
+  return allWorkouts.filter(w => new Date(w.start_time) >= cutoff);
+}
+
+function renderWorkoutSummary() {
+  const container = document.getElementById('workoutSummaryBar');
+  if (!container) return;
+
+  const workouts = getWorkoutsForSummaryRange();
+
+  if (workouts.length === 0) {
+    container.innerHTML = `<div class="workout-summary-empty">No workouts in this period</div>`;
+    return;
+  }
+
+  const totalCals = workouts.reduce((s, w) => s + (w.calories || 0), 0);
+  const avgStrain = workouts.reduce((s, w) => s + (w.strain || 0), 0) / workouts.length;
+  const avgHR = Math.round(workouts.reduce((s, w) => s + (w.avg_heart_rate || 0), 0) / workouts.length);
+  const uniqueDays = new Set(workouts.map(w => getDateFromISO(w.start_time))).size;
+
+  container.innerHTML = `
+    <div class="workout-summary-grid">
+      <div class="workout-summary-stat">
+        <div class="wss-label">Workouts</div>
+        <div class="wss-value">${workouts.length}</div>
+        <div class="wss-sub">${uniqueDays} day${uniqueDays !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="workout-summary-stat">
+        <div class="wss-label">Calories burned</div>
+        <div class="wss-value">${totalCals.toLocaleString()}</div>
+        <div class="wss-sub">kcal total</div>
+      </div>
+      <div class="workout-summary-stat">
+        <div class="wss-label">Avg strain</div>
+        <div class="wss-value">${avgStrain.toFixed(1)}</div>
+        <div class="wss-sub">out of 21</div>
+      </div>
+      <div class="workout-summary-stat">
+        <div class="wss-label">Avg HR</div>
+        <div class="wss-value">${avgHR}</div>
+        <div class="wss-sub">bpm</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderWorkouts() {
   const tbody = document.getElementById('workoutsBody');
   const paginationEl = document.getElementById('workoutsPagination');
 
-  // Populate sport filter (always from allWorkouts)
+  // Inject summary bar + toggle if not yet present
+  if (!document.getElementById('workoutSummaryBar')) {
+    injectWorkoutSummaryStyles();
+    const tableContainer = document.querySelector('#tab-workouts .table-container') ||
+                           document.querySelector('#tab-workouts table')?.parentElement;
+    if (tableContainer) {
+      const summaryEl = document.createElement('div');
+      summaryEl.innerHTML = `
+        <div class="workout-summary-header">
+          <div id="workoutSummaryBar"></div>
+          <div class="workout-summary-range-toggle">
+            <button class="workout-summary-range-btn active" data-range="7d">7 days</button>
+            <button class="workout-summary-range-btn" data-range="30d">30 days</button>
+          </div>
+        </div>
+      `;
+      tableContainer.parentElement.insertBefore(summaryEl, tableContainer);
+      setupWorkoutSummaryToggle();
+    }
+  }
+
+  renderWorkoutSummary();
+
+  // Populate sport filter
   const sportFilter = document.getElementById('workoutSportFilter');
   const sports = [...new Set(allWorkouts.map(w => w.sport_name))].sort();
   const currentSport = sportFilter.value;
@@ -496,7 +671,7 @@ function renderWorkouts() {
     sports.map(s => `<option value="${s}" ${s === currentSport ? 'selected' : ''}>${s.replace(/-/g, ' ')}</option>`).join('');
 
   if (workoutsFiltered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No workouts found</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No workouts found</td></tr>';
     paginationEl.innerHTML = '';
     return;
   }
@@ -508,16 +683,63 @@ function renderWorkouts() {
 
   tbody.innerHTML = pageItems.map(w => {
     const date = getDateFromISO(w.start_time);
-    const dist = w.distance_meter != null ? w.distance_meter.toFixed(1) : '—';
+
+    // Zone sparkbar
+    const zones = w.zone_durations || {};
+    const z0 = zones.zone_zero_milli || 0;
+    const z1 = zones.zone_one_milli || 0;
+    const z2 = zones.zone_two_milli || 0;
+    const z3 = zones.zone_three_milli || 0;
+    const z4 = zones.zone_four_milli || 0;
+    const z5 = zones.zone_five_milli || 0;
+    const zTotal = z0 + z1 + z2 + z3 + z4 + z5;
+
+    let zoneBarHtml = '—';
+    if (zTotal > 0) {
+      const segs = [
+        { val: z0, color: '#888780' },
+        { val: z1, color: '#5DCAA5' },
+        { val: z2, color: '#EF9F27' },
+        { val: z3, color: '#E24B4A' },
+        { val: z4, color: '#993556' },
+        { val: z5, color: '#6c63ff' },
+      ].filter(s => s.val > 0);
+
+      const segHtml = segs.map(s =>
+        `<div class="zone-sparkbar-seg" style="flex:${s.val};background:${s.color}"></div>`
+      ).join('');
+      zoneBarHtml = `<div class="zone-sparkbar">${segHtml}</div>`;
+    }
+
+    // Strain bar (0–21 scale)
+    const strain = w.strain != null ? w.strain : null;
+    let strainHtml = '—';
+    if (strain != null) {
+      const pct = Math.min(100, (strain / 21) * 100).toFixed(1);
+      strainHtml = `
+        <div class="strain-bar-wrap">
+          <span class="strain-bar-num">${strain.toFixed(1)}</span>
+          <div class="strain-bar-track">
+            <div class="strain-bar-fill" style="width:${pct}%"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    const maxHR = w.max_heart_rate != null ? w.max_heart_rate : '—';
+    const dist = w.distance_meter != null ? (w.distance_meter / 1609.34).toFixed(2) + ' mi' : '—';
+
     return `
       <tr>
         <td>${formatDate(date)}</td>
         <td><span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span></td>
         <td>${formatTime(w.start_time)}</td>
         <td>${formatDuration(w.start_time, w.end_time)}</td>
-        <td>${w.avg_heart_rate} bpm</td>
+        <td>${w.avg_heart_rate} / <span style="color:#8b90a8">${maxHR}</span></td>
         <td>${w.calories} kcal</td>
         <td>${dist}</td>
+        <td>${strainHtml}</td>
+        <td>${zoneBarHtml}</td>
       </tr>
     `;
   }).join('');
@@ -656,7 +878,6 @@ function renderMeals() {
     `;
   }).join('');
 
-  // Render summary pies after DOM is ready
   pageItems.forEach(({ date, meals: dayMeals }) => {
     const p = dayMeals.reduce((s, m) => s + (m.total_protein || 0), 0);
     const c = dayMeals.reduce((s, m) =>
@@ -756,7 +977,6 @@ function renderPagination(el, currentPage, totalPages, onPageChange) {
 function renderMacroPie(canvasId, protein, carbs, fat) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
-  // Destroy existing chart on this canvas if any
   const existing = Chart.getChart(canvas);
   if (existing) existing.destroy();
   const ctx = canvas.getContext('2d');
@@ -798,7 +1018,6 @@ function renderMacroPie(canvasId, protein, carbs, fat) {
 
 // ===== DAY MODAL =====
 function setupDayModal() {
-  // Inject modal HTML into the page if not already present
   if (!document.getElementById('dayModal')) {
     const modalEl = document.createElement('div');
     modalEl.id = 'dayModal';
@@ -812,7 +1031,6 @@ function setupDayModal() {
     `;
     document.body.appendChild(modalEl);
 
-    // Inject modal CSS
     const style = document.createElement('style');
     style.textContent = `
       .day-modal-overlay {
@@ -885,14 +1103,11 @@ function setupDayModal() {
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .modal-meal-macros { display: flex; gap: 10px; }
       .modal-meal-macros span { font-size: 0.8rem; }
-      /* Layout tweak for meal entries in meals tab */
       .meal-entry-bottom {
         display: flex; align-items: center; justify-content: space-between;
         gap: 12px; margin-top: 6px;
       }
       .meal-pie-wrap { flex-shrink: 0; }
-
-      /* ===== BODY COMP ROW in day modal ===== */
       .day-modal-body-comp-row {
         display: flex; gap: 12px; flex-wrap: wrap;
         background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.15);
@@ -913,13 +1128,9 @@ function setupDayModal() {
       }
       .day-modal-body-comp-stat .bcs-value.exact { color: #00d4aa; }
       .day-modal-body-comp-stat .bcs-value.estimated { color: #c8cbdf; }
-
-      /* ===== WEEK MODAL wider ===== */
       .day-modal.week-modal {
         width: min(860px, 95vw);
       }
-
-      /* ===== LOG MEAL MODAL ===== */
       .log-meal-btn {
         background: linear-gradient(135deg, #6c63ff, #5a52d5);
         color: #fff;
@@ -934,7 +1145,6 @@ function setupDayModal() {
         white-space: nowrap;
       }
       .log-meal-btn:hover { opacity: 0.85; }
-
       .log-meal-overlay {
         position: fixed; inset: 0; z-index: 1100;
         background: rgba(10, 11, 20, 0.9);
@@ -1054,7 +1264,6 @@ function setupDayModal() {
     document.head.appendChild(style);
   }
 
-  // Event listeners
   document.getElementById('dayModalCloseBtn').addEventListener('click', closeDayModal);
   document.getElementById('dayModal').addEventListener('click', e => {
     if (e.target === document.getElementById('dayModal')) closeDayModal();
@@ -1067,7 +1276,6 @@ function setupDayModal() {
 function closeDayModal() {
   const modal = document.getElementById('dayModal');
   if (modal) modal.style.display = 'none';
-  // Reset width in case week modal widened it
   const inner = document.getElementById('dayModalInner');
   if (inner) inner.classList.remove('week-modal');
 }
@@ -1080,20 +1288,16 @@ function openDayModal(date) {
   const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
   const dayMeals = allMeals.filter(m => m.date === date);
 
-  // Aggregate day-level macros
   const totalProtein = dayMeals.reduce((s, m) => s + (m.total_protein || 0), 0);
   const totalCarbs = dayMeals.reduce((s, m) =>
     s + (m.items || []).reduce((si, i) => si + (i.totalCarbohydrate || 0), 0), 0);
   const totalFat = dayMeals.reduce((s, m) =>
     s + (m.items || []).reduce((si, i) => si + (i.totalFat || 0), 0), 0);
 
-  // Use date-stable target intake
   const { targetIntake } = getTargetIntakeForDate(date, day.workoutCalories);
   const delta = targetIntake - day.totalCaloriesIn;
   const metGoal = day.totalCaloriesIn > 0 && delta >= 0;
 
-  // ===== BODY COMPOSITION for this day =====
-  // Use exact reading if available, otherwise fall back to last known entry.
   const exactWeightEntry = getWeightForDate(date);
   const weightEntry = exactWeightEntry || getLastKnownWeightBeforeDate(date);
   const isExactReading = !!exactWeightEntry;
@@ -1133,7 +1337,6 @@ function openDayModal(date) {
     bodyCompHtml = `<div class="day-modal-empty">No weight data available</div>`;
   }
 
-  // Workouts section
   const workoutsHtml = day.workouts.length
     ? day.workouts.map(w => `
         <div class="day-modal-workout-row">
@@ -1145,7 +1348,6 @@ function openDayModal(date) {
         </div>`).join('')
     : `<div class="day-modal-empty">No workouts logged</div>`;
 
-  // Per-meal rows with individual pie charts
   const dayPieId = `modal-day-pie-${date}`;
   const mealsHtml = dayMeals.length
     ? dayMeals.map((meal, idx) => {
@@ -1211,19 +1413,16 @@ function openDayModal(date) {
 
   document.getElementById('dayModal').style.display = 'flex';
 
-  // Render day-level pie after DOM update
   if (dayMeals.length) {
     setTimeout(() => renderMacroPie(dayPieId, totalProtein, totalCarbs, totalFat), 0);
   }
 }
 
 // ===== WEEK MODAL =====
-// weekMonday: ISO date string of the Monday that starts this week
 function openWeekModal(weekMonday) {
   const inner = document.getElementById('dayModalInner');
   inner.classList.add('week-modal');
 
-  // Build the 7 dates of this week (Mon–Sun)
   const weekDates = [];
   const start = new Date(weekMonday + 'T00:00:00');
   for (let i = 0; i < 7; i++) {
@@ -1237,7 +1436,6 @@ function openWeekModal(weekMonday) {
   const weekEnd = weekSunday > todayStr ? todayStr : weekSunday;
   const dailyMap = buildDailyMap();
 
-  // ---- Calorie totals using date-stable targets ----
   const daysWithMeals = weekDates.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
   const totalCaloriesIn = daysWithMeals.reduce((s, d) => s + dailyMap[d].totalCaloriesIn, 0);
   const totalTarget = daysWithMeals.reduce((s, d) => {
@@ -1248,12 +1446,10 @@ function openWeekModal(weekMonday) {
   const weekDelta = totalTarget - totalCaloriesIn;
   const weekMet = weekDelta >= 0;
 
-  // ---- Workout totals ----
   const allWeekWorkouts = weekDates.flatMap(d => (dailyMap[d] || {}).workouts || []);
   const workoutDays = [...new Set(allWeekWorkouts.map(w => getDateFromISO(w.start_time)))];
   const totalWorkoutCals = allWeekWorkouts.reduce((s, w) => s + (w.calories || 0), 0);
 
-  // ---- Weight / body fat ----
   const weekWeightEntries = allWeight.filter(w => w.date >= weekMonday && w.date <= weekEnd);
   let weightHtml = '<div class="day-modal-empty">No weight data this week</div>';
   if (weekWeightEntries.length >= 2) {
@@ -1305,7 +1501,6 @@ function openWeekModal(weekMonday) {
     `;
   }
 
-  // ---- Workouts list ----
   const workoutsHtml = allWeekWorkouts.length
     ? allWeekWorkouts
       .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
@@ -1320,9 +1515,8 @@ function openWeekModal(weekMonday) {
           </div>`).join('')
     : '<div class="day-modal-empty">No workouts this week</div>';
 
-  // ---- Per-day calorie breakdown table using date-stable targets ----
   const dayRowsHtml = weekDates.map(date => {
-    if (date > todayStr) return ''; // skip future days
+    if (date > todayStr) return '';
     const day = dailyMap[date] || { totalCaloriesIn: 0, workouts: [], workoutCalories: 0 };
     const hasAnyData = day.totalCaloriesIn > 0 || day.workouts.length > 0;
     if (!hasAnyData) return '';
@@ -1404,7 +1598,6 @@ function openWeekModal(weekMonday) {
 
 // ===== LOG MEAL MODAL =====
 function setupLogMealModal() {
-  // Inject the modal HTML
   if (!document.getElementById('logMealOverlay')) {
     const el = document.createElement('div');
     el.id = 'logMealOverlay';
@@ -1435,7 +1628,6 @@ function setupLogMealModal() {
     document.body.appendChild(el);
   }
 
-  // Inject the "+ Log Meal" button into the meals tab filter bar
   const mealResetBtn = document.getElementById('mealResetBtn');
   if (mealResetBtn && !document.getElementById('openLogMealBtn')) {
     const btn = document.createElement('button');
@@ -1446,7 +1638,6 @@ function setupLogMealModal() {
     mealResetBtn.parentNode.insertBefore(btn, mealResetBtn.nextSibling);
   }
 
-  // Wire up modal controls
   document.getElementById('logMealCloseBtn').addEventListener('click', closeLogMealModal);
   document.getElementById('logMealCancelBtn').addEventListener('click', closeLogMealModal);
   document.getElementById('logMealOverlay').addEventListener('click', e => {
@@ -1454,7 +1645,6 @@ function setupLogMealModal() {
   });
   document.getElementById('logMealSubmitBtn').addEventListener('click', submitLogMeal);
   document.getElementById('logMealInput').addEventListener('keydown', e => {
-    // Cmd/Ctrl+Enter to submit
     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') submitLogMeal();
   });
 }
@@ -1466,7 +1656,6 @@ function openLogMealModal() {
   const error = document.getElementById('logMealError');
   const submitBtn = document.getElementById('logMealSubmitBtn');
 
-  // Reset state
   input.value = '';
   input.disabled = false;
   progress.style.display = 'none';
@@ -1486,7 +1675,6 @@ function closeLogMealModal() {
 }
 
 function setLogMealStep(step) {
-  // step: 1 = parsing, 2 = uploading, 3 = done
   ['lmStep1', 'lmStep2', 'lmStep3'].forEach((id, i) => {
     const el = document.getElementById(id);
     if (i + 1 < step) {
@@ -1511,7 +1699,6 @@ async function submitLogMeal() {
     return;
   }
 
-  // Lock UI
   input.disabled = true;
   submitBtn.disabled = true;
   submitBtn.textContent = 'Logging…';
@@ -1519,7 +1706,6 @@ async function submitLogMeal() {
   progress.style.display = 'flex';
   setLogMealStep(1);
 
-  // Step 2 indicator fires after a short delay (Claude parsing typically takes 2-4s)
   const step2Timer = setTimeout(() => setLogMealStep(2), 3000);
 
   try {
@@ -1536,11 +1722,9 @@ async function submitLogMeal() {
       throw new Error(data.message || `Server error ${res.status}`);
     }
 
-    // Success
     setLogMealStep(3);
     submitBtn.textContent = '✓ Logged';
 
-    // Reload meals data and re-render after short delay
     setTimeout(async () => {
       const mealsRes = await fetch('/api/meals');
       allMeals = await mealsRes.json();
@@ -1602,7 +1786,6 @@ function avgDailyWorkoutCals() {
 function renderTDEEPlan() {
   const container = document.getElementById('tdeeDetails');
 
-  // Show frozen snapshot if available
   if (goals.saved_tdee) {
     const tdee = goals.saved_tdee;
     const bmr = goals.saved_bmr || '—';
@@ -1615,7 +1798,6 @@ function renderTDEEPlan() {
     const deficitColor = feasible ? 'var(--green)' : 'var(--danger)';
     const warning = !feasible ? ' ⚠️ Deficit exceeds 1000 kcal/day — consider extending your goal date.' : '';
 
-    // Days left from today (display only — doesn't affect any targets)
     let daysLeftHtml = '';
     if (goals.goal_date) {
       const daysLeft = Math.max(0, Math.round((new Date(goals.goal_date) - new Date()) / (1000 * 60 * 60 * 24)));
@@ -1675,7 +1857,6 @@ function renderTDEEPlan() {
     return;
   }
 
-  // No snapshot yet — show form-driven preview so user knows what they'll be saving
   const dob = document.getElementById('dob').value;
   const heightIn = parseFloat(document.getElementById('heightIn').value);
   const sex = document.getElementById('sex').value;
@@ -1846,9 +2027,6 @@ function setupGoalsForm() {
     const heightIn = document.getElementById('heightIn').value;
     const sex = document.getElementById('sex').value;
 
-    // Snapshot TDEE, deficit, and target intake from today's weight at save time.
-    // These frozen values are used for all calendar/modal calculations going forward
-    // so that daily weight fluctuation doesn't change historical over/under numbers.
     let savedTDEE = null, savedBMR = null, savedDeficit = 0, savedTargetIntake = null;
     let savedWeightLbs = null, savedDate = null, dailyCalorieGoal = 2000;
 
@@ -1886,7 +2064,6 @@ function setupGoalsForm() {
       height_in: heightIn ? parseFloat(heightIn) : null,
       sex: sex || 'male',
       daily_calorie_goal: dailyCalorieGoal,
-      // Frozen snapshot — all calorie target math uses these, not live weight
       saved_tdee: savedTDEE,
       saved_bmr: savedBMR,
       saved_deficit: savedDeficit,

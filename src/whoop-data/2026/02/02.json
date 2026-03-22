@@ -6,7 +6,17 @@
         "end_time": "2026-02-01T18:57:14.682Z",
         "avg_heart_rate": 139,
         "calories": 352,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 167,
+        "strain": 10.792866,
+        "zone_durations": {
+            "zone_zero_milli": 44000,
+            "zone_one_milli": 357000,
+            "zone_two_milli": 945000,
+            "zone_three_milli": 658000,
+            "zone_four_milli": 125000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "440f0373-9f8c-4823-a0f9-c8e4e2af4e0b",
@@ -15,7 +25,17 @@
         "end_time": "2026-02-01T19:07:53.392Z",
         "avg_heart_rate": 130,
         "calories": 74,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 152,
+        "strain": 5.166068,
+        "zone_durations": {
+            "zone_zero_milli": 0,
+            "zone_one_milli": 329000,
+            "zone_two_milli": 219000,
+            "zone_three_milli": 39000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "a9072b68-56dd-4ce7-80f6-765fdf9bd3b8",
@@ -24,7 +44,17 @@
         "end_time": "2026-02-03T11:56:23.705Z",
         "avg_heart_rate": 140,
         "calories": 306,
-        "distance_meter": 5.8050013
+        "distance_meter": 5.8050013,
+        "max_heart_rate": 162,
+        "strain": 11.411663,
+        "zone_durations": {
+            "zone_zero_milli": 273000,
+            "zone_one_milli": 164000,
+            "zone_two_milli": 221000,
+            "zone_three_milli": 610000,
+            "zone_four_milli": 536000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "fa7a951c-c1b5-41d5-b7d7-6a147f5ce5db",
@@ -33,7 +63,17 @@
         "end_time": "2026-02-03T12:14:48.741Z",
         "avg_heart_rate": 110,
         "calories": 50,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 130,
+        "strain": 4.6014686,
+        "zone_durations": {
+            "zone_zero_milli": 599000,
+            "zone_one_milli": 459000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "d0ad39a7-49ac-4568-861e-83b02eab4ea0",
@@ -42,7 +82,17 @@
         "end_time": "2026-02-05T12:03:25.162Z",
         "avg_heart_rate": 142,
         "calories": 315,
-        "distance_meter": 743.4767
+        "distance_meter": 743.4767,
+        "max_heart_rate": 161,
+        "strain": 11.640211,
+        "zone_durations": {
+            "zone_zero_milli": 229000,
+            "zone_one_milli": 184000,
+            "zone_two_milli": 219000,
+            "zone_three_milli": 541000,
+            "zone_four_milli": 631000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "3de7feaf-facf-42e2-9b24-6bd6839206e7",
@@ -51,7 +101,17 @@
         "end_time": "2026-02-05T12:15:41.050Z",
         "avg_heart_rate": 133,
         "calories": 100,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 154,
+        "strain": 5.6871243,
+        "zone_durations": {
+            "zone_zero_milli": 0,
+            "zone_one_milli": 312000,
+            "zone_two_milli": 377010,
+            "zone_three_milli": 28990,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "a6e59001-45e7-4680-8381-d9c76fcf3e84",
@@ -60,7 +120,17 @@
         "end_time": "2026-02-06T11:55:23.657Z",
         "avg_heart_rate": 137,
         "calories": 241,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 165,
+        "strain": 9.066992,
+        "zone_durations": {
+            "zone_zero_milli": 88000,
+            "zone_one_milli": 398000,
+            "zone_two_milli": 391000,
+            "zone_three_milli": 584000,
+            "zone_four_milli": 81000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "8efcd2a3-e394-4f91-82cf-b7df02f6635c",
@@ -69,7 +139,17 @@
         "end_time": "2026-02-06T12:09:56.028Z",
         "avg_heart_rate": 135,
         "calories": 125,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 156,
+        "strain": 6.2342525,
+        "zone_durations": {
+            "zone_zero_milli": 0,
+            "zone_one_milli": 285000,
+            "zone_two_milli": 466000,
+            "zone_three_milli": 102000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "2e811362-d6f4-4cf2-be90-fb939c857355",
@@ -78,7 +158,17 @@
         "end_time": "2026-02-08T18:52:29.383Z",
         "avg_heart_rate": 133,
         "calories": 351,
-        "distance_meter": 977.3805
+        "distance_meter": 977.3805,
+        "max_heart_rate": 162,
+        "strain": 10.482265,
+        "zone_durations": {
+            "zone_zero_milli": 196000,
+            "zone_one_milli": 634060,
+            "zone_two_milli": 906010,
+            "zone_three_milli": 573050,
+            "zone_four_milli": 107010,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "d48c6927-f90c-4389-9e76-1706e30559df",
@@ -87,7 +177,17 @@
         "end_time": "2026-02-10T12:09:43.646Z",
         "avg_heart_rate": 137,
         "calories": 297,
-        "distance_meter": 14.118245
+        "distance_meter": 14.118245,
+        "max_heart_rate": 162,
+        "strain": 10.644162,
+        "zone_durations": {
+            "zone_zero_milli": 270000,
+            "zone_one_milli": 349000,
+            "zone_two_milli": 281000,
+            "zone_three_milli": 765000,
+            "zone_four_milli": 259000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "698c3f0b-046e-49d9-8f67-9bf59b65af7d",
@@ -96,7 +196,17 @@
         "end_time": "2026-02-11T11:58:14.365Z",
         "avg_heart_rate": 105,
         "calories": 92,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 133,
+        "strain": 8.897433,
+        "zone_durations": {
+            "zone_zero_milli": 1241000,
+            "zone_one_milli": 901000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "796281c1-bd3c-4482-83c5-c03ecbde6cab",
@@ -105,7 +215,17 @@
         "end_time": "2026-02-12T11:56:15.314Z",
         "avg_heart_rate": 139,
         "calories": 305,
-        "distance_meter": 75.619194
+        "distance_meter": 75.619194,
+        "max_heart_rate": 175,
+        "strain": 11.654925,
+        "zone_durations": {
+            "zone_zero_milli": 217000,
+            "zone_one_milli": 273000,
+            "zone_two_milli": 361000,
+            "zone_three_milli": 434060,
+            "zone_four_milli": 310000,
+            "zone_five_milli": 209000
+        }
     },
     {
         "id": "13a05250-21e4-4265-82a7-41e08a3f0d79",
@@ -114,7 +234,17 @@
         "end_time": "2026-02-14T19:54:21.299Z",
         "avg_heart_rate": 146,
         "calories": 363,
-        "distance_meter": 3.352498
+        "distance_meter": 3.352498,
+        "max_heart_rate": 179,
+        "strain": 12.665928,
+        "zone_durations": {
+            "zone_zero_milli": 159000,
+            "zone_one_milli": 128000,
+            "zone_two_milli": 395000,
+            "zone_three_milli": 446000,
+            "zone_four_milli": 629010,
+            "zone_five_milli": 163000
+        }
     },
     {
         "id": "34828301-efff-4456-869e-5fd510a097ed",
@@ -123,7 +253,17 @@
         "end_time": "2026-02-15T19:36:15.232Z",
         "avg_heart_rate": 122,
         "calories": 230,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 149,
+        "strain": 11.247874,
+        "zone_durations": {
+            "zone_zero_milli": 377000,
+            "zone_one_milli": 1465000,
+            "zone_two_milli": 640990,
+            "zone_three_milli": 48010,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "7a35f8ca-f5c6-483b-baf4-bfa726711c55",
@@ -132,7 +272,17 @@
         "end_time": "2026-02-17T11:51:57.348Z",
         "avg_heart_rate": 146,
         "calories": 323,
-        "distance_meter": 271.23285
+        "distance_meter": 271.23285,
+        "max_heart_rate": 167,
+        "strain": 12.322994,
+        "zone_durations": {
+            "zone_zero_milli": 174000,
+            "zone_one_milli": 189000,
+            "zone_two_milli": 122000,
+            "zone_three_milli": 396000,
+            "zone_four_milli": 851000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "f347503c-d7f6-435d-974d-d7a307f1d417",
@@ -141,7 +291,17 @@
         "end_time": "2026-02-17T12:06:13.129Z",
         "avg_heart_rate": 132,
         "calories": 109,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 149,
+        "strain": 5.7557597,
+        "zone_durations": {
+            "zone_zero_milli": 0,
+            "zone_one_milli": 382010,
+            "zone_two_milli": 429000,
+            "zone_three_milli": 28000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "a337a9a0-c6ed-4cc3-b0cd-fdd2f8044fc1",
@@ -150,7 +310,17 @@
         "end_time": "2026-02-18T12:16:02.081Z",
         "avg_heart_rate": 132,
         "calories": 303,
-        "distance_meter": 1220.4921
+        "distance_meter": 1220.4921,
+        "max_heart_rate": 157,
+        "strain": 9.114351,
+        "zone_durations": {
+            "zone_zero_milli": 173000,
+            "zone_one_milli": 655000,
+            "zone_two_milli": 1098050,
+            "zone_three_milli": 424060,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "f42359c1-7850-4a68-9e31-c9e97b83d8b0",
@@ -159,7 +329,17 @@
         "end_time": "2026-02-20T11:45:22.085Z",
         "avg_heart_rate": 146,
         "calories": 299,
-        "distance_meter": 973.02386
+        "distance_meter": 973.02386,
+        "max_heart_rate": 184,
+        "strain": 12.302598,
+        "zone_durations": {
+            "zone_zero_milli": 207000,
+            "zone_one_milli": 194000,
+            "zone_two_milli": 359010,
+            "zone_three_milli": 255040,
+            "zone_four_milli": 99000,
+            "zone_five_milli": 540000
+        }
     },
     {
         "id": "aa4e594d-be85-42b4-a5c6-02c6366de3de",
@@ -168,7 +348,17 @@
         "end_time": "2026-02-20T12:04:31.768Z",
         "avg_heart_rate": 130,
         "calories": 125,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 154,
+        "strain": 6.606414,
+        "zone_durations": {
+            "zone_zero_milli": 108000,
+            "zone_one_milli": 639000,
+            "zone_two_milli": 352000,
+            "zone_three_milli": 31000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "f38aac6a-1b84-4ede-ba6d-a317031bf2b4",
@@ -177,7 +367,17 @@
         "end_time": "2026-02-21T18:40:09.484Z",
         "avg_heart_rate": 140,
         "calories": 404,
-        "distance_meter": 2.887519
+        "distance_meter": 2.887519,
+        "max_heart_rate": 163,
+        "strain": 11.793058,
+        "zone_durations": {
+            "zone_zero_milli": 234000,
+            "zone_one_milli": 654000,
+            "zone_two_milli": 643010,
+            "zone_three_milli": 1035990,
+            "zone_four_milli": 6000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "5548de5d-28f9-4635-bcae-27e93545d574",
@@ -186,7 +386,17 @@
         "end_time": "2026-02-22T18:36:01.668Z",
         "avg_heart_rate": 111,
         "calories": 130,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 148,
+        "strain": 10.731876,
+        "zone_durations": {
+            "zone_zero_milli": 1583010,
+            "zone_one_milli": 1286010,
+            "zone_two_milli": 48000,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "459cda1e-912e-4297-99a3-2053cddc127b",
@@ -195,7 +405,17 @@
         "end_time": "2026-02-24T11:37:27.739Z",
         "avg_heart_rate": 136,
         "calories": 159,
-        "distance_meter": 1.8152757
+        "distance_meter": 1.8152757,
+        "max_heart_rate": 171,
+        "strain": 7.304208,
+        "zone_durations": {
+            "zone_zero_milli": 176000,
+            "zone_one_milli": 203000,
+            "zone_two_milli": 490000,
+            "zone_three_milli": 151000,
+            "zone_four_milli": 98000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "828d8c78-52de-4e01-bd4b-d4d0d577d5ed",
@@ -204,7 +424,17 @@
         "end_time": "2026-02-24T11:57:56.767Z",
         "avg_heart_rate": 116,
         "calories": 59,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 142,
+        "strain": 5.6504035,
+        "zone_durations": {
+            "zone_zero_milli": 508000,
+            "zone_one_milli": 678000,
+            "zone_two_milli": 7000,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "69cbdf24-ba8b-417c-8f00-04ceebf96808",
@@ -213,7 +443,17 @@
         "end_time": "2026-02-25T11:44:35.844Z",
         "avg_heart_rate": 143,
         "calories": 278,
-        "distance_meter": 0.78782487
+        "distance_meter": 0.78782487,
+        "max_heart_rate": 173,
+        "strain": 10.259094,
+        "zone_durations": {
+            "zone_zero_milli": 198000,
+            "zone_one_milli": 183000,
+            "zone_two_milli": 645000,
+            "zone_three_milli": 451000,
+            "zone_four_milli": 193000,
+            "zone_five_milli": 7000
+        }
     },
     {
         "id": "08afbd84-b373-4971-ae06-7bfed173daa5",
@@ -222,7 +462,17 @@
         "end_time": "2026-02-25T11:55:35.193Z",
         "avg_heart_rate": 108,
         "calories": 19,
-        "distance_meter": null
+        "distance_meter": null,
+        "max_heart_rate": 134,
+        "strain": 4.1739354,
+        "zone_durations": {
+            "zone_zero_milli": 445000,
+            "zone_one_milli": 196000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "9a7ba0aa-995a-42f3-aa50-581ae719254f",
@@ -231,7 +481,17 @@
         "end_time": "2026-02-27T11:58:53.517Z",
         "avg_heart_rate": 141,
         "calories": 384,
-        "distance_meter": 1.2481503
+        "distance_meter": 1.2481503,
+        "max_heart_rate": 167,
+        "strain": 11.733452,
+        "zone_durations": {
+            "zone_zero_milli": 202000,
+            "zone_one_milli": 832000,
+            "zone_two_milli": 505000,
+            "zone_three_milli": 630000,
+            "zone_four_milli": 331000,
+            "zone_five_milli": 0
+        }
     },
     {
         "id": "0f26ec41-7c87-40a8-b34f-74645da5b785",
@@ -240,6 +500,16 @@
         "end_time": "2026-02-28T19:28:22.004Z",
         "avg_heart_rate": 149,
         "calories": 395,
-        "distance_meter": 1.2930899
+        "distance_meter": 1.2930899,
+        "max_heart_rate": 178,
+        "strain": 12.789925,
+        "zone_durations": {
+            "zone_zero_milli": 192000,
+            "zone_one_milli": 198000,
+            "zone_two_milli": 297010,
+            "zone_three_milli": 655000,
+            "zone_four_milli": 705000,
+            "zone_five_milli": 36000
+        }
     }
 ]

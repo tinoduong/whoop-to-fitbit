@@ -2402,5 +2402,383 @@
         "total_protein": 55.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-20T19:50:56.604329",
+        "date": "2026-03-20",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "3/4 cup non-fat greek yogurt Chiobani, 1/4 fresh blueberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt Chobani",
+                "calories": 100,
+                "protein": 18.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38312284687
+            },
+            {
+                "foodName": "Fresh Blueberries",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38312813898
+            }
+        ],
+        "total_calories": 121,
+        "total_protein": 18.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-21T09:38:02.703590",
+        "date": "2026-03-21",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3 eggs, 1/4 tbps butter, 1/4 small avacodo, 1/2 crossiant (105 calories), 3 oz fresh orange, 1tbps soy milk, black coffee",
+        "items": [
+            {
+                "foodName": "Eggs",
+                "calories": 210,
+                "protein": 18.0,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 15.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315946535
+            },
+            {
+                "foodName": "Butter",
+                "calories": 25,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 2.8,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315406012
+            },
+            {
+                "foodName": "Avocado",
+                "calories": 60,
+                "protein": 1.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 5.5,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315533768
+            },
+            {
+                "foodName": "Croissant",
+                "calories": 105,
+                "protein": 2.5,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 6.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315818833
+            },
+            {
+                "foodName": "Fresh Orange",
+                "calories": 40,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315877751
+            },
+            {
+                "foodName": "Soy Milk",
+                "calories": 4,
+                "protein": 0.3,
+                "totalCarbohydrate": 0.2,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315199594
+            },
+            {
+                "foodName": "Black Coffee",
+                "calories": 2,
+                "protein": 0.3,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38315140675
+            }
+        ],
+        "total_calories": 446,
+        "total_protein": 23.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-21T15:19:28.601166",
+        "date": "2026-03-21",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 cup non-fat greek choibani yogurt, 1/2 cup blueberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Chobani Yogurt",
+                "calories": 130,
+                "protein": 23.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38317676697
+            },
+            {
+                "foodName": "Blueberries",
+                "calories": 42,
+                "protein": 0.5,
+                "totalCarbohydrate": 10.7,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38317067294
+            }
+        ],
+        "total_calories": 172,
+        "total_protein": 23.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-21T15:19:53.607343",
+        "date": "2026-03-21",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 small smoke baby back rib no sauce",
+        "items": [
+            {
+                "foodName": "Smoked Baby Back Rib",
+                "calories": 140,
+                "protein": 13,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 19.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38316556505
+            }
+        ],
+        "total_calories": 140,
+        "total_protein": 13,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-21T19:16:12.572969",
+        "date": "2026-03-21",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "4 baby back bbq ribs, 2 oz pork belly burnt ends, 2oz corn bread, 1oz avacado, 5 candied pecans, 1/4 fig, 1 cup kale",
+        "items": [
+            {
+                "foodName": "BBQ Baby Back Ribs",
+                "calories": 480,
+                "protein": 32.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 36.0,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38317994937
+            },
+            {
+                "foodName": "Pork Belly Burnt Ends",
+                "calories": 340,
+                "protein": 14.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 30.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38317376782
+            },
+            {
+                "foodName": "Cornbread",
+                "calories": 180,
+                "protein": 4.0,
+                "totalCarbohydrate": 28.0,
+                "totalFat": 6.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38316590519
+            },
+            {
+                "foodName": "Avocado",
+                "calories": 45,
+                "protein": 1.0,
+                "totalCarbohydrate": 2.5,
+                "totalFat": 4.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38316502574
+            },
+            {
+                "foodName": "Candied Pecans",
+                "calories": 85,
+                "protein": 1.5,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 6.0,
+                "amount": 5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38317965517
+            },
+            {
+                "foodName": "Fresh Fig",
+                "calories": 9,
+                "protein": 0.1,
+                "totalCarbohydrate": 2.3,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38317642026
+            },
+            {
+                "foodName": "Kale",
+                "calories": 33,
+                "protein": 2.2,
+                "totalCarbohydrate": 6.7,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38318099670
+            }
+        ],
+        "total_calories": 1172,
+        "total_protein": 54.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-22T13:42:42.153716",
+        "date": "2026-03-22",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "3 steamed shumai (shrimp and pork), 5 steamed shrimp dumplings, 2 steamed soup dumplings (pork), 1 shrimp pork and chive pan fried, 1oz fried zucchini, 1/2 scallion pancake",
+        "items": [
+            {
+                "foodName": "Steamed Shumai (Shrimp and Pork)",
+                "calories": 210,
+                "protein": 12.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 9.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38319927110
+            },
+            {
+                "foodName": "Steamed Shrimp Dumplings",
+                "calories": 200,
+                "protein": 10.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 8.0,
+                "amount": 5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38321211703
+            },
+            {
+                "foodName": "Steamed Soup Dumplings (Pork)",
+                "calories": 140,
+                "protein": 8.0,
+                "totalCarbohydrate": 14.0,
+                "totalFat": 6.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38320514043
+            },
+            {
+                "foodName": "Pan Fried Shrimp Pork and Chive Dumpling",
+                "calories": 80,
+                "protein": 4.5,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38320818712
+            },
+            {
+                "foodName": "Fried Zucchini",
+                "calories": 45,
+                "protein": 1.5,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38319993834
+            },
+            {
+                "foodName": "Scallion Pancake",
+                "calories": 150,
+                "protein": 4.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 7.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38320995537
+            }
+        ],
+        "total_calories": 825,
+        "total_protein": 40.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
