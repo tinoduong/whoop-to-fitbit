@@ -2780,5 +2780,138 @@
         "total_protein": 40.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-22T20:53:49.599458",
+        "date": "2026-03-22",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3.5 oz bbq picanha, 1oz bbq short rib, 1.5 oz bbq pork belly, 1/5 cup coconut rice (light coconut milk), 1/2 manga salsa, 2 tbsp chimmichurri, 2 Tates chocolate chip cookies, 2oz grilled pineapple, 1 tbsp olive oil, 2 athletic upside dawn fake beer",
+        "items": [
+            {
+                "foodName": "BBQ Picanha",
+                "calories": 312,
+                "protein": 26.3,
+                "totalCarbohydrate": 2.1,
+                "totalFat": 21.8,
+                "amount": 3.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38324282824
+            },
+            {
+                "foodName": "BBQ Short Rib",
+                "calories": 89,
+                "protein": 6.8,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 6.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38323043685
+            },
+            {
+                "foodName": "BBQ Pork Belly",
+                "calories": 213,
+                "protein": 9.3,
+                "totalCarbohydrate": 1.2,
+                "totalFat": 19.2,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38322984663
+            },
+            {
+                "foodName": "Coconut Rice",
+                "calories": 58,
+                "protein": 1.2,
+                "totalCarbohydrate": 11.8,
+                "totalFat": 0.8,
+                "amount": 0.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38321591420
+            },
+            {
+                "foodName": "Mango Salsa",
+                "calories": 25,
+                "protein": 0.3,
+                "totalCarbohydrate": 6.2,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38324233698
+            },
+            {
+                "foodName": "Chimichurri",
+                "calories": 88,
+                "protein": 0.4,
+                "totalCarbohydrate": 1.8,
+                "totalFat": 9.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38323378078
+            },
+            {
+                "foodName": "Tates Chocolate Chip Cookies",
+                "calories": 280,
+                "protein": 2.8,
+                "totalCarbohydrate": 36.0,
+                "totalFat": 14.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38324066563
+            },
+            {
+                "foodName": "Grilled Pineapple",
+                "calories": 28,
+                "protein": 0.3,
+                "totalCarbohydrate": 7.4,
+                "totalFat": 0.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38322040695
+            },
+            {
+                "foodName": "Olive Oil",
+                "calories": 119,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 13.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38323181296
+            },
+            {
+                "foodName": "Athletic Upside Dawn Non-Alcoholic Beer",
+                "calories": 100,
+                "protein": 2.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38323102668
+            }
+        ],
+        "total_calories": 1312,
+        "total_protein": 49.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

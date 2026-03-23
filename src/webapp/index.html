@@ -24,7 +24,6 @@
       <h2>Overview</h2>
     </div>
 
-    <!-- Weight & Fat Chart -->
     <div class="card">
       <div class="chart-header">
         <h3>Weight &amp; Body Fat Over Time</h3>
@@ -40,7 +39,6 @@
       </div>
     </div>
 
-    <!-- Daily Summary Calendar -->
     <div class="card">
       <div class="chart-header">
         <h3>Daily Summary</h3>
@@ -59,7 +57,12 @@
   <section id="tab-workouts" class="tab">
     <div class="section-header">
       <h2>Workouts</h2>
-      <div class="filters">
+    </div>
+
+    <!-- JS injects: range toggle, summary stats, intensity charts, divider — all above this card -->
+
+    <div class="card">
+      <div class="filters" style="margin-bottom: 12px;">
         <input type="text" id="workoutSearch" placeholder="Search sport..." />
         <select id="workoutSportFilter">
           <option value="">All Sports</option>
@@ -70,8 +73,6 @@
         <button id="workoutFilterBtn">Filter</button>
         <button id="workoutResetBtn">Reset</button>
       </div>
-    </div>
-    <div class="card">
       <table id="workoutsTable">
         <thead>
           <tr>
