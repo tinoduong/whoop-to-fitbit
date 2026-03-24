@@ -520,12 +520,21 @@ function renderIntensityTrends() {
   const tt = { backgroundColor:'#1a1d27', borderColor:'#2e3250', borderWidth:1, titleColor:'#e8eaf0', bodyColor:'#8b90a8' };
 
   // ---- STRAIN CHART ----
-  const strainWorkouts = sorted.filter(w => w.strain != null);
-  const strainLabels = strainWorkouts.map(w => {
-    const d = new Date(w.start_time);
-    return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  // Group by date — take max strain per day (one point per day)
+  const strainByDate = {};
+  sorted.forEach(w => {
+    if (w.strain == null) return;
+    const date = getDateFromISO(w.start_time);
+    if (strainByDate[date] == null || w.strain > strainByDate[date]) {
+      strainByDate[date] = w.strain;
+    }
   });
-  const strainVals = strainWorkouts.map(w => Math.round(w.strain * 10) / 10);
+  const strainDates = Object.keys(strainByDate).sort();
+  const strainLabels = strainDates.map(d => {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  });
+  const strainVals = strainDates.map(d => Math.round(strainByDate[d] * 10) / 10);
   const strainTrend = linReg(strainVals);
 
   const avgStrain = strainVals.length ? (strainVals.reduce((a,b)=>a+b,0)/strainVals.length).toFixed(1) : '—';
@@ -544,7 +553,7 @@ function renderIntensityTrends() {
         <div class="intensity-metric">
           <div class="intensity-metric-label">Avg strain</div>
           <div class="intensity-metric-value">${avgStrain}</div>
-          <div class="intensity-metric-sub">${strainVals.length} session${strainVals.length !== 1 ? 's' : ''}</div>
+          <div class="intensity-metric-sub">${strainVals.length} day${strainVals.length !== 1 ? 's' : ''}</div>
         </div>
         <div class="intensity-metric">
           <div class="intensity-metric-label">Peak</div>
@@ -629,7 +638,7 @@ function renderIntensityTrends() {
         tooltip: { ...tt, callbacks: {
           label: ctx => ctx.dataset.label === 'Trend'
             ? ` Trend: ${ctx.raw.toFixed(1)}`
-            : ` Strain: ${ctx.raw.toFixed(1)}  ·  ${strainWorkouts[ctx.dataIndex]?.sport_name || ''}`
+            : ` Strain: ${ctx.raw.toFixed(1)}`
         }}
       },
       scales: {

@@ -2913,5 +2913,212 @@
         "total_protein": 49.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-23T08:22:59.473604",
+        "date": "2026-03-23",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "4oz picanha steak grilled, 1 fig, 1/4 cup low fat cottage cheese, 1/4 lentils, 1/4 chic peas, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Picanha Steak Grilled",
+                "calories": 280,
+                "protein": 26.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 19.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38325406573
+            },
+            {
+                "foodName": "Fresh Fig",
+                "calories": 37,
+                "protein": 0.4,
+                "totalCarbohydrate": 9.6,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38325730828
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 41,
+                "protein": 7.0,
+                "totalCarbohydrate": 2.7,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38326133606
+            },
+            {
+                "foodName": "Cooked Lentils",
+                "calories": 57,
+                "protein": 4.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38326241769
+            },
+            {
+                "foodName": "Cooked Chickpeas",
+                "calories": 67,
+                "protein": 3.6,
+                "totalCarbohydrate": 11.0,
+                "totalFat": 1.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38326506685
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 25,
+                "protein": 2.6,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38326261462
+            }
+        ],
+        "total_calories": 507,
+        "total_protein": 44.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-23T19:16:57.917135",
+        "date": "2026-03-23",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2oz quinoi, 8 oz baked salmon with no skin, 1/4 mango salsa, .25 roasted red pepper, 3 oz sweet potato",
+        "items": [
+            {
+                "foodName": "Quinoa",
+                "calories": 156,
+                "protein": 5.6,
+                "totalCarbohydrate": 28.4,
+                "totalFat": 2.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38328375392
+            },
+            {
+                "foodName": "Baked Salmon",
+                "calories": 412,
+                "protein": 57.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 18.4,
+                "amount": 8,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38329618444
+            },
+            {
+                "foodName": "Mango Salsa",
+                "calories": 15,
+                "protein": 0.2,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38328734051
+            },
+            {
+                "foodName": "Roasted Red Pepper",
+                "calories": 8,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.9,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38328656051
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 77,
+                "protein": 1.4,
+                "totalCarbohydrate": 17.7,
+                "totalFat": 0.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38328511186
+            }
+        ],
+        "total_calories": 668,
+        "total_protein": 65.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-23T19:46:40.664943",
+        "date": "2026-03-23",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "2 cups non fat greek yogurt choibani, 1 tbsp pomegranite seeds, 1/4 cup raspberries",
+        "items": [
+            {
+                "foodName": "Non Fat Greek Yogurt Chobani",
+                "calories": 260,
+                "protein": 46.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38329766462
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 12,
+                "protein": 0.2,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38330090133
+            },
+            {
+                "foodName": "Raspberries",
+                "calories": 16,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38329589597
+            }
+        ],
+        "total_calories": 288,
+        "total_protein": 46.6,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
