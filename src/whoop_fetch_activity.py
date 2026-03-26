@@ -3,16 +3,25 @@ import requests
 import sys
 import os
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from whoop_token_manager import WhoopTokenManager
 from logger import get_logger
 
 log = get_logger("whoop_fetch_activity")
 
 BASE_DATA_DIR = 'whoop-data'
+LOCAL_TZ = ZoneInfo("America/New_York")
 
 def save_workout_idempotent(workout_obj):
     start_time_str = workout_obj.get('start_time')
     dt = datetime.fromisoformat(start_time_str.replace('Z', '+00:00'))
+    dt = dt.astimezone(LOCAL_TZ)
+
+    # Overwrite timestamps with local time before saving
+    workout_obj['start_time'] = dt.strftime("%Y-%m-%dT%H:%M:%S")
+    if workout_obj.get('end_time'):
+        end_dt = datetime.fromisoformat(workout_obj['end_time'].replace('Z', '+00:00'))
+        workout_obj['end_time'] = end_dt.astimezone(LOCAL_TZ).strftime("%Y-%m-%dT%H:%M:%S")
 
     year = dt.strftime("%Y")
     month = dt.strftime("%m")

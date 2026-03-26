@@ -33,8 +33,8 @@ def parse_start_argument():
 
 def convert_whoop_to_fitbit(workout):
     try:
-        start_dt = datetime.strptime(workout["start_time"], "%Y-%m-%dT%H:%M:%S.%fZ")
-        end_dt = datetime.strptime(workout["end_time"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        start_dt = datetime.fromisoformat(workout["start_time"]).replace(tzinfo=None)
+        end_dt = datetime.fromisoformat(workout["end_time"]).replace(tzinfo=None)
         duration_ms = int((end_dt - start_dt).total_seconds() * 1000)
 
         cals = workout.get("calories", 0)
@@ -116,7 +116,7 @@ def sync_whoop_to_fitbit(start_filter_dt):
 
             for workout in whoop_workouts:
                 w_id = workout.get("id")
-                w_start_dt = datetime.strptime(workout["start_time"], "%Y-%m-%dT%H:%M:%S.%fZ")
+                w_start_dt = datetime.fromisoformat(workout["start_time"]).replace(tzinfo=None)
 
                 if w_start_dt < start_filter_dt:
                     continue
@@ -142,8 +142,8 @@ def sync_whoop_to_fitbit(start_filter_dt):
 
                     if resp.status_code in [200, 201]:
                         log.info(f"Upload successful: {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}")
-                        # log.info(f"API payload: {payload}") 
-                        # log.info(f"API response: {resp.text}") 
+                        # log.info(f"API payload: {payload}")
+                        # log.info(f"API response: {resp.text}")
                         new_ids_successfully_synced.append({"id": w_id})
                         total_uploaded += 1
                     else:

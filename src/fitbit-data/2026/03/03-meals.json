@@ -3120,5 +3120,492 @@
         "total_protein": 46.6,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-24T08:08:55.951267",
+        "date": "2026-03-24",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "1/4 lentils, 1/4 pomegranate seeds, 1.26 oz sweet potato, 2 cups arugula, 1/4 cup low fat cottage cheese, 6.64 oz baked chicken breast",
+        "items": [
+            {
+                "foodName": "Lentils",
+                "calories": 57,
+                "protein": 4.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38331147171
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 21,
+                "protein": 0.4,
+                "totalCarbohydrate": 5.3,
+                "totalFat": 0.3,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38331324092
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 30,
+                "protein": 0.7,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.1,
+                "amount": 1.26,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38332214903
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38330412254
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 20,
+                "protein": 3.5,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 0.3,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38331343678
+            },
+            {
+                "foodName": "Baked Chicken Breast",
+                "calories": 311,
+                "protein": 58.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.8,
+                "amount": 6.64,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38330793459
+            }
+        ],
+        "total_calories": 444,
+        "total_protein": 68.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-25T07:36:10.701074",
+        "date": "2026-03-24",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 medium green apple",
+        "items": [
+            {
+                "foodName": "Medium Green Apple",
+                "calories": 95,
+                "protein": 0.5,
+                "totalCarbohydrate": 25.1,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38342165987
+            }
+        ],
+        "total_calories": 95,
+        "total_protein": 0.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-25T08:07:46.480819",
+        "date": "2026-03-25",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "3.84 oz baked chicken skinless breast, 2.4 oz bratwurst, 2 oz sweet potato, 1/4 cup low fat cottage cheese, 1/4 pomegranate seeds, 1 cup arugula, 1/4 lentils",
+        "items": [
+            {
+                "foodName": "Baked Chicken Skinless Breast",
+                "calories": 185,
+                "protein": 35.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 4.0,
+                "amount": 3.84,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38339008412
+            },
+            {
+                "foodName": "Bratwurst",
+                "calories": 204,
+                "protein": 8.4,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 18.0,
+                "amount": 2.4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38341419013
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 51,
+                "protein": 1.1,
+                "totalCarbohydrate": 11.8,
+                "totalFat": 0.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38340228434
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 41,
+                "protein": 7.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 1.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38340828648
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 37,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.3,
+                "totalFat": 0.5,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38341173000
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38339687275
+            },
+            {
+                "foodName": "Lentils",
+                "calories": 57,
+                "protein": 4.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38342028926
+            }
+        ],
+        "total_calories": 580,
+        "total_protein": 57.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-25T18:40:53.985578",
+        "date": "2026-03-25",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 shrimp tempura, 1 yam tempura, 1.25 shrimp tempura roll, 2 salmon sushi, 2 tuna sashami, 3 pieces of californa roll, 1 piece of spicy tuna roll",
+        "items": [
+            {
+                "foodName": "Shrimp Tempura",
+                "calories": 120,
+                "protein": 8.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 6.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38344538311
+            },
+            {
+                "foodName": "Yam Tempura",
+                "calories": 80,
+                "protein": 2.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38344784121
+            },
+            {
+                "foodName": "Shrimp Tempura Roll",
+                "calories": 200,
+                "protein": 12.0,
+                "totalCarbohydrate": 24.0,
+                "totalFat": 8.0,
+                "amount": 1.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38344715236
+            },
+            {
+                "foodName": "Salmon Sushi",
+                "calories": 50,
+                "protein": 4.5,
+                "totalCarbohydrate": 5.0,
+                "totalFat": 1.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38344361480
+            },
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 35,
+                "protein": 7.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38344015532
+            },
+            {
+                "foodName": "California Roll",
+                "calories": 40,
+                "protein": 2.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 1.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38345088915
+            },
+            {
+                "foodName": "Spicy Tuna Roll",
+                "calories": 45,
+                "protein": 3.0,
+                "totalCarbohydrate": 5.0,
+                "totalFat": 2.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38344361481
+            }
+        ],
+        "total_calories": 570,
+        "total_protein": 39.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-26T08:16:32.226239",
+        "date": "2026-03-26",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "3oz sweet potato, 1/4 cup lentils, 1/4 cup pomegranite seeds, 1/4 cup low fat cottage cheese, 4.2 oz Kirkland breaded chicken breast chunks",
+        "items": [
+            {
+                "foodName": "Sweet Potato",
+                "calories": 76,
+                "protein": 1.7,
+                "totalCarbohydrate": 17.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38346666491
+            },
+            {
+                "foodName": "Lentils",
+                "calories": 57,
+                "protein": 4.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38347354791
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 35,
+                "protein": 0.7,
+                "totalCarbohydrate": 7.9,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38346725492
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 41,
+                "protein": 7.0,
+                "totalCarbohydrate": 2.3,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38347226980
+            },
+            {
+                "foodName": "Kirkland Breaded Chicken Breast Chunks",
+                "calories": 150,
+                "protein": 13.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 7.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38346420603
+            }
+        ],
+        "total_calories": 359,
+        "total_protein": 26.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-26T19:01:57.104228",
+        "date": "2026-03-26",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 oz strawberry, 1/4 cup pomegranite seeds, 2/3 cup of yogurt, 1 tbps home made granola",
+        "items": [
+            {
+                "foodName": "Strawberry",
+                "calories": 9,
+                "protein": 0.2,
+                "totalCarbohydrate": 2.2,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38348455133
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 36,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.1,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38348632155
+            },
+            {
+                "foodName": "Plain Yogurt",
+                "calories": 100,
+                "protein": 5.5,
+                "totalCarbohydrate": 7.5,
+                "totalFat": 5.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38349074579
+            },
+            {
+                "foodName": "Homemade Granola",
+                "calories": 60,
+                "protein": 1.5,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38349045171
+            }
+        ],
+        "total_calories": 205,
+        "total_protein": 7.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-26T19:02:44.976498",
+        "date": "2026-03-26",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3 bbq ribs, 2.5 oz sweet potato, 2 cups of kale salad with light vinnegrette",
+        "items": [
+            {
+                "foodName": "BBQ Ribs",
+                "calories": 840,
+                "protein": 63.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 60.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38351516932
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 62,
+                "protein": 1.4,
+                "totalCarbohydrate": 14.4,
+                "totalFat": 0.1,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38351546447
+            },
+            {
+                "foodName": "Kale Salad with Light Vinaigrette",
+                "calories": 90,
+                "protein": 4.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 4.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38349210332
+            }
+        ],
+        "total_calories": 992,
+        "total_protein": 68.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
