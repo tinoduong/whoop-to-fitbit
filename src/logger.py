@@ -1,11 +1,28 @@
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
-LOG_DIR = os.path.join(os.path.dirname(__file__), "logs")
-LOG_FILE = os.path.join(LOG_DIR, "app.log")
 
-os.makedirs(LOG_DIR, exist_ok=True)
+def _get_week_log_path() -> str:
+    """Returns log file path: logs/YYYY/MM/YYYY-MM-DD_app.log where date is the most recent Sunday."""
+    today = datetime.now()
+    days_since_sunday = today.weekday() + 1  # Mon=0..Sun=6, so Sun=6 → +1=7, but we want 0 for Sunday
+    # weekday(): Mon=0, Tue=1, ..., Sun=6
+    # Days back to Sunday: (weekday + 1) % 7
+    days_back = (today.weekday() + 1) % 7
+    sunday = today - timedelta(days=days_back)
+
+    year = sunday.strftime("%Y")
+    month = sunday.strftime("%m")
+    date_str = sunday.strftime("%Y-%m-%d")
+
+    log_dir = os.path.join(os.path.dirname(__file__), "logs", year, month)
+    os.makedirs(log_dir, exist_ok=True)
+
+    return os.path.join(log_dir, f"{date_str}_app.log")
+
+
+LOG_FILE = _get_week_log_path()
 
 # Single shared formatter
 _formatter = logging.Formatter(
@@ -13,7 +30,7 @@ _formatter = logging.Formatter(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-# File handler — all scripts write to the same file
+# File handler — all scripts write to the same weekly file
 _file_handler = logging.FileHandler(LOG_FILE, encoding="utf-8")
 _file_handler.setFormatter(_formatter)
 
@@ -24,7 +41,9 @@ _console_handler.setFormatter(_formatter)
 
 def get_logger(name: str) -> logging.Logger:
     """
-    Returns a named logger that writes to both the console and logs/app.log.
+    Returns a named logger that writes to both the console and the weekly log file.
+    Log path: logs/YYYY/MM/YYYY-MM-DD_app.log (Sunday-anchored week)
+
     Usage:
         from logger import get_logger
         log = get_logger("whoop_fetch_activity")

@@ -3607,5 +3607,248 @@
         "total_protein": 68.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-27T08:16:32.270739",
+        "date": "2026-03-27",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "2.5 oz breaded chicken breasts Kirkland, 1 oz salami, 1/4 low fat cottage cheese, 1/4 lentils, 1/4 pomegranite seeds, 1.5 cups spinach",
+        "items": [
+            {
+                "foodName": "Breaded Chicken Breasts Kirkland",
+                "calories": 220,
+                "protein": 18.5,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 11.0,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38352997505
+            },
+            {
+                "foodName": "Salami",
+                "calories": 110,
+                "protein": 6.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 9.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38354440093
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 50,
+                "protein": 10.0,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 1.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38353142439
+            },
+            {
+                "foodName": "Lentils",
+                "calories": 55,
+                "protein": 4.5,
+                "totalCarbohydrate": 9.5,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38354518577
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 35,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.5,
+                "totalFat": 0.5,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38354115583
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 10,
+                "protein": 1.4,
+                "totalCarbohydrate": 1.6,
+                "totalFat": 0.2,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38354066454
+            }
+        ],
+        "total_calories": 480,
+        "total_protein": 41.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-27T19:52:58.077142",
+        "date": "2026-03-27",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "4oz pan fried duck breast, 1 cup sweet potato fries, 4 seared sashito peppers, 1oz avacado, 1 fig, 4 pecans, 2tbps pan sauce (chicken broth, white wine, butter), 1 Tates chocolate chip cookie",
+        "items": [
+            {
+                "foodName": "Pan Fried Duck Breast",
+                "calories": 337,
+                "protein": 19.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 28.4,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355322860
+            },
+            {
+                "foodName": "Sweet Potato Fries",
+                "calories": 160,
+                "protein": 2.0,
+                "totalCarbohydrate": 29.0,
+                "totalFat": 4.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355047425
+            },
+            {
+                "foodName": "Seared Shishito Peppers",
+                "calories": 20,
+                "protein": 1.0,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.2,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38356138860
+            },
+            {
+                "foodName": "Avocado",
+                "calories": 45,
+                "protein": 0.6,
+                "totalCarbohydrate": 2.3,
+                "totalFat": 4.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355735663
+            },
+            {
+                "foodName": "Fresh Fig",
+                "calories": 37,
+                "protein": 0.4,
+                "totalCarbohydrate": 9.6,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355814508
+            },
+            {
+                "foodName": "Pecans",
+                "calories": 78,
+                "protein": 1.0,
+                "totalCarbohydrate": 1.6,
+                "totalFat": 8.1,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355617657
+            },
+            {
+                "foodName": "Pan Sauce (Chicken Broth, White Wine, Butter)",
+                "calories": 51,
+                "protein": 0.3,
+                "totalCarbohydrate": 0.4,
+                "totalFat": 5.7,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38356119198
+            },
+            {
+                "foodName": "Tate's Chocolate Chip Cookie",
+                "calories": 140,
+                "protein": 2.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 7.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355568656
+            }
+        ],
+        "total_calories": 868,
+        "total_protein": 26.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-27T20:01:30.564643",
+        "date": "2026-03-27",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 Tate's chocolate chip cookie, 1 cup Choibani non-fat greek yogurt, 1/4 cup raspberries",
+        "items": [
+            {
+                "foodName": "Tate's chocolate chip cookie",
+                "calories": 140,
+                "protein": 2.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 7.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355804677
+            },
+            {
+                "foodName": "Chobani non-fat greek yogurt",
+                "calories": 130,
+                "protein": 23.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355273772
+            },
+            {
+                "foodName": "raspberries",
+                "calories": 16,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38355942441
+            }
+        ],
+        "total_calories": 286,
+        "total_protein": 25.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
