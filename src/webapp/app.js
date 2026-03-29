@@ -214,6 +214,9 @@ function renderWeightChart() {
   const weightData = filtered.map(w => kgToLbs(w.weight));
   const fatData = filtered.map(w => w.fat);
 
+  const weightTrend = linReg(weightData);
+  const fatTrend = linReg(fatData);
+
   const datasets = [
     {
       label: 'Weight (lbs)',
@@ -226,6 +229,16 @@ function renderWeightChart() {
       pointHoverRadius: 6,
     },
     {
+      label: 'Weight trend',
+      data: weightTrend,
+      borderColor: 'rgba(108,99,255,0.5)',
+      borderDash: [5, 4],
+      borderWidth: 1.5,
+      pointRadius: 0,
+      tension: 0,
+      yAxisID: 'yWeight',
+    },
+    {
       label: 'Body Fat (%)',
       data: fatData,
       borderColor: '#00d4aa',
@@ -234,6 +247,16 @@ function renderWeightChart() {
       yAxisID: 'yFat',
       pointRadius: 4,
       pointHoverRadius: 6,
+    },
+    {
+      label: 'Body Fat trend',
+      data: fatTrend,
+      borderColor: 'rgba(0,212,170,0.5)',
+      borderDash: [5, 4],
+      borderWidth: 1.5,
+      pointRadius: 0,
+      tension: 0,
+      yAxisID: 'yFat',
     },
   ];
 
@@ -277,6 +300,7 @@ function renderWeightChart() {
           borderWidth: 1,
           titleColor: '#e8eaf0',
           bodyColor: '#8b90a8',
+          filter: item => !item.dataset.label.includes('trend'),
         },
       },
       scales: {
