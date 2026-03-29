@@ -217,6 +217,29 @@ function renderWeightChart() {
   const weightTrend = linReg(weightData);
   const fatTrend = linReg(fatData);
 
+  // Build set of Monday date strings from the label range
+  const mondayPlugin = {
+    id: 'mondayLines',
+    afterDraw(chart) {
+      const { ctx: c, scales: { x }, chartArea: { top, bottom } } = chart;
+      c.save();
+      c.strokeStyle = 'rgba(220, 60, 60, 0.35)';
+      c.lineWidth = 1;
+      c.setLineDash([3, 5]);
+      labels.forEach((dateStr, i) => {
+        const d = new Date(dateStr + 'T00:00:00');
+        if (d.getDay() === 1) { // Monday
+          const xPos = x.getPixelForValue(i);
+          c.beginPath();
+          c.moveTo(xPos, top);
+          c.lineTo(xPos, bottom);
+          c.stroke();
+        }
+      });
+      c.restore();
+    }
+  };
+
   const datasets = [
     {
       label: 'Weight (lbs)',
@@ -288,6 +311,7 @@ function renderWeightChart() {
   weightChart = new Chart(ctx, {
     type: 'line',
     data: { labels, datasets },
+    plugins: [mondayPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -326,7 +350,6 @@ function renderWeightChart() {
     },
   });
 }
-
 // ===== MONTH NAV =====
 function setupMonthNav() {
   document.getElementById('prevMonth').addEventListener('click', () => {

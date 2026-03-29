@@ -4204,5 +4204,103 @@
         "total_protein": 2.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-29T10:26:21.590925",
+        "date": "2026-03-29",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3 large eggs, 2 breakfast link sausages, 1/5 orange",
+        "items": [
+            {
+                "foodName": "Large Eggs",
+                "calories": 210,
+                "protein": 18.0,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 15.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38364667682
+            },
+            {
+                "foodName": "Breakfast Link Sausages",
+                "calories": 170,
+                "protein": 6.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 15.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38364303883
+            },
+            {
+                "foodName": "Orange",
+                "calories": 12,
+                "protein": 0.2,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 0.0,
+                "amount": 0.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38363989372
+            }
+        ],
+        "total_calories": 392,
+        "total_protein": 24.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-29T15:22:00.212493",
+        "date": "2026-03-29",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "2/3 cup non-fat greek yogurt, 1/4 pomegranite seed, 1.5 tbsp granola",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 100,
+                "protein": 17.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.67,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38365036733
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 21,
+                "protein": 0.4,
+                "totalCarbohydrate": 5.3,
+                "totalFat": 0.3,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38364488286
+            },
+            {
+                "foodName": "Granola",
+                "calories": 75,
+                "protein": 2.3,
+                "totalCarbohydrate": 11.3,
+                "totalFat": 2.8,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38364910631
+            }
+        ],
+        "total_calories": 196,
+        "total_protein": 19.7,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
