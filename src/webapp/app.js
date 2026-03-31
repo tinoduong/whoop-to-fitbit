@@ -1279,7 +1279,7 @@ function injectProteinChartStyles() {
 
 function getProteinGoal() {
   // Use saved protein goal if set, otherwise fall back to 110g default
-  return goals.protein_goal || 110;
+  return goals.saved_protein_goal || 110;
 }
 
 function getMealsForProteinRange(range) {
@@ -2717,6 +2717,10 @@ function setupGoalsForm() {
       savedTDEE = calcTDEE(latestLbs, parseFloat(heightIn), age, sex);
       savedBMR = Math.round(calcBMR(latestLbs, parseFloat(heightIn), age, sex));
 
+      const currentFat = allWeight.length ? allWeight[allWeight.length - 1].fat : null;
+      const savedLBM = currentFat != null ? savedWeightLbs * (1 - currentFat / 100) : null;
+      const savedProteinGoal = savedLBM ? Math.round(savedLBM * 1.2) : 110;
+
       if (tw && gd) {
         const today = new Date();
         const goalDate = new Date(gd);
@@ -2749,6 +2753,7 @@ function setupGoalsForm() {
       saved_target_intake: savedTargetIntake,
       saved_weight_lbs: savedWeightLbs,
       saved_date: savedDate,
+      saved_protein_goal: savedProteinGoal
     };
 
     await fetch('/api/goals', {
