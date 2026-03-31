@@ -1277,9 +1277,11 @@ function injectProteinChartStyles() {
   document.head.appendChild(style);
 }
 
-function getProteinGoal() {
+function getProteinGoals() {
   // Use saved protein goal if set, otherwise fall back to 110g default
-  return goals.saved_protein_goal || 110;
+  const goal = goals.saved_protein_goal || 135;
+  const floor = goal ? Math.round(goal / 1.2) : 110;
+  return { goal, floor };
 }
 
 function getMealsForProteinRange(range) {
@@ -1296,7 +1298,6 @@ function getMealsForProteinRange(range) {
 function renderProteinChart() {
   injectProteinChartStyles();
 
-  // Inject section above filter bar if not already present
   if (!document.getElementById('proteinChartSection')) {
     const mealsTab = document.getElementById('tab-meals');
     const filterBar = mealsTab.querySelector('.filter-bar') || mealsTab.firstElementChild;
@@ -1308,10 +1309,9 @@ function renderProteinChart() {
   }
 
   const section = document.getElementById('proteinChartSection');
-  const proteinGoal = getProteinGoal();
+  const { goal: proteinGoal, floor: proteinFloor } = getProteinGoals();
   const filtered = getMealsForProteinRange(proteinChartRange);
 
-  // Aggregate protein by day
   const byDate = {};
   filtered.forEach(meal => {
     if (!byDate[meal.date]) byDate[meal.date] = 0;
@@ -1320,16 +1320,15 @@ function renderProteinChart() {
   const dates = Object.keys(byDate).sort();
   const proteinVals = dates.map(d => Math.round(byDate[d] * 10) / 10);
 
-  // Summary metrics
   const daysLogged = dates.length;
   const avg = daysLogged ? (proteinVals.reduce((a, b) => a + b, 0) / daysLogged).toFixed(1) : '—';
-  const metGoalDays = proteinVals.filter(v => v >= proteinGoal).length;
+  const metGoalDays = proteinGoal ? proteinVals.filter(v => v >= proteinGoal).length : 0;
   const pctMet = daysLogged ? Math.round((metGoalDays / daysLogged) * 100) : 0;
   const peak = daysLogged ? Math.max(...proteinVals).toFixed(1) : '—';
 
   section.innerHTML = `
     <div class="protein-chart-header">
-      <div class="protein-chart-title">Daily Protein vs Goal</div>
+      <div class="protein-chart-title">Daily Protein</div>
       <div class="protein-chart-range-toggle">
         <button class="protein-range-btn ${proteinChartRange === '7d'  ? 'active' : ''}" data-range="7d">1 week</button>
         <button class="protein-range-btn ${proteinChartRange === '30d' ? 'active' : ''}" data-range="30d">1 month</button>
@@ -1344,9 +1343,9 @@ function renderProteinChart() {
         <div class="protein-metric-sub">${daysLogged} day${daysLogged !== 1 ? 's' : ''} logged</div>
       </div>
       <div class="protein-metric">
-        <div class="protein-metric-label">Goal hit</div>
-        <div class="protein-metric-value">${metGoalDays}/${daysLogged}</div>
-        <div class="protein-metric-sub">${pctMet}% of days ≥ ${proteinGoal}g</div>
+        <div class="protein-metric-label">Target hit</div>
+        <div class="protein-metric-value">${proteinGoal ? `${metGoalDays}/${daysLogged}` : '—'}</div>
+        <div class="protein-metric-sub">${proteinGoal ? `${pctMet}% of days ≥ ${proteinGoal}g` : 'no goal set'}</div>
       </div>
       <div class="protein-metric">
         <div class="protein-metric-label">Peak day</div>
@@ -1354,12 +1353,22 @@ function renderProteinChart() {
         <div class="protein-metric-sub">single day high</div>
       </div>
     </div>
+    <div class="protein-chart-legend" style="display:flex;gap:16px;margin-bottom:8px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:#00d4aa"></div>≥ target (${proteinGoal ?? '—'}g)
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:#6c63ff"></div>≥ floor (${proteinFloor ?? '—'}g)
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:#ff6b6b"></div>below floor
+      </div>
+    </div>
     <div style="position:relative;width:100%;height:200px">
       <canvas id="proteinBarChart"></canvas>
     </div>
   `;
 
-  // Range toggle listeners
   section.querySelectorAll('.protein-range-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       proteinChartRange = btn.dataset.range;
@@ -1367,7 +1376,6 @@ function renderProteinChart() {
     });
   });
 
-  // Build chart
   if (proteinChart) proteinChart.destroy();
 
   const labels = dates.map(d => {
@@ -1376,71 +1384,93 @@ function renderProteinChart() {
   });
 
   const barColors = proteinVals.map(v =>
-    v >= proteinGoal ? 'rgba(0,212,170,0.75)' : 'rgba(108,99,255,0.65)'
+    !proteinGoal ? 'rgba(108,99,255,0.65)' :
+    v >= proteinGoal ? 'rgba(0,212,170,0.75)' :
+    v >= proteinFloor ? 'rgba(108,99,255,0.65)' :
+    'rgba(255,107,107,0.55)'
   );
   const barBorders = proteinVals.map(v =>
-    v >= proteinGoal ? '#00d4aa' : '#6c63ff'
+    !proteinGoal ? '#6c63ff' :
+    v >= proteinGoal ? '#00d4aa' :
+    v >= proteinFloor ? '#6c63ff' :
+    '#ff6b6b'
   );
 
   const tickColor = '#8b90a8';
   const gridColor = 'rgba(139,144,168,0.12)';
+  const tt = {
+    backgroundColor: '#1a1d27',
+    borderColor: '#2e3250',
+    borderWidth: 1,
+    titleColor: '#e8eaf0',
+    bodyColor: '#8b90a8',
+  };
+
+  const datasets = [
+    {
+      label: 'Protein (g)',
+      data: proteinVals,
+      backgroundColor: barColors,
+      borderColor: barBorders,
+      borderWidth: 1,
+      borderRadius: 3,
+      order: 2,
+    },
+  ];
+
+  if (proteinGoal) {
+    datasets.push({
+      label: `Target (${proteinGoal}g)`,
+      data: dates.map(() => proteinGoal),
+      type: 'line',
+      borderColor: 'rgba(0,212,170,0.8)',
+      borderWidth: 1.5,
+      borderDash: [5, 4],
+      pointRadius: 0,
+      fill: false,
+      order: 0,
+    });
+  }
+
+  if (proteinFloor) {
+    datasets.push({
+      label: `Floor (${proteinFloor}g)`,
+      data: dates.map(() => proteinFloor),
+      type: 'line',
+      borderColor: 'rgba(255,107,107,0.7)',
+      borderWidth: 1.5,
+      borderDash: [3, 4],
+      pointRadius: 0,
+      fill: false,
+      order: 1,
+    });
+  }
 
   proteinChart = new Chart(document.getElementById('proteinBarChart'), {
     type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Protein (g)',
-          data: proteinVals,
-          backgroundColor: barColors,
-          borderColor: barBorders,
-          borderWidth: 1,
-          borderRadius: 3,
-          order: 1,
-        },
-        {
-          label: `Goal (${proteinGoal}g)`,
-          data: dates.map(() => proteinGoal),
-          type: 'line',
-          borderColor: 'rgba(255,107,107,0.7)',
-          borderWidth: 1.5,
-          borderDash: [5, 4],
-          pointRadius: 0,
-          fill: false,
-          order: 0,
-        },
-      ],
-    },
+    data: { labels, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: {
-          labels: {
-            color: '#8b90a8',
-            font: { size: 11 },
-            boxWidth: 12,
-          },
-        },
+        legend: { display: false },
         tooltip: {
-          backgroundColor: '#1a1d27',
-          borderColor: '#2e3250',
-          borderWidth: 1,
-          titleColor: '#e8eaf0',
-          bodyColor: '#8b90a8',
+          ...tt,
           callbacks: {
-            label: ctx => ctx.dataset.label.startsWith('Goal')
-              ? ` Goal: ${proteinGoal}g`
-              : ` Protein: ${ctx.raw}g`,
+            label: ctx => {
+              if (ctx.dataset.label.startsWith('Target')) return ` Target: ${proteinGoal}g`;
+              if (ctx.dataset.label.startsWith('Floor')) return ` Floor: ${proteinFloor}g`;
+              return ` Protein: ${ctx.raw}g`;
+            },
             afterBody: items => {
-              const val = items.find(i => !i.dataset.label.startsWith('Goal'))?.raw;
+              if (!proteinGoal) return '';
+              const val = items.find(i => i.dataset.label === 'Protein (g)')?.raw;
               if (val == null) return '';
               const diff = val - proteinGoal;
               return diff >= 0
-                ? `  ✓ ${diff.toFixed(1)}g over goal`
-                : `  ✗ ${Math.abs(diff).toFixed(1)}g under goal`;
+                ? `  ✓ ${diff.toFixed(1)}g over target`
+                : `  ✗ ${Math.abs(diff).toFixed(1)}g under target`;
             },
           },
         },
