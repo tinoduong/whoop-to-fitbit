@@ -4813,5 +4813,30 @@
         "total_protein": 51.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-31T19:54:41.812582",
+        "date": "2026-03-31",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 wegmans albacore tuna pack lemon and pepper",
+        "items": [
+            {
+                "foodName": "Wegmans Albacore Tuna Pack Lemon and Pepper",
+                "calories": 90,
+                "protein": 20.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38379833818
+            }
+        ],
+        "total_calories": 90,
+        "total_protein": 20.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

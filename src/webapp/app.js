@@ -1325,6 +1325,8 @@ function renderProteinChart() {
   const metGoalDays = proteinGoal ? proteinVals.filter(v => v >= proteinGoal).length : 0;
   const pctMet = daysLogged ? Math.round((metGoalDays / daysLogged) * 100) : 0;
   const peak = daysLogged ? Math.max(...proteinVals).toFixed(1) : '—';
+  const withinRangeDays = proteinFloor ? proteinVals.filter(v => v >= proteinFloor).length : 0;
+  const pctWithinRange = daysLogged ? Math.round((withinRangeDays / daysLogged) * 100) : 0;
 
   section.innerHTML = `
     <div class="protein-chart-header">
@@ -1346,6 +1348,11 @@ function renderProteinChart() {
         <div class="protein-metric-label">Target hit</div>
         <div class="protein-metric-value">${proteinGoal ? `${metGoalDays}/${daysLogged}` : '—'}</div>
         <div class="protein-metric-sub">${proteinGoal ? `${pctMet}% of days ≥ ${proteinGoal}g` : 'no goal set'}</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Within range</div>
+        <div class="protein-metric-value">${proteinGoal ? `${withinRangeDays}/${daysLogged}` : '—'}</div>
+        <div class="protein-metric-sub">${proteinGoal ? `${pctWithinRange}% of days ≥ ${proteinFloor}g` : 'no goal set'}</div>
       </div>
       <div class="protein-metric">
         <div class="protein-metric-label">Peak day</div>
