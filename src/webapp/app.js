@@ -906,6 +906,17 @@ function injectWorkoutSummaryStyles() {
       color: #e8eaf0;
       min-width: 28px;
     }
+    .workout-count-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 1px 7px;
+      border-radius: 10px;
+      background: rgba(108,99,255,0.12);
+      color: #9c96ff;
+      vertical-align: middle;
+      margin-left: 3px;
+    }
   `;
   document.head.appendChild(style);
 }
@@ -1041,29 +1052,67 @@ function renderWorkouts() {
     sports.map(s => `<option value="${s}" ${s === currentSport ? 'selected' : ''}>${s.replace(/-/g, ' ')}</option>`).join('');
 
   if (workoutsFiltered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No workouts found</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No workouts found</td></tr>';
     paginationEl.innerHTML = '';
     return;
   }
 
-  const totalPages = Math.ceil(workoutsFiltered.length / WORKOUTS_PER_PAGE);
+  // Group by date
+  const workoutsByDate = {};
+  workoutsFiltered.forEach(w => {
+    const d = getDateFromISO(w.start_time);
+    if (!workoutsByDate[d]) workoutsByDate[d] = [];
+    workoutsByDate[d].push(w);
+  });
+  const dayKeys = Object.keys(workoutsByDate).sort().reverse();
+
+  const totalPages = Math.ceil(dayKeys.length / WORKOUTS_PER_PAGE);
   if (workoutsPage > totalPages) workoutsPage = totalPages;
   const start = (workoutsPage - 1) * WORKOUTS_PER_PAGE;
-  const pageItems = workoutsFiltered.slice(start, start + WORKOUTS_PER_PAGE);
+  const pageDays = dayKeys.slice(start, start + WORKOUTS_PER_PAGE);
 
-  tbody.innerHTML = pageItems.map(w => {
-    const date = getDateFromISO(w.start_time);
+  tbody.innerHTML = pageDays.map(date => {
+    const dayWorkouts = workoutsByDate[date];
 
-    // Zone sparkbar
-    const zones = w.zone_durations || {};
-    const z0 = zones.zone_zero_milli || 0;
-    const z1 = zones.zone_one_milli || 0;
-    const z2 = zones.zone_two_milli || 0;
-    const z3 = zones.zone_three_milli || 0;
-    const z4 = zones.zone_four_milli || 0;
-    const z5 = zones.zone_five_milli || 0;
-    const zTotal = z0 + z1 + z2 + z3 + z4 + z5;
+    let totalDurMs = 0, totalCals = 0, totalDist = 0;
+    let sumAvgHR = 0, maxHR = 0;
+    let sumStrain = 0, strainCount = 0;
+    let z0=0, z1=0, z2=0, z3=0, z4=0, z5=0;
 
+    dayWorkouts.forEach(w => {
+      totalDurMs += (new Date(w.end_time) - new Date(w.start_time));
+      totalCals += w.calories || 0;
+      totalDist += w.distance_meter || 0;
+      sumAvgHR += w.avg_heart_rate || 0;
+      if ((w.max_heart_rate || 0) > maxHR) maxHR = w.max_heart_rate;
+      if (w.strain != null) { sumStrain += w.strain; strainCount++; }
+      const zd = w.zone_durations || {};
+      z0 += zd.zone_zero_milli || 0;
+      z1 += zd.zone_one_milli || 0;
+      z2 += zd.zone_two_milli || 0;
+      z3 += zd.zone_three_milli || 0;
+      z4 += zd.zone_four_milli || 0;
+      z5 += zd.zone_five_milli || 0;
+    });
+
+    const totalMins = Math.round(totalDurMs / 60000);
+    const avgHR = Math.round(sumAvgHR / dayWorkouts.length);
+    const avgStrain = strainCount ? sumStrain / strainCount : null;
+
+    const durStr = totalMins >= 60
+      ? `${Math.floor(totalMins/60)}h ${totalMins%60}m`
+      : `${totalMins}m`;
+
+    const seen = new Set();
+    const sportTags = dayWorkouts
+      .filter(w => { if (seen.has(w.sport_name)) return false; seen.add(w.sport_name); return true; })
+      .map(w => `<span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span>`)
+      .join('');
+    const countBadge = dayWorkouts.length > 1
+      ? `<span class="workout-count-badge">${dayWorkouts.length}</span>`
+      : '';
+
+    const zTotal = z0+z1+z2+z3+z4+z5;
     let zoneBarHtml = '—';
     if (zTotal > 0) {
       const segs = [
@@ -1074,44 +1123,37 @@ function renderWorkouts() {
         { val: z4, color: '#993556' },
         { val: z5, color: '#6c63ff' },
       ].filter(s => s.val > 0);
-
       const segHtml = segs.map(s =>
         `<div class="zone-sparkbar-seg" style="flex:${s.val};background:${s.color}"></div>`
       ).join('');
       zoneBarHtml = `<div class="zone-sparkbar">${segHtml}</div>`;
     }
 
-    // Strain bar (0–21 scale)
-    const strain = w.strain != null ? w.strain : null;
     let strainHtml = '—';
-    if (strain != null) {
-      const pct = Math.min(100, (strain / 21) * 100).toFixed(1);
+    if (avgStrain != null) {
+      const pct = Math.min(100, (avgStrain / 21) * 100).toFixed(1);
       strainHtml = `
         <div class="strain-bar-wrap">
-          <span class="strain-bar-num">${strain.toFixed(1)}</span>
+          <span class="strain-bar-num">${avgStrain.toFixed(1)}</span>
           <div class="strain-bar-track">
             <div class="strain-bar-fill" style="width:${pct}%"></div>
           </div>
-        </div>
-      `;
+        </div>`;
     }
 
-    const maxHR = w.max_heart_rate != null ? w.max_heart_rate : '—';
-    const dist = w.distance_meter != null ? (w.distance_meter / 1609.34).toFixed(2) + ' mi' : '—';
+    const distStr = totalDist > 200 ? (totalDist / 1609.34).toFixed(2) + ' mi' : '—';
 
     return `
       <tr>
         <td>${formatDate(date)}</td>
-        <td><span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span></td>
-        <td>${formatTime(w.start_time)}</td>
-        <td>${formatDuration(w.start_time, w.end_time)}</td>
-        <td>${w.avg_heart_rate} / <span style="color:#8b90a8">${maxHR}</span></td>
-        <td>${w.calories} kcal</td>
-        <td>${dist}</td>
+        <td>${sportTags}${countBadge}</td>
+        <td>${durStr}</td>
+        <td>${avgHR} / <span style="color:#8b90a8">${maxHR || '—'}</span></td>
+        <td>${totalCals} kcal</td>
+        <td>${distStr}</td>
         <td>${strainHtml}</td>
         <td>${zoneBarHtml}</td>
-      </tr>
-    `;
+      </tr>`;
   }).join('');
 
   renderPagination(paginationEl, workoutsPage, totalPages, (p) => {

@@ -4302,5 +4302,310 @@
         "total_protein": 19.7,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-29T18:45:29.740365",
+        "date": "2026-03-29",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "7.5 oz grilled chicken breast, 1/2 cup uncle ben's wild rice, 1oz roasted egg plant, 2 oz roasted acorn squash, 1oz roasted zuchinni, 1/2 tbsp olive oil",
+        "items": [
+            {
+                "foodName": "Grilled Chicken Breast",
+                "calories": 347,
+                "protein": 65.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.6,
+                "amount": 7.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38365714012
+            },
+            {
+                "foodName": "Uncle Ben's Wild Rice",
+                "calories": 110,
+                "protein": 4.0,
+                "totalCarbohydrate": 22.0,
+                "totalFat": 1.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38366107146
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 7,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38365235234
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 32,
+                "protein": 0.6,
+                "totalCarbohydrate": 8.3,
+                "totalFat": 0.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38365196689
+            },
+            {
+                "foodName": "Roasted Zucchini",
+                "calories": 5,
+                "protein": 0.6,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38365792472
+            },
+            {
+                "foodName": "Olive Oil",
+                "calories": 60,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.8,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38366490531
+            }
+        ],
+        "total_calories": 561,
+        "total_protein": 70.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-29T18:58:02.034846",
+        "date": "2026-03-29",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 slice apple tart (305 calories, 41g carbs, 3g protein, 14g fat)",
+        "items": [
+            {
+                "foodName": "Apple Tart",
+                "calories": 305,
+                "protein": 3.0,
+                "totalCarbohydrate": 41.0,
+                "totalFat": 14.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38366686434
+            }
+        ],
+        "total_calories": 305,
+        "total_protein": 3.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-30T07:51:09.806662",
+        "date": "2026-03-30",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "5.14 oz grilled skinless chicken breast, 1/4 cup roasted sweet potato, 1/4 roasted egg plan, 1/4 cup pomegranite seeds, 1 cup spinach, .25 oz roasted acorn squash",
+        "items": [
+            {
+                "foodName": "Grilled Skinless Chicken Breast",
+                "calories": 231,
+                "protein": 43.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38369214327
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 26,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38368342771
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 7,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38367478027
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 21,
+                "protein": 0.4,
+                "totalCarbohydrate": 4.7,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38367743141
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 7,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38368655261
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 3,
+                "protein": 0.1,
+                "totalCarbohydrate": 0.8,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38367360562
+            }
+        ],
+        "total_calories": 295,
+        "total_protein": 45.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-30T18:46:50.717855",
+        "date": "2026-03-30",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1.5 cups ground turkey, .5 tbsp Sesame Garlic sauce Wegmans (22kal), 2 large fried eggs, 1/2 cup sauteed vegetables, 1.25 cup white rice",
+        "items": [
+            {
+                "foodName": "Ground Turkey",
+                "calories": 360,
+                "protein": 54.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 15.0,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38374968720
+            },
+            {
+                "foodName": "Sesame Garlic Sauce Wegmans",
+                "calories": 22,
+                "protein": 0.5,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.5,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38374634430
+            },
+            {
+                "foodName": "Fried Eggs Large",
+                "calories": 180,
+                "protein": 12.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 14.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38374192125
+            },
+            {
+                "foodName": "Sauteed Vegetables",
+                "calories": 35,
+                "protein": 2.0,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.5,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38374998260
+            },
+            {
+                "foodName": "White Rice",
+                "calories": 255,
+                "protein": 5.3,
+                "totalCarbohydrate": 55.0,
+                "totalFat": 0.6,
+                "amount": 1.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38375047275
+            }
+        ],
+        "total_calories": 852,
+        "total_protein": 73.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-30T19:30:50.922497",
+        "date": "2026-03-30",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 cup non-fat greek yogurt, 1 cup strawberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 130,
+                "protein": 23.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38375215410
+            },
+            {
+                "foodName": "Strawberries",
+                "calories": 49,
+                "protein": 1.0,
+                "totalCarbohydrate": 11.7,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38373986804
+            }
+        ],
+        "total_calories": 179,
+        "total_protein": 24.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
