@@ -1195,6 +1195,272 @@ function applyWorkoutFilters() {
 }
 
 // ===== MEALS =====
+// ===== PROTEIN CHART =====
+let proteinChart = null;
+let proteinChartRange = '30d';
+
+function injectProteinChartStyles() {
+  if (document.getElementById('proteinChartStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'proteinChartStyles';
+  style.textContent = `
+    #proteinChartSection {
+      margin-bottom: 24px;
+    }
+    .protein-chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .protein-chart-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #8b90a8;
+    }
+    .protein-chart-range-toggle {
+      display: flex;
+      gap: 4px;
+    }
+    .protein-range-btn {
+      background: transparent;
+      border: 1px solid rgba(139,144,168,0.3);
+      color: #8b90a8;
+      border-radius: 6px;
+      padding: 4px 11px;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .protein-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
+    .protein-range-btn.active {
+      background: rgba(108,99,255,0.15);
+      border-color: #6c63ff;
+      color: #6c63ff;
+      font-weight: 600;
+    }
+    .protein-chart-metrics {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .protein-metric {
+      background: rgba(108,99,255,0.07);
+      border: 1px solid rgba(108,99,255,0.15);
+      border-radius: 10px;
+      padding: 8px 14px;
+      min-width: 100px;
+    }
+    .protein-metric-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #8b90a8;
+      margin-bottom: 2px;
+    }
+    .protein-metric-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e8eaf0;
+    }
+    .protein-metric-sub {
+      font-size: 0.7rem;
+      color: #8b90a8;
+      margin-top: 1px;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function getProteinGoal() {
+  // Use saved protein goal if set, otherwise fall back to 110g default
+  return goals.protein_goal || 110;
+}
+
+function getMealsForProteinRange(range) {
+  if (!allMeals.length) return allMeals;
+  const now = new Date();
+  const cutoff = new Date(now);
+  if (range === '7d')  cutoff.setDate(cutoff.getDate() - 7);
+  else if (range === '30d') cutoff.setDate(cutoff.getDate() - 30);
+  else if (range === '1y')  cutoff.setFullYear(cutoff.getFullYear() - 1);
+  else return allMeals; // 'all'
+  return allMeals.filter(m => new Date(m.date + 'T00:00:00') >= cutoff);
+}
+
+function renderProteinChart() {
+  injectProteinChartStyles();
+
+  // Inject section above filter bar if not already present
+  if (!document.getElementById('proteinChartSection')) {
+    const mealsTab = document.getElementById('tab-meals');
+    const filterBar = mealsTab.querySelector('.filter-bar') || mealsTab.firstElementChild;
+    const section = document.createElement('div');
+    section.id = 'proteinChartSection';
+    section.className = 'card';
+    section.style.padding = '20px 24px';
+    mealsTab.insertBefore(section, filterBar);
+  }
+
+  const section = document.getElementById('proteinChartSection');
+  const proteinGoal = getProteinGoal();
+  const filtered = getMealsForProteinRange(proteinChartRange);
+
+  // Aggregate protein by day
+  const byDate = {};
+  filtered.forEach(meal => {
+    if (!byDate[meal.date]) byDate[meal.date] = 0;
+    byDate[meal.date] += meal.total_protein || 0;
+  });
+  const dates = Object.keys(byDate).sort();
+  const proteinVals = dates.map(d => Math.round(byDate[d] * 10) / 10);
+
+  // Summary metrics
+  const daysLogged = dates.length;
+  const avg = daysLogged ? (proteinVals.reduce((a, b) => a + b, 0) / daysLogged).toFixed(1) : '—';
+  const metGoalDays = proteinVals.filter(v => v >= proteinGoal).length;
+  const pctMet = daysLogged ? Math.round((metGoalDays / daysLogged) * 100) : 0;
+  const peak = daysLogged ? Math.max(...proteinVals).toFixed(1) : '—';
+
+  section.innerHTML = `
+    <div class="protein-chart-header">
+      <div class="protein-chart-title">Daily Protein vs Goal</div>
+      <div class="protein-chart-range-toggle">
+        <button class="protein-range-btn ${proteinChartRange === '7d'  ? 'active' : ''}" data-range="7d">1 week</button>
+        <button class="protein-range-btn ${proteinChartRange === '30d' ? 'active' : ''}" data-range="30d">1 month</button>
+        <button class="protein-range-btn ${proteinChartRange === '1y'  ? 'active' : ''}" data-range="1y">1 year</button>
+        <button class="protein-range-btn ${proteinChartRange === 'all' ? 'active' : ''}" data-range="all">All time</button>
+      </div>
+    </div>
+    <div class="protein-chart-metrics">
+      <div class="protein-metric">
+        <div class="protein-metric-label">Avg protein</div>
+        <div class="protein-metric-value">${avg}g</div>
+        <div class="protein-metric-sub">${daysLogged} day${daysLogged !== 1 ? 's' : ''} logged</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Goal hit</div>
+        <div class="protein-metric-value">${metGoalDays}/${daysLogged}</div>
+        <div class="protein-metric-sub">${pctMet}% of days ≥ ${proteinGoal}g</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Peak day</div>
+        <div class="protein-metric-value">${peak}g</div>
+        <div class="protein-metric-sub">single day high</div>
+      </div>
+    </div>
+    <div style="position:relative;width:100%;height:200px">
+      <canvas id="proteinBarChart"></canvas>
+    </div>
+  `;
+
+  // Range toggle listeners
+  section.querySelectorAll('.protein-range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      proteinChartRange = btn.dataset.range;
+      renderProteinChart();
+    });
+  });
+
+  // Build chart
+  if (proteinChart) proteinChart.destroy();
+
+  const labels = dates.map(d => {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  });
+
+  const barColors = proteinVals.map(v =>
+    v >= proteinGoal ? 'rgba(0,212,170,0.75)' : 'rgba(108,99,255,0.65)'
+  );
+  const barBorders = proteinVals.map(v =>
+    v >= proteinGoal ? '#00d4aa' : '#6c63ff'
+  );
+
+  const tickColor = '#8b90a8';
+  const gridColor = 'rgba(139,144,168,0.12)';
+
+  proteinChart = new Chart(document.getElementById('proteinBarChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Protein (g)',
+          data: proteinVals,
+          backgroundColor: barColors,
+          borderColor: barBorders,
+          borderWidth: 1,
+          borderRadius: 3,
+          order: 1,
+        },
+        {
+          label: `Goal (${proteinGoal}g)`,
+          data: dates.map(() => proteinGoal),
+          type: 'line',
+          borderColor: 'rgba(255,107,107,0.7)',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          fill: false,
+          order: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#8b90a8',
+            font: { size: 11 },
+            boxWidth: 12,
+          },
+        },
+        tooltip: {
+          backgroundColor: '#1a1d27',
+          borderColor: '#2e3250',
+          borderWidth: 1,
+          titleColor: '#e8eaf0',
+          bodyColor: '#8b90a8',
+          callbacks: {
+            label: ctx => ctx.dataset.label.startsWith('Goal')
+              ? ` Goal: ${proteinGoal}g`
+              : ` Protein: ${ctx.raw}g`,
+            afterBody: items => {
+              const val = items.find(i => !i.dataset.label.startsWith('Goal'))?.raw;
+              if (val == null) return '';
+              const diff = val - proteinGoal;
+              return diff >= 0
+                ? `  ✓ ${diff.toFixed(1)}g over goal`
+                : `  ✗ ${Math.abs(diff).toFixed(1)}g under goal`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: tickColor, font: { size: 10 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 20 },
+          grid: { color: gridColor },
+        },
+        y: {
+          min: 0,
+          ticks: { color: tickColor, font: { size: 11 }, callback: v => v + 'g' },
+          grid: { color: gridColor },
+          title: { display: true, text: 'protein (g)', color: tickColor, font: { size: 11 } },
+        },
+      },
+    },
+  });
+}
+
 function groupedMealDates(meals) {
   const byDate = {};
   meals.forEach(meal => {
@@ -1205,6 +1471,7 @@ function groupedMealDates(meals) {
 }
 
 function renderMeals() {
+  renderProteinChart();
   const container = document.getElementById('mealsContainer');
   const paginationEl = document.getElementById('mealsPagination');
 
