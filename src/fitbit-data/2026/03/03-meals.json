@@ -4607,5 +4607,211 @@
         "total_protein": 24.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-03-31T07:42:09.455109",
+        "date": "2026-03-31",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "5.75 oz grilled skinless chicken breast, 1/4 cup low fat cottage cheese, 1/4 cup roasted egg plant, 1/4 cup roasted sweet potato, 1/4 cup pomegranate seed, .5 oz roast acorn squash, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Grilled Skinless Chicken Breast",
+                "calories": 270,
+                "protein": 50.7,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.9,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38376074364
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 41,
+                "protein": 7.0,
+                "totalCarbohydrate": 2.7,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38377315156
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 9,
+                "protein": 0.4,
+                "totalCarbohydrate": 2.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38377472419
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 26,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38377442946
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 21,
+                "protein": 0.4,
+                "totalCarbohydrate": 4.7,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38376251431
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 8,
+                "protein": 0.2,
+                "totalCarbohydrate": 2.1,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38376733028
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38376870541
+            }
+        ],
+        "total_calories": 380,
+        "total_protein": 59.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-03-31T18:42:41.374170",
+        "date": "2026-03-31",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "4 pieces tempura rolls (220 calories, 4g protein), 3 pieces of California roll (135 calories, 3g protein), 1 piece of tuna and avocado roll (50 calories, 2g protein), 2 pieces shrimp tempura (180 calories, 6g protein), 1 piece of zucchini tempura (50 calories, 1g protein), 1/4 cup edamame beans (48 calories, 4g protein), 2oz tuna sashimi (75 calories, 16g protein), 3 salmon sushi (172 calories, 15g protein)",
+        "items": [
+            {
+                "foodName": "Tempura Rolls",
+                "calories": 220,
+                "protein": 4.0,
+                "totalCarbohydrate": 32.0,
+                "totalFat": 8.0,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38382099709
+            },
+            {
+                "foodName": "California Roll",
+                "calories": 135,
+                "protein": 3.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 4.5,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38380185891
+            },
+            {
+                "foodName": "Tuna and Avocado Roll",
+                "calories": 50,
+                "protein": 2.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 2.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38380293987
+            },
+            {
+                "foodName": "Shrimp Tempura",
+                "calories": 180,
+                "protein": 6.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 9.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38380166228
+            },
+            {
+                "foodName": "Zucchini Tempura",
+                "calories": 50,
+                "protein": 1.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38380058105
+            },
+            {
+                "foodName": "Edamame Beans",
+                "calories": 48,
+                "protein": 4.0,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 2.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38379802683
+            },
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 75,
+                "protein": 16.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38379301302
+            },
+            {
+                "foodName": "Salmon Sushi",
+                "calories": 172,
+                "protein": 15.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 5.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38379232737
+            }
+        ],
+        "total_calories": 930,
+        "total_protein": 51.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
