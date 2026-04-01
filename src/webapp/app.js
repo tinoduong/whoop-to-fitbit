@@ -434,7 +434,21 @@ function renderDailySummary() {
       const dayNum = d.getDate();
 
       if (!inMonth) {
-        return `<div class="cal-cell cal-cell-out"></div>`;
+        const { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal } = getDayData(date);
+        const cardClass = hasMeals ? (metGoal ? 'met' : 'missed') : '';
+        let inner = `<div class="cal-day-num">${dayNum}</div>`;
+        if (hasMeals) {
+          inner += `<div class="cal-goal-line">🎯 ${targetIntake}</div>`;
+          inner += `<div class="cal-cals">🍽 ${day.totalCaloriesIn}</div>`;
+          inner += `<div class="cal-delta ${metGoal ? 'under' : 'over'}">${delta >= 0 ? '▼' + delta : '▲' + Math.abs(delta)}</div>`;
+        } else {
+          inner += `<div class="cal-goal-line">🎯 ${targetIntake}</div>`;
+          inner += `<div class="cal-no-data">no meals</div>`;
+        }
+        if (hasWorkout) {
+          inner += `<div class="cal-workout">🏃 ${sportNames.join(', ')}</div>`;
+        }
+        return `<div class="cal-cell cal-cell-out ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer;opacity:0.45">${inner}</div>`;
       }
 
       const { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal } = getDayData(date);
@@ -456,8 +470,7 @@ function renderDailySummary() {
       return `<div class="cal-cell ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer">${inner}</div>`;
     }).join('');
 
-    const weekDaysInMonth = week.filter(d => getYearMonth(d) === ym);
-    const weekMealDays = weekDaysInMonth.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
+    const weekMealDays = week.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
     const todayStr = new Date().toISOString().substring(0, 10);
 
     const weekMonday = week[0];
@@ -518,11 +531,11 @@ let zoneModeWeekly = 'mins';
 function linReg(ys) {
   const n = ys.length;
   if (n < 2) return ys.map(v => v);
-  let sx=0,sy=0,sxy=0,sx2=0;
-  for(let i=0;i<n;i++){sx+=i;sy+=ys[i];sxy+=i*ys[i];sx2+=i*i;}
-  const m=(n*sxy-sx*sy)/(n*sx2-sx*sx);
-  const b=(sy-m*sx)/n;
-  return ys.map((_,i)=>Math.round((m*i+b)*100)/100);
+  let sx = 0, sy = 0, sxy = 0, sx2 = 0;
+  for (let i = 0; i < n; i++) { sx += i; sy += ys[i]; sxy += i * ys[i]; sx2 += i * i; }
+  const m = (n * sxy - sx * sy) / (n * sx2 - sx * sx);
+  const b = (sy - m * sx) / n;
+  return ys.map((_, i) => Math.round((m * i + b) * 100) / 100);
 }
 
 function getISOWeekLabel(dateStr) {
@@ -536,9 +549,9 @@ function buildWeeklyZoneData(workouts) {
   const weekMap = {};
   workouts.forEach(w => {
     const weekKey = getISOWeekLabel(getDateFromISO(w.start_time));
-    if (!weekMap[weekKey]) weekMap[weekKey] = { z1:0, z2:0, z3:0, z4:0, totalMins:0 };
+    if (!weekMap[weekKey]) weekMap[weekKey] = { z1: 0, z2: 0, z3: 0, z4: 0, totalMins: 0 };
     const zd = w.zone_durations || {};
-    const toMin = ms => Math.round((ms||0) / 60000);
+    const toMin = ms => Math.round((ms || 0) / 60000);
     weekMap[weekKey].z1 += toMin(zd.zone_one_milli);
     weekMap[weekKey].z2 += toMin(zd.zone_two_milli);
     weekMap[weekKey].z3 += toMin(zd.zone_three_milli);
@@ -564,7 +577,7 @@ function renderIntensityTrends() {
 
   const tickColor = '#8b90a8';
   const gridColor = 'rgba(139,144,168,0.12)';
-  const tt = { backgroundColor:'#1a1d27', borderColor:'#2e3250', borderWidth:1, titleColor:'#e8eaf0', bodyColor:'#8b90a8' };
+  const tt = { backgroundColor: '#1a1d27', borderColor: '#2e3250', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a8' };
 
   // ---- STRAIN CHART ----
   // Group by date — take max strain per day (one point per day)
@@ -579,17 +592,17 @@ function renderIntensityTrends() {
   const strainDates = Object.keys(strainByDate).sort();
   const strainLabels = strainDates.map(d => {
     const dt = new Date(d + 'T00:00:00');
-    return dt.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
   const strainVals = strainDates.map(d => Math.round(strainByDate[d] * 10) / 10);
   const strainTrend = linReg(strainVals);
 
-  const avgStrain = strainVals.length ? (strainVals.reduce((a,b)=>a+b,0)/strainVals.length).toFixed(1) : '—';
+  const avgStrain = strainVals.length ? (strainVals.reduce((a, b) => a + b, 0) / strainVals.length).toFixed(1) : '—';
   const peakStrain = strainVals.length ? Math.max(...strainVals).toFixed(1) : '—';
   const peakIdx = strainVals.indexOf(Math.max(...strainVals));
   const peakLabel = strainLabels[peakIdx] || '—';
   const highStrainDays = strainVals.filter(s => s >= 13).length;
-  const trendSlope = strainVals.length >= 2 ? (strainTrend[strainTrend.length-1] - strainTrend[0]).toFixed(1) : null;
+  const trendSlope = strainVals.length >= 2 ? (strainTrend[strainTrend.length - 1] - strainTrend[0]).toFixed(1) : null;
   const trendColor = trendSlope > 0 ? '#1D9E75' : trendSlope < 0 ? '#E24B4A' : '#8b90a8';
   const trendLabel = trendSlope > 0 ? `+${trendSlope}` : trendSlope;
 
@@ -668,7 +681,7 @@ function renderIntensityTrends() {
           data: strainTrend,
           borderColor: '#5DCAA5',
           borderWidth: 2,
-          borderDash: [6,4],
+          borderDash: [6, 4],
           pointRadius: 0,
           fill: false,
           tension: 0,
@@ -679,19 +692,23 @@ function renderIntensityTrends() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display:false },
-        tooltip: { ...tt, callbacks: {
-          label: ctx => ctx.dataset.label === 'Trend'
-            ? ` Trend: ${ctx.raw.toFixed(1)}`
-            : ` Strain: ${ctx.raw.toFixed(1)}`
-        }}
+        legend: { display: false },
+        tooltip: {
+          ...tt, callbacks: {
+            label: ctx => ctx.dataset.label === 'Trend'
+              ? ` Trend: ${ctx.raw.toFixed(1)}`
+              : ` Strain: ${ctx.raw.toFixed(1)}`
+          }
+        }
       },
       scales: {
-        x: { ticks:{ color:tickColor, font:{size:11}, maxRotation:45 }, grid:{ color:gridColor } },
-        y: { min:0, max:21, ticks:{ color:tickColor, font:{size:11} }, grid:{ color:gridColor },
-          title:{ display:true, text:'strain (0–21)', color:tickColor, font:{size:11} } }
+        x: { ticks: { color: tickColor, font: { size: 11 }, maxRotation: 45 }, grid: { color: gridColor } },
+        y: {
+          min: 0, max: 21, ticks: { color: tickColor, font: { size: 11 } }, grid: { color: gridColor },
+          title: { display: true, text: 'strain (0–21)', color: tickColor, font: { size: 11 } }
+        }
       }
     }
   });
@@ -700,7 +717,7 @@ function renderIntensityTrends() {
   const { keys: weekKeys, weekMap } = buildWeeklyZoneData(sorted);
   const weekLabels = weekKeys.map(k => {
     const d = new Date(k + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
 
   const wZ1 = weekKeys.map(k => weekMap[k].z1);
@@ -709,16 +726,16 @@ function renderIntensityTrends() {
   const wZ4 = weekKeys.map(k => weekMap[k].z4);
   const wTot = weekKeys.map(k => weekMap[k].totalMins);
 
-  const wZ1p = weekKeys.map((k,i) => wTot[i] > 0 ? Math.round(wZ1[i]/wTot[i]*100) : 0);
-  const wZ2p = weekKeys.map((k,i) => wTot[i] > 0 ? Math.round(wZ2[i]/wTot[i]*100) : 0);
-  const wZ3p = weekKeys.map((k,i) => wTot[i] > 0 ? Math.round(wZ3[i]/wTot[i]*100) : 0);
-  const wZ4p = weekKeys.map((k,i) => wTot[i] > 0 ? Math.round(wZ4[i]/wTot[i]*100) : 0);
+  const wZ1p = weekKeys.map((k, i) => wTot[i] > 0 ? Math.round(wZ1[i] / wTot[i] * 100) : 0);
+  const wZ2p = weekKeys.map((k, i) => wTot[i] > 0 ? Math.round(wZ2[i] / wTot[i] * 100) : 0);
+  const wZ3p = weekKeys.map((k, i) => wTot[i] > 0 ? Math.round(wZ3[i] / wTot[i] * 100) : 0);
+  const wZ4p = weekKeys.map((k, i) => wTot[i] > 0 ? Math.round(wZ4[i] / wTot[i] * 100) : 0);
 
-  const totZ1 = wZ1.reduce((a,b)=>a+b,0);
-  const totZ2 = wZ2.reduce((a,b)=>a+b,0);
-  const totZ3 = wZ3.reduce((a,b)=>a+b,0);
-  const totZ4 = wZ4.reduce((a,b)=>a+b,0);
-  const totAll = totZ1+totZ2+totZ3+totZ4;
+  const totZ1 = wZ1.reduce((a, b) => a + b, 0);
+  const totZ2 = wZ2.reduce((a, b) => a + b, 0);
+  const totZ3 = wZ3.reduce((a, b) => a + b, 0);
+  const totZ4 = wZ4.reduce((a, b) => a + b, 0);
+  const totAll = totZ1 + totZ2 + totZ3 + totZ4;
 
   function updateZoneMetrics() {
     const row = document.getElementById('zoneMetricRow');
@@ -732,10 +749,10 @@ function renderIntensityTrends() {
       `;
     } else {
       row.innerHTML = `
-        <div class="intensity-metric"><div class="intensity-metric-label">Z1 easy</div><div class="intensity-metric-value">${totAll ? Math.round(totZ1/totAll*100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
-        <div class="intensity-metric"><div class="intensity-metric-label">Z2 aerobic</div><div class="intensity-metric-value">${totAll ? Math.round(totZ2/totAll*100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
-        <div class="intensity-metric"><div class="intensity-metric-label">Z3 threshold</div><div class="intensity-metric-value">${totAll ? Math.round(totZ3/totAll*100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
-        <div class="intensity-metric"><div class="intensity-metric-label">Z4+ max</div><div class="intensity-metric-value">${totAll ? Math.round(totZ4/totAll*100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
+        <div class="intensity-metric"><div class="intensity-metric-label">Z1 easy</div><div class="intensity-metric-value">${totAll ? Math.round(totZ1 / totAll * 100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
+        <div class="intensity-metric"><div class="intensity-metric-label">Z2 aerobic</div><div class="intensity-metric-value">${totAll ? Math.round(totZ2 / totAll * 100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
+        <div class="intensity-metric"><div class="intensity-metric-label">Z3 threshold</div><div class="intensity-metric-value">${totAll ? Math.round(totZ3 / totAll * 100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
+        <div class="intensity-metric"><div class="intensity-metric-label">Z4+ max</div><div class="intensity-metric-value">${totAll ? Math.round(totZ4 / totAll * 100) : 0}%</div><div class="intensity-metric-sub">of all workout time</div></div>
       `;
     }
   }
@@ -747,33 +764,36 @@ function renderIntensityTrends() {
     data: {
       labels: weekLabels,
       datasets: [
-        { label:'Z1 easy',      data: wZ1, backgroundColor:'#5DCAA5', stack:'z', borderRadius:0 },
-        { label:'Z2 aerobic',   data: wZ2, backgroundColor:'#EF9F27', stack:'z', borderRadius:0 },
-        { label:'Z3 threshold', data: wZ3, backgroundColor:'#E24B4A', stack:'z', borderRadius:0 },
-        { label:'Z4+ max',      data: wZ4, backgroundColor:'#993556', stack:'z', borderRadius:2 },
+        { label: 'Z1 easy', data: wZ1, backgroundColor: '#5DCAA5', stack: 'z', borderRadius: 0 },
+        { label: 'Z2 aerobic', data: wZ2, backgroundColor: '#EF9F27', stack: 'z', borderRadius: 0 },
+        { label: 'Z3 threshold', data: wZ3, backgroundColor: '#E24B4A', stack: 'z', borderRadius: 0 },
+        { label: 'Z4+ max', data: wZ4, backgroundColor: '#993556', stack: 'z', borderRadius: 2 },
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display:false },
-        tooltip: { ...tt, callbacks: {
-          label: ctx => zoneModeWeekly === 'mins'
-            ? ` ${ctx.dataset.label}: ${ctx.raw} mins`
-            : ` ${ctx.dataset.label}: ${ctx.raw}%`,
-          footer: items => zoneModeWeekly === 'mins'
-            ? `Total: ${items.reduce((s,i)=>s+i.raw,0)} mins`
-            : `Total: ${items.reduce((s,i)=>s+i.raw,0)}%`
-        }}
+        legend: { display: false },
+        tooltip: {
+          ...tt, callbacks: {
+            label: ctx => zoneModeWeekly === 'mins'
+              ? ` ${ctx.dataset.label}: ${ctx.raw} mins`
+              : ` ${ctx.dataset.label}: ${ctx.raw}%`,
+            footer: items => zoneModeWeekly === 'mins'
+              ? `Total: ${items.reduce((s, i) => s + i.raw, 0)} mins`
+              : `Total: ${items.reduce((s, i) => s + i.raw, 0)}%`
+          }
+        }
       },
       scales: {
-        x: { stacked:true, ticks:{ color:tickColor, font:{size:11} }, grid:{ display:false } },
-        y: { stacked:true,
-          ticks:{ color:tickColor, font:{size:11}, callback: v => zoneModeWeekly==='mins' ? v+'m' : v+'%' },
-          grid:{ color:gridColor },
-          title:{ display:true, text:'minutes', color:tickColor, font:{size:11} }
+        x: { stacked: true, ticks: { color: tickColor, font: { size: 11 } }, grid: { display: false } },
+        y: {
+          stacked: true,
+          ticks: { color: tickColor, font: { size: 11 }, callback: v => zoneModeWeekly === 'mins' ? v + 'm' : v + '%' },
+          grid: { color: gridColor },
+          title: { display: true, text: 'minutes', color: tickColor, font: { size: 11 } }
         }
       }
     }
@@ -937,9 +957,9 @@ function getWorkoutsForSummaryRange() {
   if (workoutSummaryRange === 'all') return allWorkouts;
   const now = new Date();
   const cutoff = new Date(now);
-  if (workoutSummaryRange === '7d')  cutoff.setDate(cutoff.getDate() - 7);
+  if (workoutSummaryRange === '7d') cutoff.setDate(cutoff.getDate() - 7);
   if (workoutSummaryRange === '30d') cutoff.setDate(cutoff.getDate() - 30);
-  if (workoutSummaryRange === '1y')  cutoff.setFullYear(cutoff.getFullYear() - 1);
+  if (workoutSummaryRange === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
   return allWorkouts.filter(w => new Date(w.start_time) >= cutoff);
 }
 
@@ -993,7 +1013,7 @@ function renderWorkouts() {
   if (!document.getElementById('workoutTabHeader')) {
     injectWorkoutSummaryStyles();
     const tableContainer = document.querySelector('#tab-workouts .table-container') ||
-                           document.querySelector('#tab-workouts table')?.parentElement;
+      document.querySelector('#tab-workouts table')?.parentElement;
     if (tableContainer) {
       // Inject styles
       if (!document.getElementById('intensityTrendsStyles')) {
@@ -1077,7 +1097,7 @@ function renderWorkouts() {
     let totalDurMs = 0, totalCals = 0, totalDist = 0;
     let sumAvgHR = 0, maxHR = 0;
     let sumStrain = 0, strainCount = 0;
-    let z0=0, z1=0, z2=0, z3=0, z4=0, z5=0;
+    let z0 = 0, z1 = 0, z2 = 0, z3 = 0, z4 = 0, z5 = 0;
 
     dayWorkouts.forEach(w => {
       totalDurMs += (new Date(w.end_time) - new Date(w.start_time));
@@ -1100,7 +1120,7 @@ function renderWorkouts() {
     const avgStrain = strainCount ? sumStrain / strainCount : null;
 
     const durStr = totalMins >= 60
-      ? `${Math.floor(totalMins/60)}h ${totalMins%60}m`
+      ? `${Math.floor(totalMins / 60)}h ${totalMins % 60}m`
       : `${totalMins}m`;
 
     const seen = new Set();
@@ -1112,7 +1132,7 @@ function renderWorkouts() {
       ? `<span class="workout-count-badge">${dayWorkouts.length}</span>`
       : '';
 
-    const zTotal = z0+z1+z2+z3+z4+z5;
+    const zTotal = z0 + z1 + z2 + z3 + z4 + z5;
     let zoneBarHtml = '—';
     if (zTotal > 0) {
       const segs = [
@@ -1288,9 +1308,9 @@ function getMealsForProteinRange(range) {
   if (!allMeals.length) return allMeals;
   const now = new Date();
   const cutoff = new Date(now);
-  if (range === '7d')  cutoff.setDate(cutoff.getDate() - 7);
+  if (range === '7d') cutoff.setDate(cutoff.getDate() - 7);
   else if (range === '30d') cutoff.setDate(cutoff.getDate() - 30);
-  else if (range === '1y')  cutoff.setFullYear(cutoff.getFullYear() - 1);
+  else if (range === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
   else return allMeals; // 'all'
   return allMeals.filter(m => new Date(m.date + 'T00:00:00') >= cutoff);
 }
@@ -1332,9 +1352,9 @@ function renderProteinChart() {
     <div class="protein-chart-header">
       <div class="protein-chart-title">Daily Protein</div>
       <div class="protein-chart-range-toggle">
-        <button class="protein-range-btn ${proteinChartRange === '7d'  ? 'active' : ''}" data-range="7d">1 week</button>
+        <button class="protein-range-btn ${proteinChartRange === '7d' ? 'active' : ''}" data-range="7d">1 week</button>
         <button class="protein-range-btn ${proteinChartRange === '30d' ? 'active' : ''}" data-range="30d">1 month</button>
-        <button class="protein-range-btn ${proteinChartRange === '1y'  ? 'active' : ''}" data-range="1y">1 year</button>
+        <button class="protein-range-btn ${proteinChartRange === '1y' ? 'active' : ''}" data-range="1y">1 year</button>
         <button class="protein-range-btn ${proteinChartRange === 'all' ? 'active' : ''}" data-range="all">All time</button>
       </div>
     </div>
@@ -1392,15 +1412,15 @@ function renderProteinChart() {
 
   const barColors = proteinVals.map(v =>
     !proteinGoal ? 'rgba(108,99,255,0.65)' :
-    v >= proteinGoal ? 'rgba(0,212,170,0.75)' :
-    v >= proteinFloor ? 'rgba(108,99,255,0.65)' :
-    'rgba(255,107,107,0.55)'
+      v >= proteinGoal ? 'rgba(0,212,170,0.75)' :
+        v >= proteinFloor ? 'rgba(108,99,255,0.65)' :
+          'rgba(255,107,107,0.55)'
   );
   const barBorders = proteinVals.map(v =>
     !proteinGoal ? '#6c63ff' :
-    v >= proteinGoal ? '#00d4aa' :
-    v >= proteinFloor ? '#6c63ff' :
-    '#ff6b6b'
+      v >= proteinGoal ? '#00d4aa' :
+        v >= proteinFloor ? '#6c63ff' :
+          '#ff6b6b'
   );
 
   const tickColor = '#8b90a8';
