@@ -1,0 +1,160 @@
+[
+    {
+        "logged_at": "2026-04-01T07:57:02.915541",
+        "date": "2026-04-01",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "5.2 oz grilled skinless chicken breast, 2.54 oz roasted beets, 1oz roasted eggplant, 1.2 oz roasted sweet potato, 1/4 cup low fat cottage cheese, 1/4 cup pomegranate seeds, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Grilled Skinless Chicken Breast",
+                "calories": 231,
+                "protein": 43.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38384196336
+            },
+            {
+                "foodName": "Roasted Beets",
+                "calories": 31,
+                "protein": 1.1,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38384304412
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 8,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.9,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38384274924
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 29,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.8,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38384422395
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 41,
+                "protein": 7.0,
+                "totalCarbohydrate": 2.3,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38383879157
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 36,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.1,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38384274925
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38384088338
+            }
+        ],
+        "total_calories": 381,
+        "total_protein": 53.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-01T18:33:25.292945",
+        "date": "2026-04-01",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "10 saut\u00e9ed prawns (0.8 oz each), 1/2 cup of canneline beans, 1/2 white rice steamed, 1 cup spinach",
+        "items": [
+            {
+                "foodName": "Saut\u00e9ed Prawns",
+                "calories": 224,
+                "protein": 43.2,
+                "totalCarbohydrate": 1.6,
+                "totalFat": 4.0,
+                "amount": 10,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38385984563
+            },
+            {
+                "foodName": "Cannellini Beans",
+                "calories": 113,
+                "protein": 8.2,
+                "totalCarbohydrate": 20.2,
+                "totalFat": 0.4,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38386092572
+            },
+            {
+                "foodName": "White Rice Steamed",
+                "calories": 103,
+                "protein": 2.1,
+                "totalCarbohydrate": 22.3,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38387036356
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 23,
+                "protein": 2.9,
+                "totalCarbohydrate": 3.6,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38385994415
+            }
+        ],
+        "total_calories": 463,
+        "total_protein": 56.4,
+        "all_uploaded": true,
+        "amended": false
+    }
+]

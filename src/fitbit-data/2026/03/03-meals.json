@@ -4823,8 +4823,8 @@
         "items": [
             {
                 "foodName": "Wegmans Albacore Tuna Pack Lemon and Pepper",
-                "calories": 90,
-                "protein": 20.0,
+                "calories": 80,
+                "protein": 19.0,
                 "totalCarbohydrate": 0.0,
                 "totalFat": 1.0,
                 "amount": 1,
@@ -4834,8 +4834,8 @@
                 "log_id": 38379833818
             }
         ],
-        "total_calories": 90,
-        "total_protein": 20.0,
+        "total_calories": 80,
+        "total_protein": 19.0,
         "all_uploaded": true,
         "amended": false
     }
