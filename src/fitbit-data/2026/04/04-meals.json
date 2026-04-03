@@ -156,5 +156,225 @@
         "total_protein": 56.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-01T19:00:47.261290",
+        "date": "2026-04-01",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup of non-fat greek yogurt, 1/2 cup of strawberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 11.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38386860055
+            },
+            {
+                "foodName": "Strawberries",
+                "calories": 25,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38386496314
+            }
+        ],
+        "total_calories": 90,
+        "total_protein": 12.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-02T08:21:11.908939",
+        "date": "2026-04-02",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "2.4 oz roasted chicken breast (112 cal, 21g protein), 2.16 oz roasted beets (25 cal, 1g protein), 1.1 oz roasted sweet potato (30 cal, 0.5g protein), 1/4 cup pomegranate arils (36 cal, 0.7g protein), 1/4 cup non-fat cottage cheese (45 cal, 7g protein), 1.76 oz shrimp (50 cal, 10g protein), 1 cup of spinach",
+        "items": [
+            {
+                "foodName": "Roasted Chicken Breast",
+                "calories": 112,
+                "protein": 21.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 2.5,
+                "amount": 2.4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38390150549
+            },
+            {
+                "foodName": "Roasted Beets",
+                "calories": 25,
+                "protein": 1.0,
+                "totalCarbohydrate": 5.5,
+                "totalFat": 0.1,
+                "amount": 2.16,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38388151934
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 30,
+                "protein": 0.5,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.1,
+                "amount": 1.1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38388446814
+            },
+            {
+                "foodName": "Pomegranate Arils",
+                "calories": 36,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 0.5,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38389120124
+            },
+            {
+                "foodName": "Non-Fat Cottage Cheese",
+                "calories": 45,
+                "protein": 7.0,
+                "totalCarbohydrate": 3.5,
+                "totalFat": 0.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38388633613
+            },
+            {
+                "foodName": "Shrimp",
+                "calories": 50,
+                "protein": 10.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.7,
+                "amount": 1.76,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38390563696
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 7,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38390140742
+            }
+        ],
+        "total_calories": 305,
+        "total_protein": 41.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-02T18:23:34.017418",
+        "date": "2026-04-02",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 small gala apple",
+        "items": [
+            {
+                "foodName": "Small Gala Apple",
+                "calories": 80,
+                "protein": 0.4,
+                "totalCarbohydrate": 21.0,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38393333807
+            }
+        ],
+        "total_calories": 80,
+        "total_protein": 0.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-02T19:07:23.978156",
+        "date": "2026-04-02",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3 oz baked portobello mushroom, 9.94 oz baked salmon with no skin, 0.5 cups of cannellini beans, 0.5 cups spinach",
+        "items": [
+            {
+                "foodName": "Baked Portobello Mushroom",
+                "calories": 22,
+                "protein": 2.1,
+                "totalCarbohydrate": 4.3,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38392646702
+            },
+            {
+                "foodName": "Baked Salmon",
+                "calories": 561,
+                "protein": 83.7,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 22.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38393206874
+            },
+            {
+                "foodName": "Cannellini Beans",
+                "calories": 114,
+                "protein": 8.2,
+                "totalCarbohydrate": 20.2,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38393727740
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 12,
+                "protein": 1.5,
+                "totalCarbohydrate": 1.8,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38393088863
+            }
+        ],
+        "total_calories": 709,
+        "total_protein": 95.5,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
