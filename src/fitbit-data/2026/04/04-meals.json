@@ -376,5 +376,663 @@
         "total_protein": 95.5,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-03T07:49:19.335072",
+        "date": "2026-04-03",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5.32 oz grilled chicken breast no skin, 3.1 oz roasted sweet potato, 1/4 non fat cottage cheese, 1.4oz roasted carrots, 1 cup spinach",
+        "items": [
+            {
+                "foodName": "Grilled Chicken Breast",
+                "calories": 249,
+                "protein": 46.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38395007821
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 76,
+                "protein": 1.7,
+                "totalCarbohydrate": 17.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38394948765
+            },
+            {
+                "foodName": "Non Fat Cottage Cheese",
+                "calories": 52,
+                "protein": 10.7,
+                "totalCarbohydrate": 3.9,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38394712793
+            },
+            {
+                "foodName": "Roasted Carrots",
+                "calories": 17,
+                "protein": 0.4,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38394830962
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 7,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38394978391
+            }
+        ],
+        "total_calories": 401,
+        "total_protein": 60.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-03T23:04:15.021568",
+        "date": "2026-04-03",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 pieces shrimp tempura roll (110 cal, 5g protein), 2 tuna sashimi (40 cal, 9g protein), 2 pieces california roll (60 cal, 2g protein), .25 cup fried rice (90 cal, 2g protein), 3 oz roast miso black cod (180 cal, 18g protein), 4 oz fruit juice (55 cal, 0g protein), 1 small fried dumpling (70 cal, 4g protein), 1 fried rice sushi (95 cal, 3g protein), 1 raw oyster (10 cal, 2g protein)",
+        "items": [
+            {
+                "foodName": "Shrimp Tempura Roll",
+                "calories": 110,
+                "protein": 5.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 4.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38397821429
+            },
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 40,
+                "protein": 9.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.3,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38399266567
+            },
+            {
+                "foodName": "California Roll",
+                "calories": 60,
+                "protein": 2.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 2.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38398096635
+            },
+            {
+                "foodName": "Fried Rice",
+                "calories": 90,
+                "protein": 2.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 2.5,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38398942064
+            },
+            {
+                "foodName": "Roast Miso Black Cod",
+                "calories": 180,
+                "protein": 18.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 10.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38397587186
+            },
+            {
+                "foodName": "Fruit Juice",
+                "calories": 55,
+                "protein": 0.0,
+                "totalCarbohydrate": 13.5,
+                "totalFat": 0.1,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38398981388
+            },
+            {
+                "foodName": "Fried Dumpling",
+                "calories": 70,
+                "protein": 4.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38399630506
+            },
+            {
+                "foodName": "Fried Rice Sushi",
+                "calories": 95,
+                "protein": 3.0,
+                "totalCarbohydrate": 16.0,
+                "totalFat": 2.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38397831260
+            },
+            {
+                "foodName": "Raw Oyster",
+                "calories": 10,
+                "protein": 2.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38398647201
+            }
+        ],
+        "total_calories": 710,
+        "total_protein": 45.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-04T08:56:34.973394",
+        "date": "2026-04-04",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3.5 eggs (60kcal each), 1 piece bacon, 1 breakfast sausage pork, 1/2 cup strawberries",
+        "items": [
+            {
+                "foodName": "Eggs",
+                "calories": 210,
+                "protein": 18.2,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 14.7,
+                "amount": 3.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38399273044
+            },
+            {
+                "foodName": "Bacon",
+                "calories": 43,
+                "protein": 3.0,
+                "totalCarbohydrate": 0.1,
+                "totalFat": 3.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38398250567
+            },
+            {
+                "foodName": "Pork Breakfast Sausage",
+                "calories": 92,
+                "protein": 5.1,
+                "totalCarbohydrate": 0.4,
+                "totalFat": 7.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38400931359
+            },
+            {
+                "foodName": "Strawberries",
+                "calories": 24,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.8,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38398663687
+            }
+        ],
+        "total_calories": 369,
+        "total_protein": 26.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-04T14:55:28.199980",
+        "date": "2026-04-04",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "2oz french baguette, 2oz duck pate, 1 vietnamese spring roll, 1/2 slice onion and spinach and cheese quiche",
+        "items": [
+            {
+                "foodName": "French Baguette",
+                "calories": 154,
+                "protein": 5.2,
+                "totalCarbohydrate": 31.0,
+                "totalFat": 1.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38401417723
+            },
+            {
+                "foodName": "Duck Pate",
+                "calories": 240,
+                "protein": 12.8,
+                "totalCarbohydrate": 2.2,
+                "totalFat": 20.4,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38401417724
+            },
+            {
+                "foodName": "Vietnamese Spring Roll",
+                "calories": 85,
+                "protein": 3.2,
+                "totalCarbohydrate": 12.5,
+                "totalFat": 2.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38401742136
+            },
+            {
+                "foodName": "Onion Spinach Cheese Quiche",
+                "calories": 180,
+                "protein": 8.5,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 12.5,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38400967497
+            }
+        ],
+        "total_calories": 659,
+        "total_protein": 29.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-04T20:01:19.894282",
+        "date": "2026-04-04",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3.5 pieces korean short ribs (2.5 oz each), 2 korean pork belly pieces (.8 oz each), 1/5 cup roasted potatoes, 2 oz portobello mushroom, 2 upside dawn athletic beers",
+        "items": [
+            {
+                "foodName": "Korean Short Ribs",
+                "calories": 780,
+                "protein": 56.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 60.0,
+                "amount": 3.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38403852892
+            },
+            {
+                "foodName": "Korean Pork Belly",
+                "calories": 340,
+                "protein": 18.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 30.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404010262
+            },
+            {
+                "foodName": "Roasted Potatoes",
+                "calories": 35,
+                "protein": 1.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 0.1,
+                "amount": 0.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38403597556
+            },
+            {
+                "foodName": "Portobello Mushroom",
+                "calories": 12,
+                "protein": 2.0,
+                "totalCarbohydrate": 2.5,
+                "totalFat": 0.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404020080
+            },
+            {
+                "foodName": "Upside Dawn Athletic Beer",
+                "calories": 100,
+                "protein": 1.0,
+                "totalCarbohydrate": 5.0,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38403410822
+            }
+        ],
+        "total_calories": 1267,
+        "total_protein": 78.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-05T09:30:12.745304",
+        "date": "2026-04-05",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "1 crepe (95 cal, 3g protein), \u00bd cup strawberries (25 cal, 0.5g protein), \u00bd cup blueberries (40 cal, 0.5g protein), 2 bacon (90 cal, 6g protein), \u00bd cup nonfat Greek yogurt (70 cal, 12g protein), 1 tbsp peanut butter (95 cal, 4g protein)",
+        "items": [
+            {
+                "foodName": "Crepe",
+                "calories": 95,
+                "protein": 3.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404214088
+            },
+            {
+                "foodName": "Strawberries",
+                "calories": 25,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38403880945
+            },
+            {
+                "foodName": "Blueberries",
+                "calories": 40,
+                "protein": 0.5,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404738755
+            },
+            {
+                "foodName": "Bacon",
+                "calories": 90,
+                "protein": 6.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405534844
+            },
+            {
+                "foodName": "Nonfat Greek Yogurt",
+                "calories": 70,
+                "protein": 12.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404778169
+            },
+            {
+                "foodName": "Peanut Butter",
+                "calories": 95,
+                "protein": 4.0,
+                "totalCarbohydrate": 3.5,
+                "totalFat": 8.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405554506
+            }
+        ],
+        "total_calories": 415,
+        "total_protein": 26.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-05T13:22:48.938130",
+        "date": "2026-04-05",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "1/4 cup low fat cottage cheese, 1 egg (60 cal), 1 cup spinach, 1 pack tuna creations sweet and spicy",
+        "items": [
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 81,
+                "protein": 14.0,
+                "totalCarbohydrate": 3.1,
+                "totalFat": 1.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404762551
+            },
+            {
+                "foodName": "Egg",
+                "calories": 60,
+                "protein": 6.0,
+                "totalCarbohydrate": 0.6,
+                "totalFat": 4.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405637444
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 7,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38404880556
+            },
+            {
+                "foodName": "Tuna Creations Sweet and Spicy",
+                "calories": 80,
+                "protein": 17.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405794553
+            }
+        ],
+        "total_calories": 228,
+        "total_protein": 37.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-05T15:23:34.539139",
+        "date": "2026-04-05",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 4.2 oz cantalope melon",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 11.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38406000963
+            },
+            {
+                "foodName": "Cantaloupe Melon",
+                "calories": 35,
+                "protein": 0.9,
+                "totalCarbohydrate": 8.4,
+                "totalFat": 0.2,
+                "amount": 4.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405836145
+            }
+        ],
+        "total_calories": 100,
+        "total_protein": 12.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-05T18:45:21.921504",
+        "date": "2026-04-05",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "7.75 oz grilled pork tenderloin, 1 tbsp honey mustard sauce, 1/2 cup roasted apple and onions and carrot, 1/4 cup Ben's original wild rice",
+        "items": [
+            {
+                "foodName": "Grilled Pork Tenderloin",
+                "calories": 478,
+                "protein": 65.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 21.7,
+                "amount": 7.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405858931
+            },
+            {
+                "foodName": "Honey Mustard Sauce",
+                "calories": 30,
+                "protein": 0.2,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38406923519
+            },
+            {
+                "foodName": "Roasted Apple and Onions and Carrot",
+                "calories": 45,
+                "protein": 0.8,
+                "totalCarbohydrate": 11.5,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38406091468
+            },
+            {
+                "foodName": "Ben's Original Wild Rice",
+                "calories": 85,
+                "protein": 3.0,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 0.3,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38405927539
+            }
+        ],
+        "total_calories": 638,
+        "total_protein": 69.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-05T18:52:30.932748",
+        "date": "2026-04-05",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 carrot cupcake with no icing - It has no butter or milk, but veggetable oil instead. (calories 240)",
+        "items": [
+            {
+                "foodName": "Carrot cupcake with no icing",
+                "calories": 240,
+                "protein": 3.5,
+                "totalCarbohydrate": 35.0,
+                "totalFat": 10.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38406091559
+            }
+        ],
+        "total_calories": 240,
+        "total_protein": 3.5,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

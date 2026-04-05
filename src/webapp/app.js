@@ -1560,7 +1560,7 @@ function renderMeals() {
       const mealFat = items.reduce((s, i) => s + (i.totalFat || 0), 0);
       const protein = meal.total_protein || 0;
       const itemChips = items.map(item =>
-        `<span class="meal-item-chip">${item.foodName}<span class="item-cals">${item.calories} k · ${(item.protein ?? item.proteinAmount ?? 0).toFixed(1)}g p</span></span>`
+        `<span class="meal-item-chip">${item.foodName}<span class="item-cals">${item.calories} kcal · ${(item.protein).toFixed(1)}g p</span></span>`
       ).join('');
 
       const chartId = `macro-pie-${meal.id || (date + '-' + meal.meal_type + '-' + Math.random().toString(36).slice(2))}`;
