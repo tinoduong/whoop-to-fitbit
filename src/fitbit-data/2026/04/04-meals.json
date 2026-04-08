@@ -1352,5 +1352,213 @@
         "total_protein": 25.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-07T20:30:52.247747",
+        "date": "2026-04-07",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 3.96 oz fresh cantelope melon",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 11.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38419966037
+            },
+            {
+                "foodName": "Fresh Cantaloupe Melon",
+                "calories": 38,
+                "protein": 0.9,
+                "totalCarbohydrate": 9.2,
+                "totalFat": 0.2,
+                "amount": 3.96,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38419361635
+            }
+        ],
+        "total_calories": 103,
+        "total_protein": 12.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-08T07:38:34.718867",
+        "date": "2026-04-08",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "6.38 oz skinless grilled chicken breast, 2.2 oz low fat cottage cheese, 1.06 oz pomegranite seeds, 1.8 oz roast acorn squash, 1.56 oz roasted sweet potato",
+        "items": [
+            {
+                "foodName": "Skinless Grilled Chicken Breast",
+                "calories": 298,
+                "protein": 55.9,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.5,
+                "amount": 6.38,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38420712009
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 55,
+                "protein": 9.4,
+                "totalCarbohydrate": 2.8,
+                "totalFat": 1.2,
+                "amount": 2.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38421513825
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 24,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.3,
+                "amount": 1.06,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38422218630
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 29,
+                "protein": 0.9,
+                "totalCarbohydrate": 7.5,
+                "totalFat": 0.1,
+                "amount": 1.8,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38421582289
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 44,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.1,
+                "totalFat": 0.1,
+                "amount": 1.56,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38421953464
+            }
+        ],
+        "total_calories": 450,
+        "total_protein": 67.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-08T19:38:39.464656",
+        "date": "2026-04-08",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 tempura shrimp (5g, 135cal), 6pc tempura shrimp roll (7g, 355cal), 2 salmon nigiri (10g, 140cal), 2oz tuna sashimi (14g, 62cal), 3oz sirloin steak (25g, 175cal)",
+        "items": [
+            {
+                "foodName": "Tempura Shrimp",
+                "calories": 135,
+                "protein": 5.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 7.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38428096640
+            },
+            {
+                "foodName": "Tempura Shrimp Roll",
+                "calories": 355,
+                "protein": 7.0,
+                "totalCarbohydrate": 45.0,
+                "totalFat": 16.0,
+                "amount": 6,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38426765118
+            },
+            {
+                "foodName": "Salmon Nigiri",
+                "calories": 140,
+                "protein": 10.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 4.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38426833670
+            },
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 62,
+                "protein": 14.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38427718399
+            },
+            {
+                "foodName": "Sirloin Steak",
+                "calories": 175,
+                "protein": 25.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38426705923
+            }
+        ],
+        "total_calories": 867,
+        "total_protein": 61.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-08T19:46:18.182065",
+        "date": "2026-04-08",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38427581216
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

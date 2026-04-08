@@ -61,14 +61,10 @@ async function loadData() {
   allWeight = await weightRes.json();
   allMeals = await mealsRes.json();
   goals = await goalsRes.json();
-  // Ensure goals.goals is always an array
   if (!goals.goals) goals.goals = [];
 }
 
 // ===== GOAL SNAPSHOT HELPERS =====
-
-// Returns the goal snapshot active on a given date (closest saved_date <= date).
-// Falls back to the earliest snapshot if none precede the date.
 function getGoalForDate(date) {
   const snapshots = goals.goals || [];
   if (!snapshots.length) return null;
@@ -78,14 +74,12 @@ function getGoalForDate(date) {
       if (!best || g.saved_date > best.saved_date) best = g;
     }
   }
-  // If no snapshot precedes this date, use the earliest one
   if (!best) {
     best = snapshots.reduce((a, b) => a.saved_date < b.saved_date ? a : b);
   }
   return best;
 }
 
-// Returns the most recent goal snapshot (for current UI state)
 function getCurrentGoal() {
   const snapshots = goals.goals || [];
   if (!snapshots.length) return null;
@@ -127,7 +121,7 @@ function getDateFromISO(isoStr) {
 }
 
 function getYearMonth(dateStr) {
-  return dateStr.substring(0, 7); // "2026-03"
+  return dateStr.substring(0, 7);
 }
 
 function sportClass(sport) {
@@ -155,7 +149,7 @@ function getLastKnownWeightBeforeDate(date) {
   return best || allWeight[0];
 }
 
-// ===== FROZEN GOAL SNAPSHOT =====
+// ===== DAILY MAP =====
 function buildDailyMap() {
   const map = {};
   allMeals.forEach(meal => {
@@ -250,7 +244,6 @@ function renderWeightChart() {
   const weightTrend = linReg(weightData);
   const fatTrend = linReg(fatData);
 
-  // Build set of Monday date strings from the label range
   const mondayPlugin = {
     id: 'mondayLines',
     afterDraw(chart) {
@@ -261,7 +254,7 @@ function renderWeightChart() {
       c.setLineDash([3, 5]);
       labels.forEach((dateStr, i) => {
         const d = new Date(dateStr + 'T00:00:00');
-        if (d.getDay() === 1) { // Monday
+        if (d.getDay() === 1) {
           const xPos = x.getPixelForValue(i);
           c.beginPath();
           c.moveTo(xPos, top);
@@ -385,6 +378,7 @@ function renderWeightChart() {
     },
   });
 }
+
 // ===== MONTH NAV =====
 function setupMonthNav() {
   document.getElementById('prevMonth').addEventListener('click', () => {
@@ -614,7 +608,6 @@ function renderIntensityTrends() {
   const gridColor = 'rgba(139,144,168,0.12)';
   const tt = { backgroundColor: '#1a1d27', borderColor: '#2e3250', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a8' };
 
-  // ---- STRAIN CHART ----
   const strainByDate = {};
   sorted.forEach(w => {
     if (w.strain == null) return;
@@ -689,7 +682,6 @@ function renderIntensityTrends() {
     </div>
   `;
 
-  // Strain chart
   if (strainChart) strainChart.destroy();
   strainChart = new Chart(document.getElementById('strainTrendChart'), {
     type: 'line',
@@ -747,7 +739,6 @@ function renderIntensityTrends() {
     }
   });
 
-  // Zone weekly chart
   const { keys: weekKeys, weekMap } = buildWeeklyZoneData(sorted);
   const weekLabels = weekKeys.map(k => {
     const d = new Date(k + 'T00:00:00');
@@ -857,120 +848,24 @@ function injectWorkoutSummaryStyles() {
   const style = document.createElement('style');
   style.id = 'workoutSummaryStyles';
   style.textContent = `
-    .workout-summary-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .workout-summary-grid {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .workout-summary-stat {
-      background: rgba(108,99,255,0.07);
-      border: 1px solid rgba(108,99,255,0.15);
-      border-radius: 10px;
-      padding: 10px 16px;
-      min-width: 110px;
-    }
-    .wss-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #8b90a8;
-      margin-bottom: 3px;
-    }
-    .wss-value {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #e8eaf0;
-    }
-    .wss-sub {
-      font-size: 0.72rem;
-      color: #8b90a8;
-      margin-top: 1px;
-    }
-    .workout-summary-empty {
-      color: #8b90a8;
-      font-size: 0.85rem;
-      padding: 8px 0 16px;
-    }
-    .workout-summary-range-toggle {
-      display: flex;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .workout-summary-range-btn {
-      background: transparent;
-      border: 1px solid rgba(139,144,168,0.3);
-      color: #8b90a8;
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .workout-summary-range-btn:hover {
-      border-color: #6c63ff;
-      color: #e8eaf0;
-    }
-    .workout-summary-range-btn.active {
-      background: rgba(108,99,255,0.15);
-      border-color: #6c63ff;
-      color: #6c63ff;
-      font-weight: 600;
-    }
-    .zone-sparkbar {
-      display: flex;
-      height: 6px;
-      border-radius: 3px;
-      overflow: hidden;
-      gap: 1px;
-      width: 80px;
-    }
-    .zone-sparkbar-seg {
-      height: 100%;
-      border-radius: 1px;
-    }
-    .strain-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .strain-bar-track {
-      flex: 1;
-      min-width: 48px;
-      height: 4px;
-      background: rgba(139,144,168,0.2);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .strain-bar-fill {
-      height: 100%;
-      border-radius: 2px;
-      background: #6c63ff;
-    }
-    .strain-bar-num {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #e8eaf0;
-      min-width: 28px;
-    }
-    .workout-count-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 500;
-      padding: 1px 7px;
-      border-radius: 10px;
-      background: rgba(108,99,255,0.12);
-      color: #9c96ff;
-      vertical-align: middle;
-      margin-left: 3px;
-    }
+    .workout-summary-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .workout-summary-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .workout-summary-stat { background: rgba(108,99,255,0.07); border: 1px solid rgba(108,99,255,0.15); border-radius: 10px; padding: 10px 16px; min-width: 110px; }
+    .wss-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: #8b90a8; margin-bottom: 3px; }
+    .wss-value { font-size: 1.25rem; font-weight: 600; color: #e8eaf0; }
+    .wss-sub { font-size: 0.72rem; color: #8b90a8; margin-top: 1px; }
+    .workout-summary-empty { color: #8b90a8; font-size: 0.85rem; padding: 8px 0 16px; }
+    .workout-summary-range-toggle { display: flex; gap: 4px; flex-shrink: 0; }
+    .workout-summary-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+    .workout-summary-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
+    .workout-summary-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
+    .zone-sparkbar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; width: 80px; }
+    .zone-sparkbar-seg { height: 100%; border-radius: 1px; }
+    .strain-bar-wrap { display: flex; align-items: center; gap: 7px; }
+    .strain-bar-track { flex: 1; min-width: 48px; height: 4px; background: rgba(139,144,168,0.2); border-radius: 2px; overflow: hidden; }
+    .strain-bar-fill { height: 100%; border-radius: 2px; background: #6c63ff; }
+    .strain-bar-num { font-size: 0.82rem; font-weight: 600; color: #e8eaf0; min-width: 28px; }
+    .workout-count-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 1px 7px; border-radius: 10px; background: rgba(108,99,255,0.12); color: #9c96ff; vertical-align: middle; margin-left: 3px; }
   `;
   document.head.appendChild(style);
 }
@@ -1244,6 +1139,7 @@ function applyWorkoutFilters() {
 }
 
 // ===== MEALS =====
+
 // ===== PROTEIN CHART =====
 let proteinChart = null;
 let proteinChartRange = '30d';
@@ -1253,75 +1149,22 @@ function injectProteinChartStyles() {
   const style = document.createElement('style');
   style.id = 'proteinChartStyles';
   style.textContent = `
-    #proteinChartSection {
-      margin-bottom: 24px;
-    }
-    .protein-chart-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .protein-chart-title {
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #8b90a8;
-    }
-    .protein-chart-range-toggle {
-      display: flex;
-      gap: 4px;
-    }
-    .protein-range-btn {
-      background: transparent;
-      border: 1px solid rgba(139,144,168,0.3);
-      color: #8b90a8;
-      border-radius: 6px;
-      padding: 4px 11px;
-      font-size: 0.76rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
+    #proteinChartSection { margin-bottom: 24px; }
+    #calorieChartSection { margin-bottom: 24px; }
+    .protein-chart-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .protein-chart-title { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #8b90a8; }
+    .protein-chart-range-toggle { display: flex; gap: 4px; }
+    .protein-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 4px 11px; font-size: 0.76rem; cursor: pointer; transition: all 0.15s; }
     .protein-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
-    .protein-range-btn.active {
-      background: rgba(108,99,255,0.15);
-      border-color: #6c63ff;
-      color: #6c63ff;
-      font-weight: 600;
-    }
-    .protein-chart-metrics {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .protein-metric {
-      background: rgba(108,99,255,0.07);
-      border: 1px solid rgba(108,99,255,0.15);
-      border-radius: 10px;
-      padding: 8px 14px;
-      min-width: 100px;
-    }
-    .protein-metric-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #8b90a8;
-      margin-bottom: 2px;
-    }
-    .protein-metric-value {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #e8eaf0;
-    }
-    .protein-metric-sub {
-      font-size: 0.7rem;
-      color: #8b90a8;
-      margin-top: 1px;
-    }
+    .protein-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
+    .protein-chart-metrics { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .protein-metric { background: rgba(108,99,255,0.07); border: 1px solid rgba(108,99,255,0.15); border-radius: 10px; padding: 8px 14px; min-width: 100px; }
+    .protein-metric-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #8b90a8; margin-bottom: 2px; }
+    .protein-metric-value { font-size: 1.1rem; font-weight: 600; color: #e8eaf0; }
+    .protein-metric-sub { font-size: 0.7rem; color: #8b90a8; margin-top: 1px; }
+    .calorie-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 4px 11px; font-size: 0.76rem; cursor: pointer; transition: all 0.15s; }
+    .calorie-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
+    .calorie-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
   `;
   document.head.appendChild(style);
 }
@@ -1340,7 +1183,7 @@ function getMealsForProteinRange(range) {
   if (range === '7d') cutoff.setDate(cutoff.getDate() - 7);
   else if (range === '30d') cutoff.setDate(cutoff.getDate() - 30);
   else if (range === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
-  else return allMeals; // 'all'
+  else return allMeals;
   return allMeals.filter(m => new Date(m.date + 'T00:00:00') >= cutoff);
 }
 
@@ -1454,13 +1297,7 @@ function renderProteinChart() {
 
   const tickColor = '#8b90a8';
   const gridColor = 'rgba(139,144,168,0.12)';
-  const tt = {
-    backgroundColor: '#1a1d27',
-    borderColor: '#2e3250',
-    borderWidth: 1,
-    titleColor: '#e8eaf0',
-    bodyColor: '#8b90a8',
-  };
+  const tt = { backgroundColor: '#1a1d27', borderColor: '#2e3250', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a8' };
 
   const datasets = [
     {
@@ -1547,6 +1384,223 @@ function renderProteinChart() {
   });
 }
 
+// ===== CALORIE VS GOAL CHART =====
+let calorieChart = null;
+let calorieChartRange = '30d';
+
+function getMealsForCalorieRange(range) {
+  if (!allMeals.length) return allMeals;
+  const now = new Date();
+  const cutoff = new Date(now);
+  if (range === '7d') cutoff.setDate(cutoff.getDate() - 7);
+  else if (range === '30d') cutoff.setDate(cutoff.getDate() - 30);
+  else if (range === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
+  else return allMeals;
+  return allMeals.filter(m => new Date(m.date + 'T00:00:00') >= cutoff);
+}
+
+function renderCalorieChart() {
+  injectProteinChartStyles();
+
+  if (!document.getElementById('calorieChartSection')) {
+    const proteinSection = document.getElementById('proteinChartSection');
+    if (!proteinSection) return;
+    const section = document.createElement('div');
+    section.id = 'calorieChartSection';
+    section.className = 'card';
+    section.style.padding = '20px 24px';
+    proteinSection.insertAdjacentElement('afterend', section);
+  }
+
+  const section = document.getElementById('calorieChartSection');
+  const filtered = getMealsForCalorieRange(calorieChartRange);
+  const dailyMap = buildDailyMap();
+
+  // Build per-date intake and goal
+  const byDate = {};
+  filtered.forEach(meal => {
+    if (!byDate[meal.date]) byDate[meal.date] = 0;
+    byDate[meal.date] += meal.total_calories || 0;
+  });
+  const dates = Object.keys(byDate).sort();
+
+  const intakeVals = dates.map(d => Math.round(byDate[d]));
+  const goalVals = dates.map(d => {
+    const woCals = (dailyMap[d] || {}).workoutCalories || 0;
+    return getTargetIntakeForDate(d, woCals).targetIntake;
+  });
+
+  const daysLogged = dates.length;
+  const avgIntake = daysLogged ? Math.round(intakeVals.reduce((a, b) => a + b, 0) / daysLogged) : 0;
+  const avgGoal = daysLogged ? Math.round(goalVals.reduce((a, b) => a + b, 0) / daysLogged) : 0;
+  const daysUnder = intakeVals.filter((v, i) => v <= goalVals[i]).length;
+  const pctUnder = daysLogged ? Math.round((daysUnder / daysLogged) * 100) : 0;
+  const avgDelta = daysLogged
+    ? Math.round(intakeVals.reduce((s, v, i) => s + (v - goalVals[i]), 0) / daysLogged)
+    : 0;
+
+  const tickColor = '#8b90a8';
+  const gridColor = 'rgba(139,144,168,0.12)';
+  const tt = { backgroundColor: '#1a1d27', borderColor: '#2e3250', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a8' };
+
+  section.innerHTML = `
+    <div class="protein-chart-header">
+      <div class="protein-chart-title">Daily Calories vs Goal</div>
+      <div class="protein-chart-range-toggle">
+        <button class="calorie-range-btn ${calorieChartRange === '7d' ? 'active' : ''}" data-range="7d">1 week</button>
+        <button class="calorie-range-btn ${calorieChartRange === '30d' ? 'active' : ''}" data-range="30d">1 month</button>
+        <button class="calorie-range-btn ${calorieChartRange === '1y' ? 'active' : ''}" data-range="1y">1 year</button>
+        <button class="calorie-range-btn ${calorieChartRange === 'all' ? 'active' : ''}" data-range="all">All time</button>
+      </div>
+    </div>
+    <div class="protein-chart-metrics">
+      <div class="protein-metric">
+        <div class="protein-metric-label">Avg intake</div>
+        <div class="protein-metric-value">${avgIntake.toLocaleString()}</div>
+        <div class="protein-metric-sub">${daysLogged} day${daysLogged !== 1 ? 's' : ''} logged</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Avg goal</div>
+        <div class="protein-metric-value">${avgGoal.toLocaleString()}</div>
+        <div class="protein-metric-sub">workout-adjusted</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Days under goal</div>
+        <div class="protein-metric-value">${daysUnder} / ${daysLogged}</div>
+        <div class="protein-metric-sub">${pctUnder}% compliance</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Avg delta</div>
+        <div class="protein-metric-value" style="color:${avgDelta <= 0 ? '#00d4aa' : '#ff6b6b'}">${avgDelta > 0 ? '+' : ''}${avgDelta.toLocaleString()}</div>
+        <div class="protein-metric-sub">kcal vs goal</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:8px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:#6c63ff"></div>Calories consumed
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:22px;height:2px;border-top:2px dashed #EF9F27;"></div>Daily goal (workout-adjusted)
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:rgba(0,212,170,0.25)"></div>Under goal
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,107,107,0.25)"></div>Over goal
+      </div>
+    </div>
+    <div style="position:relative;width:100%;height:220px">
+      <canvas id="calorieGoalChart"></canvas>
+    </div>
+  `;
+
+  section.querySelectorAll('.calorie-range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      calorieChartRange = btn.dataset.range;
+      renderCalorieChart();
+    });
+  });
+
+  if (calorieChart) calorieChart.destroy();
+
+  const labels = dates.map(d => {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  });
+
+  // Plugin: shade columns green/red based on under/over goal
+  const columnShadePlugin = {
+    id: 'columnShade',
+    beforeDraw(chart) {
+      const { ctx, scales: { x, y }, chartArea } = chart;
+      ctx.save();
+      intakeVals.forEach((val, i) => {
+        const xCenter = x.getPixelForValue(i);
+        const colHalfW = i < intakeVals.length - 1
+          ? (x.getPixelForValue(i + 1) - xCenter) / 2
+          : (xCenter - x.getPixelForValue(i - 1)) / 2;
+        const underGoal = val <= goalVals[i];
+        ctx.fillStyle = underGoal ? 'rgba(0,212,170,0.07)' : 'rgba(255,107,107,0.07)';
+        ctx.fillRect(xCenter - colHalfW, chartArea.top, colHalfW * 2, chartArea.bottom - chartArea.top);
+      });
+      ctx.restore();
+    }
+  };
+
+  calorieChart = new Chart(document.getElementById('calorieGoalChart'), {
+    type: 'line',
+    plugins: [columnShadePlugin],
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Calories consumed',
+          data: intakeVals,
+          borderColor: '#6c63ff',
+          backgroundColor: 'rgba(108,99,255,0.06)',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: intakeVals.map((v, i) => v <= goalVals[i] ? '#00d4aa' : '#ff6b6b'),
+          pointBorderColor: intakeVals.map((v, i) => v <= goalVals[i] ? '#00d4aa' : '#ff6b6b'),
+          spanGaps: false,
+          fill: false,
+          order: 1,
+        },
+        {
+          label: 'Daily goal',
+          data: goalVals,
+          borderColor: '#EF9F27',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          tension: 0.2,
+          fill: false,
+          order: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...tt,
+          callbacks: {
+            label: ctx => {
+              if (ctx.dataset.label === 'Daily goal') return ` Goal: ${ctx.raw.toLocaleString()} kcal`;
+              return ` Ate: ${ctx.raw.toLocaleString()} kcal`;
+            },
+            afterBody: items => {
+              const ate = items.find(i => i.dataset.label === 'Calories consumed')?.raw;
+              const goal = items.find(i => i.dataset.label === 'Daily goal')?.raw;
+              if (ate == null || goal == null) return '';
+              const diff = ate - goal;
+              return diff <= 0
+                ? `  ▼ ${Math.abs(diff).toLocaleString()} kcal under`
+                : `  ▲ ${diff.toLocaleString()} kcal over`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: tickColor, font: { size: 10 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 20 },
+          grid: { color: gridColor },
+        },
+        y: {
+          ticks: { color: tickColor, font: { size: 11 }, callback: v => v.toLocaleString() },
+          grid: { color: gridColor },
+          title: { display: true, text: 'kcal', color: tickColor, font: { size: 11 } },
+        }
+      }
+    }
+  });
+}
+
 function groupedMealDates(meals) {
   const byDate = {};
   meals.forEach(meal => {
@@ -1558,6 +1612,7 @@ function groupedMealDates(meals) {
 
 function renderMeals() {
   renderProteinChart();
+  renderCalorieChart();
   const container = document.getElementById('mealsContainer');
   const paginationEl = document.getElementById('mealsPagination');
 
@@ -1798,232 +1853,64 @@ function setupDayModal() {
 
     const style = document.createElement('style');
     style.textContent = `
-      .day-modal-overlay {
-        position: fixed; inset: 0; z-index: 1000;
-        background: rgba(10, 11, 20, 0.88);
-        backdrop-filter: blur(4px);
-        display: flex; align-items: center; justify-content: center;
-      }
-      .day-modal {
-        background: #1a1d27;
-        border: 1px solid #2e3250;
-        border-radius: 16px;
-        width: min(760px, 95vw);
-        max-height: 88vh;
-        overflow-y: auto;
-        padding: 28px 32px;
-        position: relative;
-        scrollbar-width: thin;
-        scrollbar-color: #2e3250 transparent;
-      }
+      .day-modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(10, 11, 20, 0.88); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; }
+      .day-modal { background: #1a1d27; border: 1px solid #2e3250; border-radius: 16px; width: min(760px, 95vw); max-height: 88vh; overflow-y: auto; padding: 28px 32px; position: relative; scrollbar-width: thin; scrollbar-color: #2e3250 transparent; }
       .day-modal::-webkit-scrollbar { width: 6px; }
       .day-modal::-webkit-scrollbar-track { background: transparent; }
       .day-modal::-webkit-scrollbar-thumb { background: #2e3250; border-radius: 3px; }
-      .day-modal-close {
-        position: absolute; top: 16px; right: 20px;
-        background: transparent; border: none;
-        color: #8b90a8; font-size: 18px; cursor: pointer;
-        padding: 4px 8px; line-height: 1; border-radius: 6px;
-        transition: color 0.15s, background 0.15s;
-      }
+      .day-modal-close { position: absolute; top: 16px; right: 20px; background: transparent; border: none; color: #8b90a8; font-size: 18px; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 6px; transition: color 0.15s, background 0.15s; }
       .day-modal-close:hover { color: #e8eaf0; background: rgba(255,255,255,0.06); }
       .day-modal h2 { margin: 0 0 20px; font-size: 1.2rem; color: #e8eaf0; padding-right: 32px; }
       .day-modal-section { margin-bottom: 24px; }
       .day-modal-section:last-child { margin-bottom: 0; }
-      .day-modal-section h3 {
-        font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.09em;
-        color: #8b90a8; margin: 0 0 10px;
-        padding-bottom: 8px; border-bottom: 1px solid #2e3250;
-      }
-      .day-modal-workout-row {
-        display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
-        background: rgba(108,99,255,0.06); border: 1px solid rgba(108,99,255,0.15);
-        border-radius: 10px; padding: 10px 14px; margin-bottom: 8px;
-      }
+      .day-modal-section h3 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.09em; color: #8b90a8; margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid #2e3250; }
+      .day-modal-workout-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; background: rgba(108,99,255,0.06); border: 1px solid rgba(108,99,255,0.15); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
       .day-modal-workout-row span { font-size: 0.83rem; color: #c8cbdf; }
       .day-modal-empty { color: #8b90a8; font-size: 0.85rem; padding: 8px 0; }
-      .modal-day-macro-row {
-        display: flex; align-items: center; gap: 20px;
-        background: rgba(108,99,255,0.05); border: 1px solid rgba(108,99,255,0.14);
-        border-radius: 10px; padding: 14px 18px; margin-bottom: 14px;
-      }
+      .modal-day-macro-row { display: flex; align-items: center; gap: 20px; background: rgba(108,99,255,0.05); border: 1px solid rgba(108,99,255,0.14); border-radius: 10px; padding: 14px 18px; margin-bottom: 14px; }
       .modal-macro-info { display: flex; flex-direction: column; gap: 5px; }
-      .modal-macro-info .modal-macro-title {
-        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em;
-        color: #8b90a8; margin-bottom: 4px;
-      }
+      .modal-macro-info .modal-macro-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: #8b90a8; margin-bottom: 4px; }
       .modal-macro-info span { font-size: 0.84rem; }
-      .modal-meal-entry {
-        display: flex; align-items: center; gap: 16px;
-        background: rgba(255,255,255,0.02); border: 1px solid #2e3250;
-        border-radius: 10px; padding: 12px 16px; margin-bottom: 8px;
-      }
+      .modal-meal-entry { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.02); border: 1px solid #2e3250; border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; }
       .modal-meal-entry:last-child { margin-bottom: 0; }
       .modal-meal-entry-info { flex: 1; min-width: 0; }
-      .modal-meal-entry-header {
-        display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
-      }
+      .modal-meal-entry-header { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
       .modal-meal-entry-header strong { font-size: 0.9rem; color: #e8eaf0; }
-      .modal-meal-desc { font-size: 0.8rem; color: #8b90a8; margin-bottom: 6px;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .modal-meal-desc { font-size: 0.8rem; color: #8b90a8; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .modal-meal-macros { display: flex; gap: 10px; }
       .modal-meal-macros span { font-size: 0.8rem; }
-      .meal-entry-bottom {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 12px; margin-top: 6px;
-      }
+      .meal-entry-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
       .meal-pie-wrap { flex-shrink: 0; }
-      .day-modal-body-comp-row {
-        display: flex; gap: 12px; flex-wrap: wrap;
-        background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.15);
-        border-radius: 10px; padding: 12px 16px;
-      }
-      .day-modal-body-comp-stat {
-        display: flex; flex-direction: column; gap: 2px; min-width: 90px;
-      }
-      .day-modal-body-comp-stat .bcs-label {
-        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em;
-        color: #8b90a8;
-      }
-      .day-modal-body-comp-stat .bcs-value {
-        font-size: 1rem; font-weight: 600; color: #e8eaf0;
-      }
-      .day-modal-body-comp-stat .bcs-sub {
-        font-size: 0.75rem; color: #8b90a8;
-      }
+      .day-modal-body-comp-row { display: flex; gap: 12px; flex-wrap: wrap; background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.15); border-radius: 10px; padding: 12px 16px; }
+      .day-modal-body-comp-stat { display: flex; flex-direction: column; gap: 2px; min-width: 90px; }
+      .day-modal-body-comp-stat .bcs-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: #8b90a8; }
+      .day-modal-body-comp-stat .bcs-value { font-size: 1rem; font-weight: 600; color: #e8eaf0; }
+      .day-modal-body-comp-stat .bcs-sub { font-size: 0.75rem; color: #8b90a8; }
       .day-modal-body-comp-stat .bcs-value.exact { color: #00d4aa; }
       .day-modal-body-comp-stat .bcs-value.estimated { color: #c8cbdf; }
-      .day-modal.week-modal {
-        width: min(860px, 95vw);
-      }
-      .log-meal-btn {
-        background: linear-gradient(135deg, #6c63ff, #5a52d5);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 7px 14px;
-        font-size: 0.82rem;
-        font-weight: 600;
-        cursor: pointer;
-        letter-spacing: 0.03em;
-        transition: opacity 0.15s;
-        white-space: nowrap;
-      }
+      .day-modal.week-modal { width: min(860px, 95vw); }
+      .log-meal-btn { background: linear-gradient(135deg, #6c63ff, #5a52d5); color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer; letter-spacing: 0.03em; transition: opacity 0.15s; white-space: nowrap; }
       .log-meal-btn:hover { opacity: 0.85; }
-      .log-meal-overlay {
-        position: fixed; inset: 0; z-index: 1100;
-        background: rgba(10, 11, 20, 0.9);
-        backdrop-filter: blur(4px);
-        display: flex; align-items: center; justify-content: center;
-      }
-      .log-meal-modal {
-        background: #1a1d27;
-        border: 1px solid #2e3250;
-        border-radius: 16px;
-        width: min(520px, 95vw);
-        padding: 28px 32px;
-        position: relative;
-      }
-      .log-meal-modal h2 {
-        margin: 0 0 6px;
-        font-size: 1.1rem;
-        color: #e8eaf0;
-        padding-right: 28px;
-      }
-      .log-meal-modal .log-meal-hint {
-        font-size: 0.78rem;
-        color: #8b90a8;
-        margin: 0 0 16px;
-      }
-      .log-meal-modal textarea {
-        width: 100%;
-        box-sizing: border-box;
-        background: #12131e;
-        border: 1px solid #2e3250;
-        border-radius: 10px;
-        color: #e8eaf0;
-        font-size: 0.88rem;
-        font-family: inherit;
-        padding: 12px 14px;
-        resize: vertical;
-        min-height: 90px;
-        outline: none;
-        transition: border-color 0.15s;
-      }
+      .log-meal-overlay { position: fixed; inset: 0; z-index: 1100; background: rgba(10, 11, 20, 0.9); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; }
+      .log-meal-modal { background: #1a1d27; border: 1px solid #2e3250; border-radius: 16px; width: min(520px, 95vw); padding: 28px 32px; position: relative; }
+      .log-meal-modal h2 { margin: 0 0 6px; font-size: 1.1rem; color: #e8eaf0; padding-right: 28px; }
+      .log-meal-modal .log-meal-hint { font-size: 0.78rem; color: #8b90a8; margin: 0 0 16px; }
+      .log-meal-modal textarea { width: 100%; box-sizing: border-box; background: #12131e; border: 1px solid #2e3250; border-radius: 10px; color: #e8eaf0; font-size: 0.88rem; font-family: inherit; padding: 12px 14px; resize: vertical; min-height: 90px; outline: none; transition: border-color 0.15s; }
       .log-meal-modal textarea:focus { border-color: #6c63ff; }
       .log-meal-modal textarea:disabled { opacity: 0.5; }
-      .log-meal-actions {
-        display: flex; align-items: center; justify-content: flex-end;
-        gap: 10px; margin-top: 14px;
-      }
-      .log-meal-cancel-btn {
-        background: transparent;
-        border: 1px solid #2e3250;
-        color: #8b90a8;
-        border-radius: 8px;
-        padding: 7px 14px;
-        font-size: 0.82rem;
-        cursor: pointer;
-        transition: border-color 0.15s, color 0.15s;
-      }
+      .log-meal-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+      .log-meal-cancel-btn { background: transparent; border: 1px solid #2e3250; color: #8b90a8; border-radius: 8px; padding: 7px 14px; font-size: 0.82rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
       .log-meal-cancel-btn:hover { border-color: #8b90a8; color: #e8eaf0; }
-      .log-meal-submit-btn {
-        background: linear-gradient(135deg, #6c63ff, #5a52d5);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 7px 18px;
-        font-size: 0.82rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: opacity 0.15s;
-      }
+      .log-meal-submit-btn { background: linear-gradient(135deg, #6c63ff, #5a52d5); color: #fff; border: none; border-radius: 8px; padding: 7px 18px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
       .log-meal-submit-btn:hover:not(:disabled) { opacity: 0.85; }
       .log-meal-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-      .log-meal-progress {
-        margin-top: 14px;
-        display: flex;
-        gap: 0;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #2e3250;
-      }
-      .log-meal-step {
-        flex: 1;
-        text-align: center;
-        padding: 8px 4px;
-        font-size: 0.75rem;
-        color: #8b90a8;
-        background: #12131e;
-        border-right: 1px solid #2e3250;
-        transition: background 0.2s, color 0.2s;
-      }
+      .log-meal-progress { margin-top: 14px; display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid #2e3250; }
+      .log-meal-step { flex: 1; text-align: center; padding: 8px 4px; font-size: 0.75rem; color: #8b90a8; background: #12131e; border-right: 1px solid #2e3250; transition: background 0.2s, color 0.2s; }
       .log-meal-step:last-child { border-right: none; }
-      .log-meal-step.active {
-        background: rgba(108,99,255,0.15);
-        color: #6c63ff;
-        font-weight: 600;
-      }
-      .log-meal-step.done {
-        background: rgba(0,212,170,0.1);
-        color: #00d4aa;
-      }
-      .log-meal-error {
-        margin-top: 12px;
-        padding: 10px 14px;
-        background: rgba(255,107,107,0.1);
-        border: 1px solid rgba(255,107,107,0.3);
-        border-radius: 8px;
-        color: #ff6b6b;
-        font-size: 0.8rem;
-      }
-      .log-meal-modal-close {
-        position: absolute; top: 16px; right: 20px;
-        background: transparent; border: none;
-        color: #8b90a8; font-size: 18px; cursor: pointer;
-        padding: 4px 8px; line-height: 1; border-radius: 6px;
-        transition: color 0.15s, background 0.15s;
-      }
+      .log-meal-step.active { background: rgba(108,99,255,0.15); color: #6c63ff; font-weight: 600; }
+      .log-meal-step.done { background: rgba(0,212,170,0.1); color: #00d4aa; }
+      .log-meal-error { margin-top: 12px; padding: 10px 14px; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); border-radius: 8px; color: #ff6b6b; font-size: 0.8rem; }
+      .log-meal-modal-close { position: absolute; top: 16px; right: 20px; background: transparent; border: none; color: #8b90a8; font-size: 18px; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 6px; transition: color 0.15s, background 0.15s; }
       .log-meal-modal-close:hover { color: #e8eaf0; background: rgba(255,255,255,0.06); }
     `;
     document.head.appendChild(style);
@@ -2149,17 +2036,14 @@ function openDayModal(date) {
 
   document.getElementById('dayModalContent').innerHTML = `
     <h2>📅 ${formatDate(date)}</h2>
-
     <div class="day-modal-section">
       <h3>⚖️ Body Composition</h3>
       ${bodyCompHtml}
     </div>
-
     <div class="day-modal-section">
       <h3>🏋️ Workouts · ${day.workoutCalories} kcal burned</h3>
       ${workoutsHtml}
     </div>
-
     <div class="day-modal-section">
       <h3>🍽 Nutrition · ${day.totalCaloriesIn} kcal consumed · 🎯 ${targetIntake} target ${calStatus}</h3>
       ${dayMeals.length ? `
@@ -2177,7 +2061,6 @@ function openDayModal(date) {
   `;
 
   document.getElementById('dayModal').style.display = 'flex';
-
   if (dayMeals.length) {
     setTimeout(() => renderMacroPie(dayPieId, totalProtein, totalCarbs, totalFat), 0);
   }
@@ -2226,42 +2109,18 @@ function openWeekModal(weekMonday) {
     const fColor = fDelta <= 0 ? 'var(--green)' : 'var(--red)';
     weightHtml = `
       <div class="tdee-grid" style="grid-template-columns:repeat(4,1fr)">
-        <div class="tdee-stat">
-          <div class="stat-label">Start Weight</div>
-          <div class="stat-value">${kgToLbs(startW.weight)} lbs</div>
-          <div class="stat-sub">${formatDate(startW.date)}</div>
-        </div>
-        <div class="tdee-stat">
-          <div class="stat-label">End Weight</div>
-          <div class="stat-value">${kgToLbs(endW.weight)} lbs</div>
-          <div class="stat-sub">${formatDate(endW.date)}</div>
-        </div>
-        <div class="tdee-stat" style="border-color:${wColor}">
-          <div class="stat-label">Weight Δ</div>
-          <div class="stat-value" style="color:${wColor}">${wDelta > 0 ? '+' : ''}${wDelta} lbs</div>
-          <div class="stat-sub">${endW.fat?.toFixed(2)}% fat now</div>
-        </div>
-        <div class="tdee-stat" style="border-color:${fColor}">
-          <div class="stat-label">Body Fat Δ</div>
-          <div class="stat-value" style="color:${fColor}">${fDelta > 0 ? '+' : ''}${fDelta}%</div>
-          <div class="stat-sub">${startW.fat?.toFixed(2)}% → ${endW.fat?.toFixed(2)}%</div>
-        </div>
+        <div class="tdee-stat"><div class="stat-label">Start Weight</div><div class="stat-value">${kgToLbs(startW.weight)} lbs</div><div class="stat-sub">${formatDate(startW.date)}</div></div>
+        <div class="tdee-stat"><div class="stat-label">End Weight</div><div class="stat-value">${kgToLbs(endW.weight)} lbs</div><div class="stat-sub">${formatDate(endW.date)}</div></div>
+        <div class="tdee-stat" style="border-color:${wColor}"><div class="stat-label">Weight Δ</div><div class="stat-value" style="color:${wColor}">${wDelta > 0 ? '+' : ''}${wDelta} lbs</div><div class="stat-sub">${endW.fat?.toFixed(2)}% fat now</div></div>
+        <div class="tdee-stat" style="border-color:${fColor}"><div class="stat-label">Body Fat Δ</div><div class="stat-value" style="color:${fColor}">${fDelta > 0 ? '+' : ''}${fDelta}%</div><div class="stat-sub">${startW.fat?.toFixed(2)}% → ${endW.fat?.toFixed(2)}%</div></div>
       </div>
     `;
   } else if (weekWeightEntries.length === 1) {
     const w = weekWeightEntries[0];
     weightHtml = `
       <div class="tdee-grid" style="grid-template-columns:repeat(2,1fr)">
-        <div class="tdee-stat">
-          <div class="stat-label">Weight</div>
-          <div class="stat-value">${kgToLbs(w.weight)} lbs</div>
-          <div class="stat-sub">${formatDate(w.date)}</div>
-        </div>
-        <div class="tdee-stat">
-          <div class="stat-label">Body Fat</div>
-          <div class="stat-value">${w.fat?.toFixed(2)}%</div>
-          <div class="stat-sub">single reading this week</div>
-        </div>
+        <div class="tdee-stat"><div class="stat-label">Weight</div><div class="stat-value">${kgToLbs(w.weight)} lbs</div><div class="stat-sub">${formatDate(w.date)}</div></div>
+        <div class="tdee-stat"><div class="stat-label">Body Fat</div><div class="stat-value">${w.fat?.toFixed(2)}%</div><div class="stat-sub">single reading this week</div></div>
       </div>
     `;
   }
@@ -2308,20 +2167,11 @@ function openWeekModal(weekMonday) {
 
   document.getElementById('dayModalContent').innerHTML = `
     <h2>📆 Week of ${weekLabel}</h2>
-
     <div class="day-modal-section">
       <h3>🍽 Calories · ${daysWithMeals.length} days logged</h3>
       <div class="tdee-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:${daysWithMeals.length ? '14px' : '0'}">
-        <div class="tdee-stat">
-          <div class="stat-label">Total Consumed</div>
-          <div class="stat-value">${totalCaloriesIn || '—'}</div>
-          <div class="stat-sub">kcal across ${daysWithMeals.length} day${daysWithMeals.length !== 1 ? 's' : ''}</div>
-        </div>
-        <div class="tdee-stat">
-          <div class="stat-label">Total Target</div>
-          <div class="stat-value">${totalTarget || '—'}</div>
-          <div class="stat-sub">kcal (deficit-adjusted)</div>
-        </div>
+        <div class="tdee-stat"><div class="stat-label">Total Consumed</div><div class="stat-value">${totalCaloriesIn || '—'}</div><div class="stat-sub">kcal across ${daysWithMeals.length} day${daysWithMeals.length !== 1 ? 's' : ''}</div></div>
+        <div class="tdee-stat"><div class="stat-label">Total Target</div><div class="stat-value">${totalTarget || '—'}</div><div class="stat-sub">kcal (deficit-adjusted)</div></div>
         <div class="tdee-stat" style="border-color:${daysWithMeals.length ? (weekMet ? 'var(--green)' : 'var(--red)') : 'var(--border)'}">
           <div class="stat-label">Weekly ${weekMet ? 'Surplus' : 'Overage'}</div>
           <div class="stat-value" style="color:${daysWithMeals.length ? (weekMet ? 'var(--green)' : 'var(--red)') : 'var(--text-muted)'}">
@@ -2346,12 +2196,10 @@ function openWeekModal(weekMonday) {
         </table>
       ` : ''}
     </div>
-
     <div class="day-modal-section">
       <h3>🏋️ Workouts · ${workoutDays.length} day${workoutDays.length !== 1 ? 's' : ''} · ${totalWorkoutCals} kcal burned</h3>
       ${workoutsHtml}
     </div>
-
     <div class="day-modal-section">
       <h3>⚖️ Weight & Body Composition</h3>
       ${weightHtml}
@@ -2584,7 +2432,6 @@ function renderTDEEPlan() {
       `;
     }
 
-    // Show goal history if more than one snapshot
     const snapshots = (goals.goals || []).slice().sort((a, b) => a.saved_date > b.saved_date ? -1 : 1);
     const historyHtml = snapshots.length > 1 ? `
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
@@ -2608,26 +2455,10 @@ function renderTDEEPlan() {
         📌 Locked in on ${savedDateFmt} at ${savedLbs} lbs — re-save Goals to recalculate.
       </div>
       <div class="tdee-grid">
-        <div class="tdee-stat">
-          <div class="stat-label">BMR (at rest)</div>
-          <div class="stat-value">${bmr || '—'}</div>
-          <div class="stat-sub">kcal/day if sedentary</div>
-        </div>
-        <div class="tdee-stat highlight">
-          <div class="stat-label">TDEE (baseline)</div>
-          <div class="stat-value">${tdee}</div>
-          <div class="stat-sub">kcal/day (lightly active)</div>
-        </div>
-        <div class="tdee-stat" style="border-color:${deficitColor}">
-          <div class="stat-label">Daily Deficit</div>
-          <div class="stat-value" style="color:${deficitColor}">${deficit > 0 ? deficit : 0} kcal</div>
-          <div class="stat-sub">${weeklyLoss > 0 ? weeklyLoss + ' lbs/week' : 'At goal!'}</div>
-        </div>
-        <div class="tdee-stat highlight-green">
-          <div class="stat-label">Target Daily Intake</div>
-          <div class="stat-value">${targetIntake > 0 ? targetIntake : '—'}</div>
-          <div class="stat-sub">kcal/day (+ workout cals)</div>
-        </div>
+        <div class="tdee-stat"><div class="stat-label">BMR (at rest)</div><div class="stat-value">${bmr || '—'}</div><div class="stat-sub">kcal/day if sedentary</div></div>
+        <div class="tdee-stat highlight"><div class="stat-label">TDEE (baseline)</div><div class="stat-value">${tdee}</div><div class="stat-sub">kcal/day (lightly active)</div></div>
+        <div class="tdee-stat" style="border-color:${deficitColor}"><div class="stat-label">Daily Deficit</div><div class="stat-value" style="color:${deficitColor}">${deficit > 0 ? deficit : 0} kcal</div><div class="stat-sub">${weeklyLoss > 0 ? weeklyLoss + ' lbs/week' : 'At goal!'}</div></div>
+        <div class="tdee-stat highlight-green"><div class="stat-label">Target Daily Intake</div><div class="stat-value">${targetIntake > 0 ? targetIntake : '—'}</div><div class="stat-sub">kcal/day (+ workout cals)</div></div>
         ${daysLeftHtml}
       </div>
       <div class="tdee-breakdown">
@@ -2641,7 +2472,6 @@ function renderTDEEPlan() {
     return;
   }
 
-  // Preview mode (no saved goal yet)
   const dob = goals.dob || document.getElementById('dob').value;
   const heightIn = goals.height_in || parseFloat(document.getElementById('heightIn').value);
   const sex = goals.sex || document.getElementById('sex').value;
@@ -2664,20 +2494,10 @@ function renderTDEEPlan() {
   const gd = document.getElementById('goalDate').value;
 
   let previewHtml = `
-    <div style="font-size:0.75rem;color:var(--accent);margin-bottom:12px">
-      ⚠️ Preview only — hit Save to lock these numbers in.
-    </div>
+    <div style="font-size:0.75rem;color:var(--accent);margin-bottom:12px">⚠️ Preview only — hit Save to lock these numbers in.</div>
     <div class="tdee-grid">
-      <div class="tdee-stat">
-        <div class="stat-label">BMR (at rest)</div>
-        <div class="stat-value">${bmr}</div>
-        <div class="stat-sub">kcal/day if sedentary</div>
-      </div>
-      <div class="tdee-stat highlight">
-        <div class="stat-label">TDEE (baseline)</div>
-        <div class="stat-value">${tdee}</div>
-        <div class="stat-sub">kcal/day (lightly active)</div>
-      </div>
+      <div class="tdee-stat"><div class="stat-label">BMR (at rest)</div><div class="stat-value">${bmr}</div><div class="stat-sub">kcal/day if sedentary</div></div>
+      <div class="tdee-stat highlight"><div class="stat-label">TDEE (baseline)</div><div class="stat-value">${tdee}</div><div class="stat-sub">kcal/day (lightly active)</div></div>
   `;
 
   if (tw && gd) {
@@ -2690,25 +2510,11 @@ function renderTDEEPlan() {
     const feasible = deficit <= 1000;
     const deficitColor = feasible ? 'var(--green)' : 'var(--danger)';
     previewHtml += `
-      <div class="tdee-stat" style="border-color:${deficitColor}">
-        <div class="stat-label">Daily Deficit</div>
-        <div class="stat-value" style="color:${deficitColor}">${deficit} kcal</div>
-        <div class="stat-sub">${(deficit * 7 / 3500).toFixed(2)} lbs/week</div>
-      </div>
-      <div class="tdee-stat highlight-green">
-        <div class="stat-label">Target Daily Intake</div>
-        <div class="stat-value">${targetIntake > 0 ? targetIntake : '—'}</div>
-        <div class="stat-sub">kcal/day (+ workout cals)</div>
-      </div>
+      <div class="tdee-stat" style="border-color:${deficitColor}"><div class="stat-label">Daily Deficit</div><div class="stat-value" style="color:${deficitColor}">${deficit} kcal</div><div class="stat-sub">${(deficit * 7 / 3500).toFixed(2)} lbs/week</div></div>
+      <div class="tdee-stat highlight-green"><div class="stat-label">Target Daily Intake</div><div class="stat-value">${targetIntake > 0 ? targetIntake : '—'}</div><div class="stat-sub">kcal/day (+ workout cals)</div></div>
     `;
   } else {
-    previewHtml += `
-      <div class="tdee-stat highlight-green">
-        <div class="stat-label">Effective Daily Budget</div>
-        <div class="stat-value">${tdee}</div>
-        <div class="stat-sub">set target weight + date for deficit</div>
-      </div>
-    `;
+    previewHtml += `<div class="tdee-stat highlight-green"><div class="stat-label">Effective Daily Budget</div><div class="stat-value">${tdee}</div><div class="stat-sub">set target weight + date for deficit</div></div>`;
   }
 
   previewHtml += `</div>`;
@@ -2718,7 +2524,6 @@ function renderTDEEPlan() {
 // ===== GOALS =====
 function renderGoals() {
   const currentGoal = getCurrentGoal();
-
   document.getElementById('targetWeight').value = currentGoal ? (currentGoal.target_weight || '') : '';
   document.getElementById('targetFat').value = currentGoal ? (currentGoal.target_fat || '') : '';
   if (currentGoal && currentGoal.goal_date) document.getElementById('goalDate').value = currentGoal.goal_date;
@@ -2752,16 +2557,10 @@ function renderGoalProgress() {
     const direction = targetLbs < firstLbs ? 'losing' : 'gaining';
     const diff = (latestLbs - targetLbs).toFixed(1);
     const diffLabel = diff > 0 ? `${diff} lbs above goal` : `${Math.abs(diff)} lbs below goal`;
-
     html += `
       <div class="progress-item">
-        <div class="progress-label">
-          <span>⚖️ Weight: ${latestLbs} lbs → Goal: ${targetLbs} lbs</span>
-          <span>${pct.toFixed(0)}%</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill weight" style="width:${pct}%"></div>
-        </div>
+        <div class="progress-label"><span>⚖️ Weight: ${latestLbs} lbs → Goal: ${targetLbs} lbs</span><span>${pct.toFixed(0)}%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill weight" style="width:${pct}%"></div></div>
         <div class="progress-note">Started at ${firstLbs} lbs · Currently ${direction} · ${diffLabel}</div>
       </div>
     `;
@@ -2778,16 +2577,10 @@ function renderGoalProgress() {
     const pct = totalChange > 0 ? Math.min(100, (achieved / totalChange) * 100) : 100;
     const diff = (currentF - targetF).toFixed(2);
     const diffLabel = diff > 0 ? `${diff}% above goal` : `${Math.abs(diff)}% below goal`;
-
     html += `
       <div class="progress-item">
-        <div class="progress-label">
-          <span>💪 Body Fat: ${currentF.toFixed(2)}% → Goal: ${targetF}%</span>
-          <span>${pct.toFixed(0)}%</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill fat" style="width:${pct}%"></div>
-        </div>
+        <div class="progress-label"><span>💪 Body Fat: ${currentF.toFixed(2)}% → Goal: ${targetF}%</span><span>${pct.toFixed(0)}%</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill fat" style="width:${pct}%"></div></div>
         <div class="progress-note">Started at ${startF.toFixed(2)}% · ${diffLabel}</div>
       </div>
     `;
@@ -2815,7 +2608,6 @@ function setupGoalsForm() {
     const heightIn = document.getElementById('heightIn').value;
     const sex = document.getElementById('sex').value;
 
-    // Update top-level profile fields
     goals.dob = dob || goals.dob;
     goals.height_in = heightIn ? parseFloat(heightIn) : goals.height_in;
     goals.sex = sex || goals.sex || 'male';
@@ -2853,7 +2645,6 @@ function setupGoalsForm() {
       }
     }
 
-    // Append new snapshot to goals array
     const newSnapshot = {
       saved_date: savedDate,
       saved_weight_lbs: savedWeightLbs,

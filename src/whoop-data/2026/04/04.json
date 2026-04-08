@@ -188,5 +188,43 @@
             "zone_four_milli": 0,
             "zone_five_milli": 0
         }
+    },
+    {
+        "id": "8a2efb25-69e3-4dc4-b86d-a01b1c8ad9ab",
+        "sport_name": "running",
+        "start_time": "2026-04-08T06:15:06",
+        "end_time": "2026-04-08T06:43:10",
+        "avg_heart_rate": 144,
+        "calories": 301,
+        "distance_meter": 2.632739,
+        "max_heart_rate": 174,
+        "strain": 11.028795,
+        "zone_durations": {
+            "zone_zero_milli": 177000,
+            "zone_one_milli": 134000,
+            "zone_two_milli": 447000,
+            "zone_three_milli": 655000,
+            "zone_four_milli": 259000,
+            "zone_five_milli": 12000
+        }
+    },
+    {
+        "id": "12945486-07bd-450f-bba4-5f1b281f841d",
+        "sport_name": "weightlifting",
+        "start_time": "2026-04-08T06:43:28",
+        "end_time": "2026-04-08T07:01:57",
+        "avg_heart_rate": 125,
+        "calories": 118,
+        "distance_meter": null,
+        "max_heart_rate": 150,
+        "strain": 6.2402716,
+        "zone_durations": {
+            "zone_zero_milli": 22000,
+            "zone_one_milli": 957010,
+            "zone_two_milli": 127000,
+            "zone_three_milli": 3000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     }
 ]
