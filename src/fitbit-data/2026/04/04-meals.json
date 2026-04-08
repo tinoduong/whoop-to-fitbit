@@ -1034,5 +1034,323 @@
         "total_protein": 3.5,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-06T07:41:58.801312",
+        "date": "2026-04-06",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "6.33 oz grill skinless chicken breast, 1.72 oz baked sweet potato, 2.07 oz low fat cottage cheese, 1.12 oz pomegranite seeds, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Grilled Skinless Chicken Breast",
+                "calories": 299,
+                "protein": 56.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38410043497
+            },
+            {
+                "foodName": "Baked Sweet Potato",
+                "calories": 42,
+                "protein": 0.9,
+                "totalCarbohydrate": 9.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38407610783
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 51,
+                "protein": 9.3,
+                "totalCarbohydrate": 3.1,
+                "totalFat": 1.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38407433959
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 26,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.9,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38410013971
+            },
+            {
+                "foodName": "Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38408955252
+            }
+        ],
+        "total_calories": 423,
+        "total_protein": 67.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-06T20:04:05.216144",
+        "date": "2026-04-06",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "6.5 oz pan cooked Cod, 0.5 tbps chipotle sauce (30 cal), 1.5 tbsp guacamole, 3 small corn tortillas",
+        "items": [
+            {
+                "foodName": "Pan Cooked Cod",
+                "calories": 189,
+                "protein": 41.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.5,
+                "amount": 6.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38411853248
+            },
+            {
+                "foodName": "Chipotle Sauce",
+                "calories": 30,
+                "protein": 0.5,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38412020166
+            },
+            {
+                "foodName": "Guacamole",
+                "calories": 60,
+                "protein": 1.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 5.5,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38412977995
+            },
+            {
+                "foodName": "Small Corn Tortillas",
+                "calories": 156,
+                "protein": 4.2,
+                "totalCarbohydrate": 31.8,
+                "totalFat": 1.8,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38411813618
+            }
+        ],
+        "total_calories": 435,
+        "total_protein": 46.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-06T20:18:42.438251",
+        "date": "2026-04-06",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 5.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38412813531
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-07T07:41:23.264698",
+        "date": "2026-04-07",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "6.02 oz grilled skinless chicken breast, 2 oz low fat cottage cheese, 1 oz pomagranite seeds, 1.58 oz roasted sweet potato, 0.6 oz acorn squash",
+        "items": [
+            {
+                "foodName": "Grilled Skinless Chicken Breast",
+                "calories": 281,
+                "protein": 52.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.1,
+                "amount": 6.02,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38413939640
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 51,
+                "protein": 7.0,
+                "totalCarbohydrate": 3.1,
+                "totalFat": 1.4,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38413979159
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38414964864
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 38,
+                "protein": 0.9,
+                "totalCarbohydrate": 8.7,
+                "totalFat": 0.1,
+                "amount": 1.58,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38414643845
+            },
+            {
+                "foodName": "Acorn Squash",
+                "calories": 10,
+                "protein": 0.2,
+                "totalCarbohydrate": 2.6,
+                "totalFat": 0.0,
+                "amount": 0.6,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38415102265
+            }
+        ],
+        "total_calories": 403,
+        "total_protein": 61.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-07T19:46:17.366592",
+        "date": "2026-04-07",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1/2 cup uncle ben's wild rice ready rice, 6.4 oz grilled pork tenderloin, 1/4 tbsp honey, 1/2 cup total of roasted apples and carrots and onions",
+        "items": [
+            {
+                "foodName": "Uncle Ben's Wild Rice Ready Rice",
+                "calories": 110,
+                "protein": 3.0,
+                "totalCarbohydrate": 22.0,
+                "totalFat": 1.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38418191608
+            },
+            {
+                "foodName": "Grilled Pork Tenderloin",
+                "calories": 280,
+                "protein": 52.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.5,
+                "amount": 6.4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38419350663
+            },
+            {
+                "foodName": "Honey",
+                "calories": 11,
+                "protein": 0.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 0.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38418408245
+            },
+            {
+                "foodName": "Roasted Apples and Carrots and Onions",
+                "calories": 40,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38419896605
+            }
+        ],
+        "total_calories": 441,
+        "total_protein": 56.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-07T19:55:48.822991",
+        "date": "2026-04-07",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38418801362
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
