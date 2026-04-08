@@ -61,6 +61,35 @@ async function loadData() {
   allWeight = await weightRes.json();
   allMeals = await mealsRes.json();
   goals = await goalsRes.json();
+  // Ensure goals.goals is always an array
+  if (!goals.goals) goals.goals = [];
+}
+
+// ===== GOAL SNAPSHOT HELPERS =====
+
+// Returns the goal snapshot active on a given date (closest saved_date <= date).
+// Falls back to the earliest snapshot if none precede the date.
+function getGoalForDate(date) {
+  const snapshots = goals.goals || [];
+  if (!snapshots.length) return null;
+  let best = null;
+  for (const g of snapshots) {
+    if (g.saved_date <= date) {
+      if (!best || g.saved_date > best.saved_date) best = g;
+    }
+  }
+  // If no snapshot precedes this date, use the earliest one
+  if (!best) {
+    best = snapshots.reduce((a, b) => a.saved_date < b.saved_date ? a : b);
+  }
+  return best;
+}
+
+// Returns the most recent goal snapshot (for current UI state)
+function getCurrentGoal() {
+  const snapshots = goals.goals || [];
+  if (!snapshots.length) return null;
+  return snapshots.reduce((a, b) => a.saved_date > b.saved_date ? a : b);
 }
 
 // ===== NAV =====
@@ -143,14 +172,18 @@ function buildDailyMap() {
   return map;
 }
 
-function getTargetIntakeForDate(_date, workoutCalories) {
-  const tdee = goals.saved_tdee || null;
-  const deficit = goals.saved_deficit || 0;
+function getTargetIntakeForDate(date, workoutCalories) {
+  const snap = getGoalForDate(date);
+  if (!snap) {
+    return { targetIntake: 2000 + workoutCalories, tdee: null, deficit: 0 };
+  }
+  const tdee = snap.saved_tdee || null;
+  const deficit = snap.saved_deficit || 0;
   if (tdee) {
     return { targetIntake: (tdee + workoutCalories) - deficit, tdee, deficit };
   }
   return {
-    targetIntake: (goals.daily_calorie_goal || 2000) + workoutCalories,
+    targetIntake: (snap.daily_calorie_goal || 2000) + workoutCalories,
     tdee: null,
     deficit: 0,
   };
@@ -240,6 +273,8 @@ function renderWeightChart() {
     }
   };
 
+  const currentGoal = getCurrentGoal();
+
   const datasets = [
     {
       label: 'Weight (lbs)',
@@ -283,10 +318,10 @@ function renderWeightChart() {
     },
   ];
 
-  if (goals.target_weight) {
+  if (currentGoal && currentGoal.target_weight) {
     datasets.push({
       label: 'Goal Weight (lbs)',
-      data: labels.map(() => goals.target_weight),
+      data: labels.map(() => currentGoal.target_weight),
       borderColor: 'rgba(108,99,255,0.4)',
       borderDash: [6, 4],
       borderWidth: 1.5,
@@ -294,10 +329,10 @@ function renderWeightChart() {
       yAxisID: 'yWeight',
     });
   }
-  if (goals.target_fat) {
+  if (currentGoal && currentGoal.target_fat) {
     datasets.push({
       label: 'Goal Fat (%)',
-      data: labels.map(() => goals.target_fat),
+      data: labels.map(() => currentGoal.target_fat),
       borderColor: 'rgba(0,212,170,0.4)',
       borderDash: [6, 4],
       borderWidth: 1.5,
@@ -580,7 +615,6 @@ function renderIntensityTrends() {
   const tt = { backgroundColor: '#1a1d27', borderColor: '#2e3250', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a8' };
 
   // ---- STRAIN CHART ----
-  // Group by date — take max strain per day (one point per day)
   const strainByDate = {};
   sorted.forEach(w => {
     if (w.strain == null) return;
@@ -1009,13 +1043,11 @@ function renderWorkouts() {
   const tbody = document.getElementById('workoutsBody');
   const paginationEl = document.getElementById('workoutsPagination');
 
-  // Inject the unified workout header (toggle + summary + trends + divider) once
   if (!document.getElementById('workoutTabHeader')) {
     injectWorkoutSummaryStyles();
     const tableContainer = document.querySelector('#tab-workouts .table-container') ||
       document.querySelector('#tab-workouts table')?.parentElement;
     if (tableContainer) {
-      // Inject styles
       if (!document.getElementById('intensityTrendsStyles')) {
         const style = document.createElement('style');
         style.id = 'intensityTrendsStyles';
@@ -1039,7 +1071,6 @@ function renderWorkouts() {
         document.head.appendChild(style);
       }
 
-      // Build the unified header block
       const headerEl = document.createElement('div');
       headerEl.id = 'workoutTabHeader';
       headerEl.innerHTML = `
@@ -1064,7 +1095,6 @@ function renderWorkouts() {
     renderWorkoutSummary();
   }
 
-  // Populate sport filter
   const sportFilter = document.getElementById('workoutSportFilter');
   const sports = [...new Set(allWorkouts.map(w => w.sport_name))].sort();
   const currentSport = sportFilter.value;
@@ -1077,7 +1107,6 @@ function renderWorkouts() {
     return;
   }
 
-  // Group by date
   const workoutsByDate = {};
   workoutsFiltered.forEach(w => {
     const d = getDateFromISO(w.start_time);
@@ -1298,8 +1327,8 @@ function injectProteinChartStyles() {
 }
 
 function getProteinGoals() {
-  // Use saved protein goal if set, otherwise fall back to 110g default
-  const goal = goals.saved_protein_goal || 135;
+  const snap = getCurrentGoal();
+  const goal = (snap && snap.saved_protein_goal) || 135;
   const floor = goal ? Math.round(goal / 1.2) : 110;
   return { goal, floor };
 }
@@ -2521,49 +2550,67 @@ function avgDailyWorkoutCals() {
 
 function renderTDEEPlan() {
   const container = document.getElementById('tdeeDetails');
+  const currentGoal = getCurrentGoal();
 
-  if (goals.saved_tdee) {
-    const tdee = goals.saved_tdee;
-    const bmr = goals.saved_bmr || '—';
-    const deficit = goals.saved_deficit || 0;
-    const targetIntake = goals.saved_target_intake || (tdee - deficit);
-    const savedDate = goals.saved_date ? formatDate(goals.saved_date) : 'unknown date';
-    const savedLbs = goals.saved_weight_lbs || '—';
+  if (currentGoal && currentGoal.saved_tdee) {
+    const { saved_tdee: tdee, saved_bmr: bmr, saved_deficit: deficit,
+            saved_target_intake: targetIntake, saved_date: savedDate,
+            saved_weight_lbs: savedLbs, goal_date, target_weight } = currentGoal;
+    const savedDateFmt = savedDate ? formatDate(savedDate) : 'unknown date';
     const weeklyLoss = deficit > 0 ? (deficit * 7 / 3500).toFixed(2) : '0';
     const feasible = deficit <= 1000;
     const deficitColor = feasible ? 'var(--green)' : 'var(--danger)';
     const warning = !feasible ? ' ⚠️ Deficit exceeds 1000 kcal/day — consider extending your goal date.' : '';
 
     let daysLeftHtml = '';
-    if (goals.goal_date) {
-      const daysLeft = Math.max(0, Math.round((new Date(goals.goal_date) - new Date()) / (1000 * 60 * 60 * 24)));
+    if (goal_date) {
+      const daysLeft = Math.max(0, Math.round((new Date(goal_date) - new Date()) / (1000 * 60 * 60 * 24)));
       const currentLbs = allWeight.length ? kgToLbs(allWeight[allWeight.length - 1].weight) : null;
-      const lbsLeft = currentLbs && goals.target_weight
-        ? (currentLbs - goals.target_weight).toFixed(1)
+      const lbsLeft = currentLbs && target_weight
+        ? (currentLbs - target_weight).toFixed(1)
         : '—';
 
       daysLeftHtml = `
         <div class="tdee-stat">
           <div class="stat-label">Days Remaining</div>
           <div class="stat-value">${daysLeft}</div>
-          <div class="stat-sub">to ${goals.goal_date}</div>
+          <div class="stat-sub">to ${goal_date}</div>
         </div>
         <div class="tdee-stat">
           <div class="stat-label">Lbs Left to Goal</div>
           <div class="stat-value">${lbsLeft > 0 ? lbsLeft : '0'} lbs</div>
-          <div class="stat-sub">as of save date</div>
+          <div class="stat-sub">as of latest weight</div>
         </div>
       `;
     }
 
+    // Show goal history if more than one snapshot
+    const snapshots = (goals.goals || []).slice().sort((a, b) => a.saved_date > b.saved_date ? -1 : 1);
+    const historyHtml = snapshots.length > 1 ? `
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:#8b90a8;margin-bottom:8px">Goal History</div>
+        ${snapshots.map((s, i) => `
+          <div style="display:flex;gap:12px;align-items:baseline;font-size:0.8rem;color:${i === 0 ? '#e8eaf0' : '#8b90a8'};padding:3px 0">
+            <span style="min-width:80px">${s.saved_date}</span>
+            <span>${s.saved_target_intake} kcal/day</span>
+            <span>·</span>
+            <span>${s.saved_deficit} deficit</span>
+            <span>·</span>
+            <span>goal: ${s.target_weight} lbs by ${s.goal_date || '—'}</span>
+            ${i === 0 ? '<span style="color:#6c63ff;font-size:0.7rem;margin-left:4px">current</span>' : ''}
+          </div>
+        `).join('')}
+      </div>
+    ` : '';
+
     container.innerHTML = `
       <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px">
-        📌 Locked in on ${savedDate} at ${savedLbs} lbs — re-save Goals to recalculate.
+        📌 Locked in on ${savedDateFmt} at ${savedLbs} lbs — re-save Goals to recalculate.
       </div>
       <div class="tdee-grid">
         <div class="tdee-stat">
           <div class="stat-label">BMR (at rest)</div>
-          <div class="stat-value">${bmr}</div>
+          <div class="stat-value">${bmr || '—'}</div>
           <div class="stat-sub">kcal/day if sedentary</div>
         </div>
         <div class="tdee-stat highlight">
@@ -2589,13 +2636,15 @@ function renderTDEEPlan() {
         <strong>${deficit} kcal</strong> = <strong>${targetIntake} kcal/day</strong> base target.
         On workout days, add that day's burned calories to your target.${warning}
       </div>
+      ${historyHtml}
     `;
     return;
   }
 
-  const dob = document.getElementById('dob').value;
-  const heightIn = parseFloat(document.getElementById('heightIn').value);
-  const sex = document.getElementById('sex').value;
+  // Preview mode (no saved goal yet)
+  const dob = goals.dob || document.getElementById('dob').value;
+  const heightIn = goals.height_in || parseFloat(document.getElementById('heightIn').value);
+  const sex = goals.sex || document.getElementById('sex').value;
 
   if (!dob || !heightIn) {
     container.innerHTML = '<div class="tdee-no-goal">Fill in your stats above and hit Save to lock in your calorie plan.</div>';
@@ -2668,9 +2717,11 @@ function renderTDEEPlan() {
 
 // ===== GOALS =====
 function renderGoals() {
-  document.getElementById('targetWeight').value = goals.target_weight || '';
-  document.getElementById('targetFat').value = goals.target_fat || '';
-  if (goals.goal_date) document.getElementById('goalDate').value = goals.goal_date;
+  const currentGoal = getCurrentGoal();
+
+  document.getElementById('targetWeight').value = currentGoal ? (currentGoal.target_weight || '') : '';
+  document.getElementById('targetFat').value = currentGoal ? (currentGoal.target_fat || '') : '';
+  if (currentGoal && currentGoal.goal_date) document.getElementById('goalDate').value = currentGoal.goal_date;
   if (goals.dob) document.getElementById('dob').value = goals.dob;
   if (goals.height_in) document.getElementById('heightIn').value = goals.height_in;
   if (goals.sex) document.getElementById('sex').value = goals.sex;
@@ -2680,6 +2731,7 @@ function renderGoals() {
 
 function renderGoalProgress() {
   const container = document.getElementById('goalProgress');
+  const currentGoal = getCurrentGoal();
 
   if (allWeight.length === 0) {
     container.innerHTML = '<div class="empty-state">No weight data available</div>';
@@ -2692,8 +2744,8 @@ function renderGoalProgress() {
   const firstLbs = kgToLbs(first.weight);
   let html = '';
 
-  if (goals.target_weight) {
-    const targetLbs = goals.target_weight;
+  if (currentGoal && currentGoal.target_weight) {
+    const targetLbs = currentGoal.target_weight;
     const totalChange = Math.abs(firstLbs - targetLbs);
     const achieved = Math.abs(firstLbs - latestLbs);
     const pct = totalChange > 0 ? Math.min(100, (achieved / totalChange) * 100) : 100;
@@ -2717,10 +2769,10 @@ function renderGoalProgress() {
     html += `<div class="progress-item"><div class="progress-note">Set a target weight in Goals to track progress.</div></div>`;
   }
 
-  if (goals.target_fat) {
+  if (currentGoal && currentGoal.target_fat) {
     const startF = first.fat;
     const currentF = latest.fat;
-    const targetF = goals.target_fat;
+    const targetF = currentGoal.target_fat;
     const totalChange = Math.abs(startF - targetF);
     const achieved = Math.abs(startF - currentF);
     const pct = totalChange > 0 ? Math.min(100, (achieved / totalChange) * 100) : 100;
@@ -2763,20 +2815,26 @@ function setupGoalsForm() {
     const heightIn = document.getElementById('heightIn').value;
     const sex = document.getElementById('sex').value;
 
+    // Update top-level profile fields
+    goals.dob = dob || goals.dob;
+    goals.height_in = heightIn ? parseFloat(heightIn) : goals.height_in;
+    goals.sex = sex || goals.sex || 'male';
+    if (!goals.goals) goals.goals = [];
+
     let savedTDEE = null, savedBMR = null, savedDeficit = 0, savedTargetIntake = null;
-    let savedWeightLbs = null, savedDate = null, dailyCalorieGoal = 2000;
+    let savedWeightLbs = null, savedProteinGoal = 135;
+    const savedDate = new Date().toISOString().substring(0, 10);
 
     if (dob && heightIn && allWeight.length) {
       const age = calcAge(dob);
       const latestLbs = kgToLbs(allWeight[allWeight.length - 1].weight);
       savedWeightLbs = latestLbs;
-      savedDate = new Date().toISOString().substring(0, 10);
       savedTDEE = calcTDEE(latestLbs, parseFloat(heightIn), age, sex);
       savedBMR = Math.round(calcBMR(latestLbs, parseFloat(heightIn), age, sex));
 
-      const currentFat = allWeight.length ? allWeight[allWeight.length - 1].fat : null;
+      const currentFat = allWeight[allWeight.length - 1].fat;
       const savedLBM = currentFat != null ? savedWeightLbs * (1 - currentFat / 100) : null;
-      const savedProteinGoal = savedLBM ? Math.round(savedLBM * 1.2) : 110;
+      savedProteinGoal = savedLBM ? Math.round(savedLBM * 1.2) : 110;
 
       if (tw && gd) {
         const today = new Date();
@@ -2793,25 +2851,24 @@ function setupGoalsForm() {
       } else {
         savedTargetIntake = savedTDEE;
       }
-      dailyCalorieGoal = savedTargetIntake;
     }
 
-    goals = {
+    // Append new snapshot to goals array
+    const newSnapshot = {
+      saved_date: savedDate,
+      saved_weight_lbs: savedWeightLbs,
       target_weight: tw ? parseFloat(tw) : null,
       target_fat: tf ? parseFloat(tf) : null,
       goal_date: gd || null,
-      dob: dob || null,
-      height_in: heightIn ? parseFloat(heightIn) : null,
-      sex: sex || 'male',
-      daily_calorie_goal: dailyCalorieGoal,
       saved_tdee: savedTDEE,
       saved_bmr: savedBMR,
       saved_deficit: savedDeficit,
       saved_target_intake: savedTargetIntake,
-      saved_weight_lbs: savedWeightLbs,
-      saved_date: savedDate,
-      saved_protein_goal: savedProteinGoal
+      saved_protein_goal: savedProteinGoal,
+      daily_calorie_goal: savedTargetIntake || 2000,
     };
+
+    goals.goals.push(newSnapshot);
 
     await fetch('/api/goals', {
       method: 'POST',
