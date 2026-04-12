@@ -103,7 +103,7 @@ Parse this meal input and return ONLY a JSON object with these fields:
 - meal_type: one of "breakfast", "morning snack", "lunch", "afternoon snack", "dinner", "snack"
 - date: the date in YYYY-MM-DD format (default to today if not specified)
 - description: the full meal description (for "log" intent)
-- amendment: for "update" intent, the additional or changed items in natural language (null for "log")
+- amendment: for "update" intent, the amendment instruction in natural language (null for "log")
 
 User input: "{user_input}"
 
@@ -116,6 +116,30 @@ Return ONLY valid JSON, no explanation, no markdown."""
         return json.loads(raw)
     except json.JSONDecodeError as e:
         log.error(f"Failed to parse Claude intent response: {e}\nRaw: {raw}")
+        return None
+
+def resolve_amendment_with_claude(existing_names, amendment):
+    """Given a list of existing food names and an amendment instruction,
+    return which items to keep and what new items to add."""
+    prompt = f"""You have a meal with these items: {json.dumps(existing_names)}
+
+Amendment instruction: "{amendment}"
+
+Return ONLY a JSON object with:
+- keep: list of food name strings from the original list to retain (use exact original names)
+- add: string describing any new items to add (empty string if none)
+
+Example: {{"keep": ["Greek yogurt", "Pomegranate seeds"], "add": "2oz shrimp"}}
+
+Return ONLY valid JSON, no explanation, no markdown."""
+
+    raw = call_claude(prompt, max_tokens=300)
+    if not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError as e:
+        log.error(f"Failed to parse amendment resolution: {e}\nRaw: {raw}")
         return None
 
 def parse_meal_with_claude(meal_description, meal_type):
@@ -146,13 +170,6 @@ Example:
     except json.JSONDecodeError as e:
         log.error(f"Failed to parse Claude meal response: {e}\nRaw: {raw}")
         return None
-
-def merge_meal_description(existing_items, amendment):
-    """Build a merged description from existing items + amendment for re-parsing."""
-    existing_summary = ", ".join(
-        f"{item.get('amount', 1)} {item['foodName']}" for item in existing_items
-    )
-    return f"{existing_summary}, {amendment}"
 
 # ─── Fitbit API ──────────────────────────────────────────────────────────────
 
@@ -304,8 +321,27 @@ def handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db
         log.error(f"No existing {meal_type} found for {date_str}. Cannot update.")
         return
 
-    log.info(f"Found existing {meal_type} for {date_str}. Deleting {len(existing['items'])} items from Fitbit...")
+    log.info(f"Found existing {meal_type} for {date_str} with {len(existing['items'])} items.")
+    log.info(f"Amendment: '{amendment}'")
 
+    # Ask Claude to resolve which items to keep and what new items to add
+    existing_names = [item["foodName"] for item in existing["items"]]
+    resolution = resolve_amendment_with_claude(existing_names, amendment)
+    if not resolution:
+        log.error("Could not resolve amendment. Aborting.")
+        return
+
+    log.info(f"Resolution — keep: {resolution.get('keep')}, add: '{resolution.get('add')}'")
+
+    keep_names = [n.lower() for n in resolution.get("keep", [])]
+    items_to_keep = [
+        item for item in existing["items"]
+        if item["foodName"].lower() in keep_names
+    ]
+    items_to_add_desc = resolution.get("add", "").strip()
+
+    # Delete all existing Fitbit log entries
+    log.info(f"Deleting {len(existing['items'])} items from Fitbit...")
     for item in existing["items"]:
         if item.get("log_id"):
             deleted = delete_food_log(access_token, item["log_id"])
@@ -316,19 +352,29 @@ def handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db
         else:
             log.warning(f"No logId stored for '{item['foodName']}' — skipping delete.")
 
-    merged_description = merge_meal_description(existing["items"], amendment)
-    log.info(f"Re-parsing merged meal: '{merged_description}'")
-    items = parse_meal_with_claude(merged_description, meal_type)
-    if not items:
-        log.error("Meal parsing failed. Aborting update.")
-        return
+    # Strip stale upload metadata before re-uploading kept items
+    clean_kept = [
+        {k: v for k, v in item.items() if k not in ("uploaded", "status_code", "log_id", "error")}
+        for item in items_to_keep
+    ]
+    all_item_records = upload_items(access_token, clean_kept, meal_type_id, date_str)
 
-    log.info(f"Parsed {len(items)} food items.")
-    item_records = upload_items(access_token, items, meal_type_id, date_str)
+    # Parse and upload any new additions
+    if items_to_add_desc:
+        log.info(f"Parsing new items to add: '{items_to_add_desc}'")
+        new_items = parse_meal_with_claude(items_to_add_desc, meal_type)
+        if new_items:
+            log.info(f"Parsed {len(new_items)} new items.")
+            all_item_records += upload_items(access_token, new_items, meal_type_id, date_str)
+        else:
+            log.warning("Could not parse new items to add.")
 
-    record = build_meal_record(date_str, meal_type, meal_type_id, merged_description, item_records, previous_record=existing)
+    final_description = ", ".join(i["foodName"] for i in all_item_records if i["uploaded"])
+    record = build_meal_record(date_str, meal_type, meal_type_id, final_description, all_item_records, previous_record=existing)
+
     db[idx] = record
     save_meal_db(db_path, db)
+    log.info(f"Final description being saved: '{amendment}'")
 
     log.info(f"Meal updated and saved to {db_path}")
     log.info(f"Total: {record['total_calories']} kcal | {record['total_protein']}g protein")
@@ -342,6 +388,8 @@ def process(user_input):
     if not intent_data:
         log.error("Could not parse intent. Aborting.")
         return
+
+    log.info(f"Intent parsed: {json.dumps(intent_data)}")
 
     intent = intent_data.get("intent", "log")
     meal_type = intent_data.get("meal_type", "dinner")
@@ -374,6 +422,7 @@ if __name__ == "__main__":
         print()
         print('Examples:')
         print('  python fitbit_log_meal.py "dinner: 5oz grilled steak, half eggplant, 2 beers, 1 cup roasted potato"')
+        print('  python fitbit_log_meal.py "update snack today to remove Tates cookie"')
         print('  python fitbit_log_meal.py "update dinner today to include 2oz shrimp"')
         print('  python fitbit_log_meal.py "breakfast: oatmeal with banana and black coffee"')
         sys.exit(1)
