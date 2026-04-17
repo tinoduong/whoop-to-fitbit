@@ -103,8 +103,13 @@ class FitnessHandler(BaseHTTPRequestHandler):
             self.send_file(os.path.join(WEBAPP_DIR, "index.html"), "text/html")
         elif path == "/style.css":
             self.send_file(os.path.join(WEBAPP_DIR, "style.css"), "text/css")
-        elif path == "/app.js":
-            self.send_file(os.path.join(WEBAPP_DIR, "app.js"), "application/javascript")
+        elif path.endswith(".js"):
+            js_file = os.path.join(WEBAPP_DIR, os.path.basename(path))
+            if os.path.exists(js_file):
+                self.send_file(js_file, "application/javascript")
+            else:
+                self.send_response(404)
+                self.end_headers()
         elif path == "/api/workouts":
             self.send_json(load_all_workouts())
         elif path == "/api/weight":
