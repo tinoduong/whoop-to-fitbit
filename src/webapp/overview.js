@@ -12,6 +12,7 @@ function setupChartRangeBtns() {
       document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentChartRange = btn.dataset.range;
+      pushUrl({ range: currentChartRange });
       renderWeightChart();
     });
   });
@@ -184,12 +185,14 @@ function setupMonthNav() {
   document.getElementById('prevMonth').addEventListener('click', () => {
     if (currentMonthIndex > 0) {
       currentMonthIndex--;
+      pushUrl({ month: availableMonths[currentMonthIndex] });
       renderDailySummary();
     }
   });
   document.getElementById('nextMonth').addEventListener('click', () => {
     if (currentMonthIndex < availableMonths.length - 1) {
       currentMonthIndex++;
+      pushUrl({ month: availableMonths[currentMonthIndex] });
       renderDailySummary();
     }
   });

@@ -328,6 +328,7 @@ function setupWorkoutSummaryToggle() {
       document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       workoutSummaryRange = btn.dataset.range;
+      pushUrl({ wrange: workoutSummaryRange });
       renderWorkoutSummary();
       renderIntensityTrends();
     });
@@ -554,6 +555,7 @@ function renderWorkouts() {
 
   renderPagination(paginationEl, workoutsPage, totalPages, (p) => {
     workoutsPage = p;
+    replaceUrl({ wpage: p > 1 ? p : null });
     renderWorkouts();
   });
 }

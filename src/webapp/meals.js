@@ -48,6 +48,7 @@ function setupMealsChartRangeToggle() {
       headerEl.querySelectorAll('.meals-range-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       mealsChartRange = btn.dataset.range;
+      pushUrl({ mrange: mealsChartRange });
       const ps = document.getElementById('proteinChartSection');
       const cs = document.getElementById('calorieChartSection');
       if (ps) ps.remove();
@@ -597,6 +598,7 @@ function renderMeals() {
 
   renderPagination(paginationEl, mealsPage, totalPages, (p) => {
     mealsPage = p;
+    replaceUrl({ mpage: p > 1 ? p : null });
     renderMeals();
   });
 }

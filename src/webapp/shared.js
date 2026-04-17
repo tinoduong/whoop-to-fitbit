@@ -24,11 +24,96 @@ let workoutSummaryRange = '30d';
 const KG_TO_LBS = 2.20462;
 function kgToLbs(kg) { return +(kg * KG_TO_LBS).toFixed(1); }
 
+// ===== URL HELPERS =====
+function pushUrl(updates) {
+  const params = new URLSearchParams(window.location.search);
+  for (const [k, v] of Object.entries(updates)) {
+    if (v == null) params.delete(k);
+    else params.set(k, String(v));
+  }
+  history.pushState(null, '', '?' + params.toString());
+}
+
+function replaceUrl(updates) {
+  const params = new URLSearchParams(window.location.search);
+  for (const [k, v] of Object.entries(updates)) {
+    if (v == null) params.delete(k);
+    else params.set(k, String(v));
+  }
+  history.replaceState(null, '', '?' + params.toString());
+}
+
+function restoreFromUrl() {
+  const p = new URLSearchParams(window.location.search);
+
+  const tab = p.get('tab') || 'overview';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === 'tab-' + tab));
+
+  const range = p.get('range') || 'month';
+  if (range !== currentChartRange) {
+    currentChartRange = range;
+    renderWeightChart();
+  }
+  document.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
+
+  const month = p.get('month');
+  if (month && availableMonths.includes(month) && availableMonths.indexOf(month) !== currentMonthIndex) {
+    currentMonthIndex = availableMonths.indexOf(month);
+    renderDailySummary();
+  }
+
+  const wrange = p.get('wrange') || '30d';
+  if (wrange !== workoutSummaryRange) {
+    workoutSummaryRange = wrange;
+    renderWorkoutSummary();
+    renderIntensityTrends();
+  }
+  document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === workoutSummaryRange));
+
+  const wpage = parseInt(p.get('wpage')) || 1;
+  if (wpage !== workoutsPage) {
+    workoutsPage = wpage;
+    renderWorkouts();
+  }
+
+  const mrange = p.get('mrange') || '30d';
+  if (mrange !== mealsChartRange) {
+    mealsChartRange = mrange;
+    const ps = document.getElementById('proteinChartSection');
+    const cs = document.getElementById('calorieChartSection');
+    if (ps) ps.remove();
+    if (cs) cs.remove();
+    renderProteinChart();
+    renderCalorieChart();
+  }
+  document.querySelectorAll('.meals-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === mealsChartRange));
+
+  const mpage = parseInt(p.get('mpage')) || 1;
+  if (mpage !== mealsPage) {
+    mealsPage = mpage;
+    renderMeals();
+  }
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
   setupNav();
   await loadData();
+
+  // Apply URL state to vars before first render
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('range')) currentChartRange = p.get('range');
+  if (p.get('wrange')) workoutSummaryRange = p.get('wrange');
+  if (p.get('wpage')) workoutsPage = parseInt(p.get('wpage')) || 1;
+  if (p.get('mrange')) mealsChartRange = p.get('mrange');
+  if (p.get('mpage')) mealsPage = parseInt(p.get('mpage')) || 1;
+
   buildAvailableMonths();
+  if (p.get('month') && availableMonths.includes(p.get('month'))) {
+    currentMonthIndex = availableMonths.indexOf(p.get('month'));
+  }
+
   renderOverview();
   workoutsFiltered = sortedWorkouts(allWorkouts);
   renderWorkouts();
@@ -42,6 +127,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupMonthNav();
   setupDayModal();
   setupLogMealModal();
+
+  // Sync button active states with state vars (some buttons hardcode their default)
+  document.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
+  document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === workoutSummaryRange));
+  document.querySelectorAll('.meals-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === mealsChartRange));
+
+  // Apply tab from URL
+  const tab = p.get('tab') || 'overview';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === 'tab-' + tab));
+  replaceUrl({ tab });
+
+  window.addEventListener('popstate', restoreFromUrl);
 });
 
 // ===== DATA LOADING =====
@@ -89,6 +187,7 @@ function setupNav() {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      pushUrl({ tab: btn.dataset.tab });
     });
   });
 }
