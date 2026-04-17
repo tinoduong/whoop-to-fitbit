@@ -227,10 +227,41 @@ function renderGoalProgress() {
     html += `<div class="progress-item"><div class="progress-note">Set a target body fat % in Goals to track progress.</div></div>`;
   }
 
+  const weightLost = +(firstLbs - latestLbs).toFixed(1);
+  const weightLostPct = firstLbs > 0 ? +((weightLost / firstLbs) * 100).toFixed(1) : 0;
+  const fatLost = +(first.fat - latest.fat).toFixed(2);
+  const fatLostPct = first.fat > 0 ? +((fatLost / first.fat) * 100).toFixed(1) : 0;
+  const weightToGoal = currentGoal?.target_weight ? +(latestLbs - currentGoal.target_weight).toFixed(1) : null;
+  const fatToGoal = currentGoal?.target_fat ? +(latest.fat - currentGoal.target_fat).toFixed(2) : null;
+
   html += `
-    <div class="progress-item" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border)">
-      <div class="progress-label"><span>📅 Latest Reading: ${formatDate(latest.date)}</span></div>
-      <div class="progress-note">Weight: ${latestLbs} lbs &nbsp;|&nbsp; Body Fat: ${latest.fat.toFixed(2)}% &nbsp;|&nbsp; BMI: ${latest.bmi}</div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:#8b90a8;margin-bottom:10px">Summary</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="tdee-stat">
+          <div class="stat-label">Total weight lost</div>
+          <div class="stat-value" style="color:${weightLost >= 0 ? 'var(--green)' : 'var(--red)'}">${weightLost >= 0 ? '-' : '+'}${Math.abs(weightLost)} lbs</div>
+          <div class="stat-sub">${Math.abs(weightLostPct)}% of starting weight</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">Weight to goal</div>
+          <div class="stat-value">${weightToGoal !== null ? (weightToGoal > 0 ? weightToGoal + ' lbs left' : '✓ Reached') : '—'}</div>
+          <div class="stat-sub">${currentGoal?.target_weight ? 'goal: ' + currentGoal.target_weight + ' lbs' : 'no goal set'}</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">Total fat lost</div>
+          <div class="stat-value" style="color:${fatLost >= 0 ? 'var(--green)' : 'var(--red)'}">${fatLost >= 0 ? '-' : '+'}${Math.abs(fatLost)}%</div>
+          <div class="stat-sub">${Math.abs(fatLostPct)}% reduction</div>
+        </div>
+        <div class="tdee-stat">
+          <div class="stat-label">Fat to goal</div>
+          <div class="stat-value">${fatToGoal !== null ? (fatToGoal > 0 ? fatToGoal + '% left' : '✓ Reached') : '—'}</div>
+          <div class="stat-sub">${currentGoal?.target_fat ? 'goal: ' + currentGoal.target_fat + '%' : 'no goal set'}</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.78rem;color:#8b90a8">
+      📅 Latest: ${formatDate(latest.date)} &nbsp;·&nbsp; ${latestLbs} lbs &nbsp;·&nbsp; ${latest.fat.toFixed(2)}% fat &nbsp;·&nbsp; BMI ${latest.bmi}
     </div>
   `;
 
