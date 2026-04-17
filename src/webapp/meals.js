@@ -36,7 +36,12 @@ function setupMealsChartRangeToggle() {
       <button class="meals-range-btn" data-range="all">All time</button>
     </div>
   `;
-  mealsTab.insertBefore(headerEl, mealsTab.firstElementChild);
+  const sectionHeader = mealsTab.querySelector('.section-header');
+  if (sectionHeader) {
+    sectionHeader.insertAdjacentElement('afterend', headerEl);
+  } else {
+    mealsTab.insertBefore(headerEl, mealsTab.firstElementChild);
+  }
 
   headerEl.querySelectorAll('.meals-range-btn').forEach(btn => {
     btn.addEventListener('click', () => {

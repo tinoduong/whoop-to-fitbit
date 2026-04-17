@@ -96,7 +96,10 @@
   <section id="tab-meals" class="tab">
     <div class="section-header">
       <h2>Meals</h2>
-      <div class="filters">
+    </div>
+    <!-- JS injects: range toggle, protein chart, calorie chart — all above this card -->
+    <div class="card">
+      <div class="filters" style="margin-bottom: 12px;">
         <input type="text" id="mealSearch" placeholder="Search food..." />
         <select id="mealTypeFilter">
           <option value="">All Types</option>
@@ -111,9 +114,9 @@
         <button id="mealFilterBtn">Filter</button>
         <button id="mealResetBtn">Reset</button>
       </div>
+      <div id="mealsContainer"></div>
+      <div class="pagination" id="mealsPagination"></div>
     </div>
-    <div id="mealsContainer"></div>
-    <div class="pagination" id="mealsPagination"></div>
   </section>
 
   <!-- GOALS TAB -->
