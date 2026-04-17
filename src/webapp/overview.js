@@ -278,7 +278,7 @@ function renderDailySummary() {
           inner += `<div class="cal-no-data">no meals</div>`;
         }
         if (hasWorkout) {
-          inner += `<div class="cal-workout">🏃 ${sportNames.join(', ')}</div>`;
+          inner += `<div class="cal-workout">🏃 ${sportNames.map(sportLabel).join(', ')}</div>`;
         }
         return `<div class="cal-cell cal-cell-out ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer;opacity:0.45">${inner}</div>`;
       }
@@ -296,7 +296,7 @@ function renderDailySummary() {
         inner += `<div class="cal-no-data">no meals</div>`;
       }
       if (hasWorkout) {
-        inner += `<div class="cal-workout">🏃 ${sportNames.join(', ')}</div>`;
+        inner += `<div class="cal-workout">🏃 ${sportNames.map(sportLabel).join(', ')}</div>`;
       }
 
       return `<div class="cal-cell ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer">${inner}</div>`;

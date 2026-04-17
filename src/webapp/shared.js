@@ -228,6 +228,13 @@ function sportClass(sport) {
   return map[sport] || 'sport-other';
 }
 
+function sportLabel(sport) {
+  const labels = {
+    weightlifting: 'weights',
+  };
+  return labels[sport] || sport.replace(/-/g, ' ');
+}
+
 // ===== WEIGHT LOOKUP HELPERS =====
 function getWeightForDate(date) {
   return allWeight.find(w => w.date === date) || null;
