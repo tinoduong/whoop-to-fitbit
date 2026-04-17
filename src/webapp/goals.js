@@ -234,6 +234,31 @@ function renderGoalProgress() {
   const weightToGoal = currentGoal?.target_weight ? +(latestLbs - currentGoal.target_weight).toFixed(1) : null;
   const fatToGoal = currentGoal?.target_fat ? +(latest.fat - currentGoal.target_fat).toFixed(2) : null;
 
+  const MS_PER_DAY = 1000 * 60 * 60 * 24;
+  const todayMs = Date.now();
+  let daysRunning = null, daysLeft = null, totalDays = null;
+  if (currentGoal?.saved_date) {
+    daysRunning = Math.max(0, Math.round((todayMs - new Date(currentGoal.saved_date).getTime()) / MS_PER_DAY));
+  }
+  if (currentGoal?.goal_date) {
+    daysLeft = Math.max(0, Math.round((new Date(currentGoal.goal_date).getTime() - todayMs) / MS_PER_DAY));
+    if (daysRunning !== null) totalDays = daysRunning + daysLeft;
+  }
+
+  const daysRunningHtml = daysRunning !== null ? `
+    <div class="tdee-stat">
+      <div class="stat-label">Days Running</div>
+      <div class="stat-value">${daysRunning}</div>
+      <div class="stat-sub">${currentGoal.saved_date ? 'since ' + formatDate(currentGoal.saved_date) : ''}</div>
+    </div>` : '';
+
+  const daysLeftHtmlProgress = daysLeft !== null ? `
+    <div class="tdee-stat" style="border-color:${daysLeft === 0 ? 'var(--green)' : 'var(--border)'}">
+      <div class="stat-label">Days Left</div>
+      <div class="stat-value" style="color:${daysLeft === 0 ? 'var(--green)' : 'inherit'}">${daysLeft === 0 ? '✓ Done' : daysLeft}</div>
+      <div class="stat-sub">${totalDays !== null ? 'of ' + totalDays + ' total days' : 'until ' + currentGoal.goal_date}</div>
+    </div>` : '';
+
   html += `
     <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:#8b90a8;margin-bottom:10px">Summary</div>
@@ -258,6 +283,8 @@ function renderGoalProgress() {
           <div class="stat-value">${fatToGoal !== null ? (fatToGoal > 0 ? fatToGoal + '% left' : '✓ Reached') : '—'}</div>
           <div class="stat-sub">${currentGoal?.target_fat ? 'goal: ' + currentGoal.target_fat + '%' : 'no goal set'}</div>
         </div>
+        ${daysRunningHtml}
+        ${daysLeftHtmlProgress}
       </div>
     </div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.78rem;color:#8b90a8">
