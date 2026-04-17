@@ -257,6 +257,8 @@ function renderDailySummary() {
     weeks.push(week);
   }
 
+  const todayStr = new Date().toISOString().substring(0, 10);
+
   let html = `<div class="cal-header">${DAY_NAMES.map(d => `<div class="cal-hdr-cell">${d}</div>`).join('')}<div class="cal-hdr-cell cal-week-summary-hdr">Week</div></div>`;
 
   html += weeks.map(week => {
@@ -280,7 +282,8 @@ function renderDailySummary() {
         if (hasWorkout) {
           inner += `<div class="cal-workout">🏃 ${sportNames.map(sportLabel).join(', ')}</div>`;
         }
-        return `<div class="cal-cell cal-cell-out ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer;opacity:0.45">${inner}</div>`;
+        const isToday = date === todayStr;
+        return `<div class="cal-cell cal-cell-out ${cardClass}${isToday ? ' cal-today' : ''}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer;opacity:0.45">${inner}</div>`;
       }
 
       const { day, hasMeals, hasWorkout, sportNames, targetIntake, delta, metGoal } = getDayData(date);
@@ -299,11 +302,11 @@ function renderDailySummary() {
         inner += `<div class="cal-workout">🏃 ${sportNames.map(sportLabel).join(', ')}</div>`;
       }
 
-      return `<div class="cal-cell ${cardClass}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer">${inner}</div>`;
+      const isToday = date === todayStr;
+      return `<div class="cal-cell ${cardClass}${isToday ? ' cal-today' : ''}" title="${date}" onclick="openDayModal('${date}')" style="cursor:pointer">${inner}</div>`;
     }).join('');
 
     const weekMealDays = week.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
-    const todayStr = new Date().toISOString().substring(0, 10);
 
     const weekMonday = week[0];
     const weekSunday = week[6];

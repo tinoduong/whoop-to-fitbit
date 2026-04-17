@@ -3197,11 +3197,11 @@
         "amended": false
     },
     {
-        "logged_at": "2026-04-16T20:17:22.970220",
+        "logged_at": "2026-04-16T21:45:36.304105",
         "date": "2026-04-16",
         "meal_type": "snack",
         "meal_type_id": 4,
-        "raw_description": "1/4 cup non fat greek yogurt, 2oz fresh strawberries",
+        "raw_description": "Non Fat Greek Yogurt, Fresh Strawberries, Blueberries",
         "items": [
             {
                 "foodName": "Non Fat Greek Yogurt",
@@ -3213,7 +3213,7 @@
                 "unitId": 304,
                 "uploaded": true,
                 "status_code": 201,
-                "log_id": 38476339599
+                "log_id": 38477144171
             },
             {
                 "foodName": "Fresh Strawberries",
@@ -3225,11 +3225,90 @@
                 "unitId": 304,
                 "uploaded": true,
                 "status_code": 201,
-                "log_id": 38476965637
+                "log_id": 38477291368
+            },
+            {
+                "foodName": "Blueberries",
+                "calories": 8,
+                "protein": 0.1,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38477183361
             }
         ],
-        "total_calories": 53,
-        "total_protein": 6.5,
+        "total_calories": 61,
+        "total_protein": 6.6,
+        "all_uploaded": true,
+        "amended": true,
+        "previous_version": {
+            "logged_at": "2026-04-16T20:17:22.970220",
+            "raw_description": "1/4 cup non fat greek yogurt, 2oz fresh strawberries",
+            "total_calories": 53,
+            "total_protein": 6.5
+        }
+    },
+    {
+        "logged_at": "2026-04-17T07:42:39.187045",
+        "date": "2026-04-17",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "6.10 oz skinless chicken breast, 2.08 oz low fat cottage cheese, 0.74 oz pomegranite seeds, 1.06 oz roasted chick peas",
+        "items": [
+            {
+                "foodName": "Skinless Chicken Breast",
+                "calories": 281,
+                "protein": 52.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.1,
+                "amount": 6.1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38478904795
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 51,
+                "protein": 7.0,
+                "totalCarbohydrate": 3.9,
+                "totalFat": 1.4,
+                "amount": 2.08,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38478406430
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 17,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.8,
+                "totalFat": 0.2,
+                "amount": 0.74,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38478396660
+            },
+            {
+                "foodName": "Roasted Chickpeas",
+                "calories": 48,
+                "protein": 2.6,
+                "totalCarbohydrate": 7.9,
+                "totalFat": 0.8,
+                "amount": 1.06,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38478133185
+            }
+        ],
+        "total_calories": 397,
+        "total_protein": 62.8,
         "all_uploaded": true,
         "amended": false
     }

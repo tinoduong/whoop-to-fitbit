@@ -326,6 +326,11 @@ nav {
   border-color: transparent;
 }
 
+.cal-cell.cal-today {
+  border: 2px solid #4a90e2;
+  box-shadow: 0 0 0 1px rgba(74, 144, 226, 0.2);
+}
+
 .cal-day-num {
   font-size: 0.78rem;
   font-weight: 700;
