@@ -263,6 +263,8 @@ function renderGoalProgress() {
     <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.07em;color:#8b90a8;margin-bottom:10px">Summary</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        ${daysRunningHtml}
+        ${daysLeftHtmlProgress}
         <div class="tdee-stat">
           <div class="stat-label">Total weight lost</div>
           <div class="stat-value" style="color:${weightLost >= 0 ? 'var(--green)' : 'var(--red)'}">${weightLost >= 0 ? '-' : '+'}${Math.abs(weightLost)} lbs</div>
@@ -283,8 +285,6 @@ function renderGoalProgress() {
           <div class="stat-value">${fatToGoal !== null ? (fatToGoal > 0 ? fatToGoal + '% left' : '✓ Reached') : '—'}</div>
           <div class="stat-sub">${currentGoal?.target_fat ? 'goal: ' + currentGoal.target_fat + '%' : 'no goal set'}</div>
         </div>
-        ${daysRunningHtml}
-        ${daysLeftHtmlProgress}
       </div>
     </div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.78rem;color:#8b90a8">
