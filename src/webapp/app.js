@@ -1140,9 +1140,60 @@ function applyWorkoutFilters() {
 
 // ===== MEALS =====
 
-// ===== PROTEIN CHART =====
+// Shared meals chart range state
 let proteinChart = null;
-let proteinChartRange = '30d';
+let calorieChart = null;
+let mealsChartRange = '30d';
+
+function injectMealsChartStyles() {
+  if (document.getElementById('mealsChartStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'mealsChartStyles';
+  style.textContent = `
+    #mealChartsHeader { margin-bottom: 0; }
+    .meals-chart-range-toggle { display: flex; gap: 4px; }
+    .meals-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+    .meals-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
+    .meals-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
+  `;
+  document.head.appendChild(style);
+}
+
+function setupMealsChartRangeToggle() {
+  const existing = document.getElementById('mealChartsHeader');
+  if (existing) return;
+
+  injectMealsChartStyles();
+
+  const mealsTab = document.getElementById('tab-meals');
+  const headerEl = document.createElement('div');
+  headerEl.id = 'mealChartsHeader';
+  headerEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;padding:0 4px';
+  headerEl.innerHTML = `
+    <div class="meals-chart-range-toggle">
+      <button class="meals-range-btn" data-range="7d">1 week</button>
+      <button class="meals-range-btn active" data-range="30d">1 month</button>
+      <button class="meals-range-btn" data-range="1y">1 year</button>
+      <button class="meals-range-btn" data-range="all">All time</button>
+    </div>
+  `;
+  mealsTab.insertBefore(headerEl, mealsTab.firstElementChild);
+
+  headerEl.querySelectorAll('.meals-range-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      headerEl.querySelectorAll('.meals-range-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      mealsChartRange = btn.dataset.range;
+      // Destroy existing chart sections so they re-render with new range
+      const ps = document.getElementById('proteinChartSection');
+      const cs = document.getElementById('calorieChartSection');
+      if (ps) ps.remove();
+      if (cs) cs.remove();
+      renderProteinChart();
+      renderCalorieChart();
+    });
+  });
+}
 
 function injectProteinChartStyles() {
   if (document.getElementById('proteinChartStyles')) return;
@@ -1192,17 +1243,22 @@ function renderProteinChart() {
 
   if (!document.getElementById('proteinChartSection')) {
     const mealsTab = document.getElementById('tab-meals');
-    const filterBar = mealsTab.querySelector('.filter-bar') || mealsTab.firstElementChild;
+    const mealChartsHeader = document.getElementById('mealChartsHeader');
     const section = document.createElement('div');
     section.id = 'proteinChartSection';
     section.className = 'card';
     section.style.padding = '20px 24px';
-    mealsTab.insertBefore(section, filterBar);
+    // Insert right after the shared toggle header
+    if (mealChartsHeader && mealChartsHeader.nextSibling) {
+      mealsTab.insertBefore(section, mealChartsHeader.nextSibling);
+    } else {
+      mealsTab.appendChild(section);
+    }
   }
 
   const section = document.getElementById('proteinChartSection');
   const { goal: proteinGoal, floor: proteinFloor } = getProteinGoals();
-  const filtered = getMealsForProteinRange(proteinChartRange);
+  const filtered = getMealsForProteinRange(mealsChartRange);
 
   const byDate = {};
   filtered.forEach(meal => {
@@ -1223,12 +1279,6 @@ function renderProteinChart() {
   section.innerHTML = `
     <div class="protein-chart-header">
       <div class="protein-chart-title">Daily Protein</div>
-      <div class="protein-chart-range-toggle">
-        <button class="protein-range-btn ${proteinChartRange === '7d' ? 'active' : ''}" data-range="7d">1 week</button>
-        <button class="protein-range-btn ${proteinChartRange === '30d' ? 'active' : ''}" data-range="30d">1 month</button>
-        <button class="protein-range-btn ${proteinChartRange === '1y' ? 'active' : ''}" data-range="1y">1 year</button>
-        <button class="protein-range-btn ${proteinChartRange === 'all' ? 'active' : ''}" data-range="all">All time</button>
-      </div>
     </div>
     <div class="protein-chart-metrics">
       <div class="protein-metric">
@@ -1385,9 +1435,6 @@ function renderProteinChart() {
 }
 
 // ===== CALORIE VS GOAL CHART =====
-let calorieChart = null;
-let calorieChartRange = '30d';
-
 function getMealsForCalorieRange(range) {
   if (!allMeals.length) return allMeals;
   const now = new Date();
@@ -1413,7 +1460,7 @@ function renderCalorieChart() {
   }
 
   const section = document.getElementById('calorieChartSection');
-  const filtered = getMealsForCalorieRange(calorieChartRange);
+  const filtered = getMealsForCalorieRange(mealsChartRange);
   const dailyMap = buildDailyMap();
 
   // Build per-date intake and goal
@@ -1446,12 +1493,6 @@ function renderCalorieChart() {
   section.innerHTML = `
     <div class="protein-chart-header">
       <div class="protein-chart-title">Daily Calories vs Goal</div>
-      <div class="protein-chart-range-toggle">
-        <button class="calorie-range-btn ${calorieChartRange === '7d' ? 'active' : ''}" data-range="7d">1 week</button>
-        <button class="calorie-range-btn ${calorieChartRange === '30d' ? 'active' : ''}" data-range="30d">1 month</button>
-        <button class="calorie-range-btn ${calorieChartRange === '1y' ? 'active' : ''}" data-range="1y">1 year</button>
-        <button class="calorie-range-btn ${calorieChartRange === 'all' ? 'active' : ''}" data-range="all">All time</button>
-      </div>
     </div>
     <div class="protein-chart-metrics">
       <div class="protein-metric">
@@ -1494,12 +1535,6 @@ function renderCalorieChart() {
     </div>
   `;
 
-  section.querySelectorAll('.calorie-range-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      calorieChartRange = btn.dataset.range;
-      renderCalorieChart();
-    });
-  });
 
   if (calorieChart) calorieChart.destroy();
 
@@ -1611,6 +1646,7 @@ function groupedMealDates(meals) {
 }
 
 function renderMeals() {
+  setupMealsChartRangeToggle();
   renderProteinChart();
   renderCalorieChart();
   const container = document.getElementById('mealsContainer');
