@@ -257,7 +257,7 @@ function renderDailySummary() {
     weeks.push(week);
   }
 
-  const todayStr = new Date().toISOString().substring(0, 10);
+  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
   let html = `<div class="cal-header">${DAY_NAMES.map(d => `<div class="cal-hdr-cell">${d}</div>`).join('')}<div class="cal-hdr-cell cal-week-summary-hdr">Week</div></div>`;
 

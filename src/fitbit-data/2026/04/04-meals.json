@@ -3311,5 +3311,115 @@
         "total_protein": 62.8,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-17T22:34:42.952023",
+        "date": "2026-04-17",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5.5 oz grilled pork chops, 3 tbsp guacamole, 2 tbsp pineapple salsa, 1/4 cup refried beans, 1 small (3 inches diameter) flour tortilla, 2 hardshell tacos shells (60 cals per shell)",
+        "items": [
+            {
+                "foodName": "Grilled Pork Chops",
+                "calories": 310,
+                "protein": 42.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 14.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38482130643
+            },
+            {
+                "foodName": "Guacamole",
+                "calories": 90,
+                "protein": 1.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 8.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38482110897
+            },
+            {
+                "foodName": "Pineapple Salsa",
+                "calories": 20,
+                "protein": 0.2,
+                "totalCarbohydrate": 5.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38481472220
+            },
+            {
+                "foodName": "Refried Beans",
+                "calories": 60,
+                "protein": 3.5,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 1.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38481924480
+            },
+            {
+                "foodName": "Small Flour Tortilla",
+                "calories": 90,
+                "protein": 2.5,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38482425246
+            },
+            {
+                "foodName": "Hard Shell Taco Shells",
+                "calories": 120,
+                "protein": 2.0,
+                "totalCarbohydrate": 16.0,
+                "totalFat": 6.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38482376309
+            }
+        ],
+        "total_calories": 690,
+        "total_protein": 52.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-17T22:38:41.525460",
+        "date": "2026-04-17",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 Tates chocolate chip cookie (70 cal)",
+        "items": [
+            {
+                "foodName": "Tates chocolate chip cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38481629618
+            }
+        ],
+        "total_calories": 70,
+        "total_protein": 1.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

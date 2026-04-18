@@ -500,7 +500,7 @@ function renderDailySummary() {
     }).join('');
 
     const weekMealDays = week.filter(d => (dailyMap[d] || {}).totalCaloriesIn > 0);
-    const todayStr = new Date().toISOString().substring(0, 10);
+    const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
     const weekMonday = week[0];
     const weekSunday = week[6];
