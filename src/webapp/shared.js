@@ -56,6 +56,7 @@ function restoreFromUrl() {
     renderWeightChart();
   }
   document.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
+  document.querySelectorAll('.overview-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
 
   const month = p.get('month');
   if (month && availableMonths.includes(month) && availableMonths.indexOf(month) !== currentMonthIndex) {
@@ -130,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Sync button active states with state vars (some buttons hardcode their default)
   document.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
+  document.querySelectorAll('.overview-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
   document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === workoutSummaryRange));
   document.querySelectorAll('.meals-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === mealsChartRange));
 

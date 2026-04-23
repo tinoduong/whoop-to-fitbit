@@ -2,18 +2,53 @@
 
 function renderOverview() {
   renderWeightChart();
+  renderBodyCompRatioChart();
   renderDailySummary();
 }
 
 // ===== CHART RANGE =====
 function setupChartRangeBtns() {
-  document.querySelectorAll('.range-btn').forEach(btn => {
+  if (document.getElementById('overviewRangeHeader')) return;
+
+  if (!document.getElementById('overviewRangeStyles')) {
+    const style = document.createElement('style');
+    style.id = 'overviewRangeStyles';
+    style.textContent = `
+      .overview-range-toggle { display: flex; gap: 4px; }
+      .overview-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+      .overview-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
+      .overview-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const overviewTab = document.getElementById('tab-overview');
+  const headerEl = document.createElement('div');
+  headerEl.id = 'overviewRangeHeader';
+  headerEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;padding:0 4px';
+  headerEl.innerHTML = `
+    <div class="overview-range-toggle">
+      <button class="overview-range-btn" data-range="week">1 week</button>
+      <button class="overview-range-btn active" data-range="month">1 month</button>
+      <button class="overview-range-btn" data-range="year">1 year</button>
+      <button class="overview-range-btn" data-range="all">All time</button>
+    </div>
+  `;
+  const sectionHeader = overviewTab.querySelector('.section-header');
+  if (sectionHeader) {
+    sectionHeader.insertAdjacentElement('afterend', headerEl);
+  } else {
+    overviewTab.insertBefore(headerEl, overviewTab.firstElementChild);
+  }
+
+  headerEl.querySelectorAll('.overview-range-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+      headerEl.querySelectorAll('.overview-range-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentChartRange = btn.dataset.range;
       pushUrl({ range: currentChartRange });
       renderWeightChart();
+      renderBodyCompRatioChart();
     });
   });
 }
@@ -724,4 +759,116 @@ function openWeekModal(weekMonday) {
   `;
 
   document.getElementById('dayModal').style.display = 'flex';
+}
+
+// ===== BODY COMPOSITION RATIO CHART =====
+let bodyCompRatioChartInstance = null;
+
+function renderBodyCompRatioChart() {
+  const canvas = document.getElementById('bodyCompRatioChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  if (bodyCompRatioChartInstance) {
+    bodyCompRatioChartInstance.destroy();
+    bodyCompRatioChartInstance = null;
+  }
+
+  const sorted = filterWeightByRange(currentChartRange).slice().sort((a, b) => a.date.localeCompare(b.date));
+  if (sorted.length < 2) return;
+
+  const base = sorted[0];
+  const baseFatMass = kgToLbs(base.weight) * (base.fat / 100);
+  const baseLeanMass = kgToLbs(base.weight) * (1 - base.fat / 100);
+
+  const labels = [];
+  const ratios = [];
+
+  for (const entry of sorted) {
+    const weightLbs = kgToLbs(entry.weight);
+    const fatMass = weightLbs * (entry.fat / 100);
+    const leanMass = weightLbs * (1 - entry.fat / 100);
+    const fatLost = baseFatMass - fatMass;
+    const leanLost = baseLeanMass - leanMass;
+
+    if (leanLost < 0.3) continue;
+    const ratio = fatLost / leanLost;
+    if (ratio < 0 || ratio > 10) continue;
+
+    labels.push(entry.date);
+    ratios.push(Math.round(ratio * 100) / 100);
+  }
+
+  if (labels.length === 0) return;
+
+  bodyCompRatioChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Body Recomposition Efficiency',
+        data: ratios,
+        borderColor: 'rgba(251, 146, 60, 0.9)',
+        backgroundColor: 'rgba(251, 146, 60, 0.08)',
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.3,
+        fill: false,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `Ratio: ${ctx.parsed.y.toFixed(2)}`,
+          },
+        },
+        annotation: undefined,
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#8b90a8',
+            maxRotation: 45,
+            callback(value, index) {
+              const dateStr = labels[index];
+              if (!dateStr) return '';
+              const d = new Date(dateStr + 'T00:00:00');
+              return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            },
+          },
+          grid: { color: 'rgba(46,50,80,0.5)' },
+        },
+        y: {
+          title: { display: true, text: 'Fat Lost / Lean Lost', color: '#8b90a8' },
+          ticks: { color: '#8b90a8' },
+          grid: { color: 'rgba(46,50,80,0.5)' },
+        },
+      },
+    },
+    plugins: [{
+      id: 'ratioReferenceLine',
+      afterDraw(chart) {
+        const { ctx: c, chartArea: { left, right }, scales: { y } } = chart;
+        const yPos = y.getPixelForValue(1.0);
+        if (yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
+        c.save();
+        c.beginPath();
+        c.setLineDash([6, 4]);
+        c.strokeStyle = 'rgba(255,255,255,0.35)';
+        c.lineWidth = 1.5;
+        c.moveTo(left, yPos);
+        c.lineTo(right, yPos);
+        c.stroke();
+        c.setLineDash([]);
+        c.fillStyle = 'rgba(255,255,255,0.45)';
+        c.font = '11px sans-serif';
+        c.fillText('1.0', right + 4, yPos + 4);
+        c.restore();
+      },
+    }],
+  });
 }
