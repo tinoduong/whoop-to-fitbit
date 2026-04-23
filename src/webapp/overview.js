@@ -843,8 +843,8 @@ function renderBodyCompRatioChart() {
         {
           label: 'Body Recomposition Efficiency',
           data: ratios,
-          borderColor: 'rgba(251, 146, 60, 0.9)',
-          backgroundColor: 'rgba(251, 146, 60, 0.08)',
+          borderColor: 'rgba(0, 212, 170, 0.9)',
+          backgroundColor: 'rgba(0, 212, 170, 0.08)',
           pointRadius: 3,
           pointHoverRadius: 5,
           tension: 0.3,
@@ -896,8 +896,8 @@ function renderBodyCompRatioChart() {
         yRatio: {
           type: 'linear',
           position: 'left',
-          title: { display: true, text: 'Fat Lost / Lean Lost', color: '#fb923c' },
-          ticks: { color: '#fb923c' },
+          title: { display: true, text: 'Fat Lost / Lean Lost', color: '#00d4aa' },
+          ticks: { color: '#00d4aa' },
           grid: { color: 'rgba(46,50,80,0.5)' },
         },
         yProtein: {
