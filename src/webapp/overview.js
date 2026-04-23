@@ -763,6 +763,17 @@ function openWeekModal(weekMonday) {
 
 // ===== BODY COMPOSITION RATIO CHART =====
 let bodyCompRatioChartInstance = null;
+let showProteinOverlay = false;
+
+function toggleProteinOverlay() {
+  showProteinOverlay = !showProteinOverlay;
+  const btn = document.getElementById('proteinOverlayBtn');
+  if (btn) btn.classList.toggle('active', showProteinOverlay);
+  if (bodyCompRatioChartInstance) {
+    bodyCompRatioChartInstance.setDatasetVisibility(1, showProteinOverlay);
+    bodyCompRatioChartInstance.update();
+  }
+}
 
 function renderBodyCompRatioChart() {
   const canvas = document.getElementById('bodyCompRatioChart');
@@ -801,6 +812,12 @@ function renderBodyCompRatioChart() {
 
   if (labels.length === 0) return;
 
+  const proteinByDate = {};
+  allMeals.forEach(m => {
+    if (m.total_protein) proteinByDate[m.date] = (proteinByDate[m.date] || 0) + m.total_protein;
+  });
+  const proteinData = labels.map(d => proteinByDate[d] != null ? Math.round(proteinByDate[d] * 10) / 10 : null);
+
   const columnShadePlugin = {
     id: 'recompColumnShade',
     beforeDraw(chart) {
@@ -822,16 +839,32 @@ function renderBodyCompRatioChart() {
     type: 'line',
     data: {
       labels,
-      datasets: [{
-        label: 'Body Recomposition Efficiency',
-        data: ratios,
-        borderColor: 'rgba(251, 146, 60, 0.9)',
-        backgroundColor: 'rgba(251, 146, 60, 0.08)',
-        pointRadius: 3,
-        pointHoverRadius: 5,
-        tension: 0.3,
-        fill: false,
-      }],
+      datasets: [
+        {
+          label: 'Body Recomposition Efficiency',
+          data: ratios,
+          borderColor: 'rgba(251, 146, 60, 0.9)',
+          backgroundColor: 'rgba(251, 146, 60, 0.08)',
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          tension: 0.3,
+          fill: false,
+          yAxisID: 'yRatio',
+        },
+        {
+          label: 'Protein (g)',
+          data: proteinData,
+          borderColor: 'rgba(108, 99, 255, 0.8)',
+          backgroundColor: 'rgba(108, 99, 255, 0.06)',
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          tension: 0.3,
+          fill: false,
+          hidden: !showProteinOverlay,
+          yAxisID: 'yProtein',
+          spanGaps: false,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -840,10 +873,11 @@ function renderBodyCompRatioChart() {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            label: ctx => `Ratio: ${ctx.parsed.y.toFixed(2)}`,
+            label: item => item.datasetIndex === 0
+              ? `Efficiency: ${item.parsed.y.toFixed(2)}`
+              : `Protein: ${item.parsed.y}g`,
           },
         },
-        annotation: undefined,
       },
       scales: {
         x: {
@@ -859,18 +893,27 @@ function renderBodyCompRatioChart() {
           },
           grid: { color: 'rgba(46,50,80,0.5)' },
         },
-        y: {
-          title: { display: true, text: 'Fat Lost / Lean Lost', color: '#8b90a8' },
-          ticks: { color: '#8b90a8' },
+        yRatio: {
+          type: 'linear',
+          position: 'left',
+          title: { display: true, text: 'Fat Lost / Lean Lost', color: '#fb923c' },
+          ticks: { color: '#fb923c' },
           grid: { color: 'rgba(46,50,80,0.5)' },
+        },
+        yProtein: {
+          type: 'linear',
+          position: 'right',
+          title: { display: true, text: 'Protein (g)', color: '#6c63ff' },
+          ticks: { color: '#6c63ff' },
+          grid: { drawOnChartArea: false },
         },
       },
     },
     plugins: [columnShadePlugin, {
       id: 'ratioReferenceLine',
       afterDraw(chart) {
-        const { ctx: c, chartArea: { left, right }, scales: { y } } = chart;
-        const yPos = y.getPixelForValue(1.0);
+        const { ctx: c, chartArea: { left, right }, scales: { yRatio } } = chart;
+        const yPos = yRatio.getPixelForValue(1.0);
         if (yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
         c.save();
         c.beginPath();
