@@ -801,6 +801,23 @@ function renderBodyCompRatioChart() {
 
   if (labels.length === 0) return;
 
+  const columnShadePlugin = {
+    id: 'recompColumnShade',
+    beforeDraw(chart) {
+      const { ctx: c, scales: { x, y }, chartArea } = chart;
+      c.save();
+      ratios.forEach((val, i) => {
+        const xCenter = x.getPixelForValue(i);
+        const colHalfW = i < ratios.length - 1
+          ? (x.getPixelForValue(i + 1) - xCenter) / 2
+          : (xCenter - x.getPixelForValue(i - 1)) / 2;
+        c.fillStyle = val >= 1.0 ? 'rgba(0,212,170,0.07)' : 'rgba(255,107,107,0.07)';
+        c.fillRect(xCenter - colHalfW, chartArea.top, colHalfW * 2, chartArea.bottom - chartArea.top);
+      });
+      c.restore();
+    },
+  };
+
   bodyCompRatioChartInstance = new Chart(ctx, {
     type: 'line',
     data: {
@@ -849,7 +866,7 @@ function renderBodyCompRatioChart() {
         },
       },
     },
-    plugins: [{
+    plugins: [columnShadePlugin, {
       id: 'ratioReferenceLine',
       afterDraw(chart) {
         const { ctx: c, chartArea: { left, right }, scales: { y } } = chart;
