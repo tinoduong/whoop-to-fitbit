@@ -207,7 +207,7 @@ function renderGoalProgress() {
     html += `<div class="progress-item"><div class="progress-note">Set a target weight in Goals to track progress.</div></div>`;
   }
 
-  if (currentGoal && currentGoal.target_fat) {
+  if (currentGoal && currentGoal.target_fat && latest.fat != null && first.fat != null) {
     const startF = first.fat;
     const currentF = latest.fat;
     const targetF = currentGoal.target_fat;
@@ -229,8 +229,8 @@ function renderGoalProgress() {
 
   const weightLost = +(firstLbs - latestLbs).toFixed(1);
   const weightLostPct = firstLbs > 0 ? +((weightLost / firstLbs) * 100).toFixed(1) : 0;
-  const fatLost = +(first.fat - latest.fat).toFixed(2);
-  const fatLostPct = first.fat > 0 ? +((fatLost / first.fat) * 100).toFixed(1) : 0;
+  const fatLost = (first.fat != null && latest.fat != null) ? +(first.fat - latest.fat).toFixed(2) : null;
+  const fatLostPct = (fatLost != null && first.fat > 0) ? +((fatLost / first.fat) * 100).toFixed(1) : 0;
   const weightToGoal = currentGoal?.target_weight ? +(latestLbs - currentGoal.target_weight).toFixed(1) : null;
   const fatToGoal = currentGoal?.target_fat ? +(latest.fat - currentGoal.target_fat).toFixed(2) : null;
 
@@ -277,8 +277,8 @@ function renderGoalProgress() {
         </div>
         <div class="tdee-stat">
           <div class="stat-label">Total fat lost</div>
-          <div class="stat-value" style="color:${fatLost >= 0 ? 'var(--green)' : 'var(--red)'}">${fatLost >= 0 ? '-' : '+'}${Math.abs(fatLost)}%</div>
-          <div class="stat-sub">${Math.abs(fatLostPct)}% reduction</div>
+          <div class="stat-value" style="color:${fatLost != null ? (fatLost >= 0 ? 'var(--green)' : 'var(--red)') : 'inherit'}">${fatLost != null ? (fatLost >= 0 ? '-' : '+') + Math.abs(fatLost) + '%' : '—'}</div>
+          <div class="stat-sub">${fatLost != null ? Math.abs(fatLostPct) + '% reduction' : 'no fat data'}</div>
         </div>
         <div class="tdee-stat">
           <div class="stat-label">Fat to goal</div>
@@ -288,7 +288,7 @@ function renderGoalProgress() {
       </div>
     </div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.78rem;color:#8b90a8">
-      📅 Latest: ${formatDate(latest.date)} &nbsp;·&nbsp; ${latestLbs} lbs &nbsp;·&nbsp; ${latest.fat.toFixed(2)}% fat &nbsp;·&nbsp; BMI ${latest.bmi}
+      📅 Latest: ${formatDate(latest.date)} &nbsp;·&nbsp; ${latestLbs} lbs ${latest.fat != null ? `&nbsp;·&nbsp; ${latest.fat.toFixed(2)}% fat` : ''}&nbsp;·&nbsp; BMI ${latest.bmi}
     </div>
   `;
 

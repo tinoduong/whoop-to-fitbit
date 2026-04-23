@@ -4209,7 +4209,7 @@
         "items": [
             {
                 "foodName": "Skinless Chicken Breast",
-                "calories": 224,
+                "calories": 324,
                 "protein": 52.0,
                 "totalCarbohydrate": 0.0,
                 "totalFat": 4.9,
@@ -4280,7 +4280,361 @@
                 "log_id": 38502724536
             }
         ],
-        "total_calories": 307,
+        "total_calories": 407,
+        "total_protein": 59.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-21T19:12:22.224184",
+        "date": "2026-04-21",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1.56 oz cooked white rice (1g protein, 58 cal), 7.74 oz shaved beef (52g protein, 387 cal), 2.04 oz bokchoy (1g protein, 8 cal), 0.6 oz mushrooms (0.5g protein, 4 cal), 0.7 oz edamame beans (2.4g protein, 25 cal), 2 eggs (12g protein, 120 cal)",
+        "items": [
+            {
+                "foodName": "Cooked White Rice",
+                "calories": 58,
+                "protein": 1.0,
+                "totalCarbohydrate": 12.8,
+                "totalFat": 0.1,
+                "amount": 1.56,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38506338534
+            },
+            {
+                "foodName": "Shaved Beef",
+                "calories": 387,
+                "protein": 52.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 18.0,
+                "amount": 7.74,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38505662758
+            },
+            {
+                "foodName": "Bok Choy",
+                "calories": 8,
+                "protein": 1.0,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 0.1,
+                "amount": 2.04,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38506152281
+            },
+            {
+                "foodName": "Mushrooms",
+                "calories": 4,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.8,
+                "totalFat": 0.0,
+                "amount": 0.6,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38505330371
+            },
+            {
+                "foodName": "Edamame Beans",
+                "calories": 25,
+                "protein": 2.4,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 1.1,
+                "amount": 0.7,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38505976107
+            },
+            {
+                "foodName": "Eggs",
+                "calories": 120,
+                "protein": 12.0,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 8.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38506495285
+            }
+        ],
+        "total_calories": 602,
+        "total_protein": 68.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-21T19:43:05.260098",
+        "date": "2026-04-21",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "4.16 oz non-fat greek yogurt, 2oz raw blueberries, 1oz raspberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 100,
+                "protein": 17.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 4.16,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38505164694
+            },
+            {
+                "foodName": "Raw Blueberries",
+                "calories": 47,
+                "protein": 0.6,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 0.3,
+                "amount": 2.0,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38506212022
+            },
+            {
+                "foodName": "Raw Raspberries",
+                "calories": 15,
+                "protein": 0.3,
+                "totalCarbohydrate": 3.4,
+                "totalFat": 0.2,
+                "amount": 1.0,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38505233452
+            }
+        ],
+        "total_calories": 162,
+        "total_protein": 17.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-22T07:38:37.393787",
+        "date": "2026-04-22",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "7.52 oz skinless chicken breast (64.8g protein, 345 cal), 0.88 oz acorn squash (0g protein, 14 cal), 1.02 oz sweet potato (1g protein, 27 cal), 1.1 oz pomegranate seeds (1g protein, 49 cal), 1.43 oz low fat cottage cheese (7g protein, 36 cal), 1 cup raw spinach (1g protein, 7 cal)",
+        "items": [
+            {
+                "foodName": "Skinless Chicken Breast",
+                "calories": 345,
+                "protein": 64.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38508497290
+            },
+            {
+                "foodName": "Acorn Squash",
+                "calories": 14,
+                "protein": 0.0,
+                "totalCarbohydrate": 3.6,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38509340405
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 27,
+                "protein": 1.0,
+                "totalCarbohydrate": 6.2,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38508428727
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 49,
+                "protein": 1.0,
+                "totalCarbohydrate": 12.2,
+                "totalFat": 0.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38507508068
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 36,
+                "protein": 7.0,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38509310882
+            },
+            {
+                "foodName": "Raw Spinach",
+                "calories": 7,
+                "protein": 1.0,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38508536762
+            }
+        ],
+        "total_calories": 478,
+        "total_protein": 74.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-22T18:20:47.924858",
+        "date": "2026-04-22",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1/4 cup cooked white rice, 3 oz lean ground turkey, 1.5 cup cooked cabbage",
+        "items": [
+            {
+                "foodName": "Cooked White Rice",
+                "calories": 51,
+                "protein": 1.1,
+                "totalCarbohydrate": 11.2,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38513374642
+            },
+            {
+                "foodName": "Lean Ground Turkey",
+                "calories": 135,
+                "protein": 25.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 3.0,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38513158927
+            },
+            {
+                "foodName": "Cooked Cabbage",
+                "calories": 40,
+                "protein": 1.9,
+                "totalCarbohydrate": 9.2,
+                "totalFat": 0.1,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38513158929
+            }
+        ],
+        "total_calories": 226,
+        "total_protein": 28.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-22T18:22:11.941743",
+        "date": "2026-04-22",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "pure protein chocolate peanut butter bar (20g protein, 200 calories)",
+        "items": [
+            {
+                "foodName": "Pure Protein Chocolate Peanut Butter Bar",
+                "calories": 200,
+                "protein": 20.0,
+                "totalCarbohydrate": 17.0,
+                "totalFat": 6.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38511671201
+            }
+        ],
+        "total_calories": 200,
+        "total_protein": 20.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-23T07:40:39.008347",
+        "date": "2026-04-23",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "chicken breast skinless 7.8oz (53g protein, 359 cal), acorn squash 0.14oz (0g protein, 2 cal), sweet potato 1.6oz (1g protein, 42 cal), low fat cottage cheese 1.56oz (5g protein, 44 cal)",
+        "items": [
+            {
+                "foodName": "Chicken Breast Skinless",
+                "calories": 359,
+                "protein": 53.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38514465393
+            },
+            {
+                "foodName": "Acorn Squash",
+                "calories": 2,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.5,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38515935268
+            },
+            {
+                "foodName": "Sweet Potato",
+                "calories": 42,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38515533313
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 44,
+                "protein": 5.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 1.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38514808305
+            }
+        ],
+        "total_calories": 447,
         "total_protein": 59.0,
         "all_uploaded": true,
         "amended": false
