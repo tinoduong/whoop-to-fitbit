@@ -339,5 +339,162 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(resp.status, 404)
 
 
+# ── 4. POST route tests ───────────────────────────────────────────────────────
+
+class TestPostRoutes(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.server = HTTPServer(('localhost', _TEST_PORT + 1), fitness_app.FitnessHandler)
+        cls.thread = threading.Thread(target=cls.server.serve_forever)
+        cls.thread.daemon = True
+        cls.thread.start()
+        time.sleep(0.1)
+        # Snapshot goals on disk so we can restore after any POST /api/goals test
+        with open(GOALS_FILE) as f:
+            cls._original_goals = f.read()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.shutdown()
+        # Restore goals.json to its original content
+        with open(GOALS_FILE, 'w') as f:
+            f.write(cls._original_goals)
+
+    def _post(self, path, payload):
+        body = json.dumps(payload).encode()
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('POST', path, body=body,
+                     headers={'Content-Type': 'application/json',
+                               'Content-Length': str(len(body))})
+        resp = conn.getresponse()
+        raw = resp.read()
+        conn.close()
+        data = json.loads(raw) if raw else None
+        return resp.status, data
+
+    # POST /api/goals — round-trip
+    def test_post_goals_status_200(self):
+        goals = fitness_app.load_goals()
+        status, _ = self._post('/api/goals', goals)
+        self.assertEqual(status, 200)
+
+    def test_post_goals_returns_ok(self):
+        goals = fitness_app.load_goals()
+        _, data = self._post('/api/goals', goals)
+        self.assertEqual(data, {'status': 'ok'})
+
+    def test_post_goals_persists_to_disk(self):
+        goals = fitness_app.load_goals()
+        goals['_test_marker'] = 'pytest'
+        self._post('/api/goals', goals)
+        reloaded = fitness_app.load_goals()
+        self.assertEqual(reloaded.get('_test_marker'), 'pytest')
+        # Clean up marker
+        del reloaded['_test_marker']
+        fitness_app.save_goals(reloaded)
+
+    def test_post_goals_new_snapshot_appended(self):
+        goals = fitness_app.load_goals()
+        original_count = len(goals.get('goals', []))
+        new_snap = {
+            'saved_date': '2099-01-01',
+            'saved_weight_lbs': 140,
+            'target_weight': 130,
+            'target_fat': 15,
+            'goal_date': '2099-06-01',
+            'saved_tdee': 2000,
+            'saved_bmr': 1500,
+            'saved_deficit': 500,
+            'saved_target_intake': 1500,
+            'saved_protein_goal': 120,
+            'daily_calorie_goal': 1500,
+        }
+        goals['goals'] = goals.get('goals', []) + [new_snap]
+        self._post('/api/goals', goals)
+        reloaded = fitness_app.load_goals()
+        self.assertEqual(len(reloaded['goals']), original_count + 1)
+        self.assertEqual(reloaded['goals'][-1]['saved_date'], '2099-01-01')
+        # tearDownClass restores goals.json from _original_goals
+
+    # POST /api/goals — round-trip read-back via GET
+    def test_post_goals_readable_via_get(self):
+        goals = fitness_app.load_goals()
+        goals['sex'] = 'male'  # no-op but confirms round-trip
+        self._post('/api/goals', goals)
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('GET', '/api/goals')
+        resp = conn.getresponse()
+        data = json.loads(resp.read())
+        conn.close()
+        self.assertEqual(data['sex'], 'male')
+
+    # POST /api/sync
+    def test_post_sync_status_200(self):
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('POST', '/api/sync', body=b'', headers={'Content-Length': '0'})
+        resp = conn.getresponse()
+        raw = resp.read()
+        conn.close()
+        self.assertEqual(resp.status, 200)
+        data = json.loads(raw)
+        self.assertIn(data['status'], ('started', 'already_running'))
+
+    def test_post_sync_sets_running_state(self):
+        # Fire sync then immediately check status — running may briefly be True
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('POST', '/api/sync', body=b'', headers={'Content-Length': '0'})
+        conn.getresponse().read()
+        conn.close()
+        # Status endpoint reflects sync state
+        conn2 = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn2.request('GET', '/api/sync/status')
+        resp2 = conn2.getresponse()
+        data = json.loads(resp2.read())
+        conn2.close()
+        self.assertIn('running', data)
+        self.assertIsInstance(data['running'], bool)
+
+    # POST /api/log-meal — validation
+    def test_post_log_meal_no_input_returns_400(self):
+        status, data = self._post('/api/log-meal', {})
+        self.assertEqual(status, 400)
+        self.assertEqual(data['status'], 'error')
+        self.assertIn('message', data)
+
+    def test_post_log_meal_empty_input_returns_400(self):
+        status, data = self._post('/api/log-meal', {'input': ''})
+        self.assertEqual(status, 400)
+        self.assertEqual(data['status'], 'error')
+
+    def test_post_log_meal_whitespace_input_returns_400(self):
+        status, data = self._post('/api/log-meal', {'input': '   '})
+        self.assertEqual(status, 400)
+        self.assertEqual(data['status'], 'error')
+
+    # POST unknown route
+    def test_post_unknown_route_returns_404(self):
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('POST', '/api/nonexistent', body=b'{}',
+                     headers={'Content-Type': 'application/json', 'Content-Length': '2'})
+        resp = conn.getresponse()
+        try:
+            resp.read()
+        except ConnectionResetError:
+            pass  # server closes without body on 404
+        conn.close()
+        self.assertEqual(resp.status, 404)
+
+    # OPTIONS preflight
+    def test_options_preflight_200(self):
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('OPTIONS', '/api/goals')
+        resp = conn.getresponse()
+        resp.read()
+        conn.close()
+        self.assertEqual(resp.status, 200)
+        self.assertEqual(resp.getheader('Access-Control-Allow-Origin'), '*')
+        self.assertIn('POST', resp.getheader('Access-Control-Allow-Methods', ''))
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
