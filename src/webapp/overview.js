@@ -193,7 +193,16 @@ function renderWeightChart() {
       },
       scales: {
         x: {
-          ticks: { color: '#8b90a8', maxRotation: 45 },
+          ticks: {
+            color: '#8b90a8',
+            maxRotation: 45,
+            callback(value, index) {
+              const dateStr = labels[index];
+              if (!dateStr) return '';
+              const d = new Date(dateStr + 'T00:00:00');
+              return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            },
+          },
           grid: { color: 'rgba(46,50,80,0.5)' },
         },
         yWeight: {
@@ -770,7 +779,10 @@ function toggleProteinOverlay() {
   const btn = document.getElementById('proteinOverlayBtn');
   if (btn) btn.classList.toggle('active', showProteinOverlay);
   if (bodyCompRatioChartInstance) {
-    bodyCompRatioChartInstance.setDatasetVisibility(1, showProteinOverlay);
+    const count = bodyCompRatioChartInstance.data.datasets.length;
+    for (let i = 1; i < count; i++) {
+      bodyCompRatioChartInstance.setDatasetVisibility(i, showProteinOverlay);
+    }
     bodyCompRatioChartInstance.update();
   }
 }
@@ -792,25 +804,23 @@ function renderBodyCompRatioChart() {
   const baseFatMass = kgToLbs(base.weight) * (base.fat / 100);
   const baseLeanMass = kgToLbs(base.weight) * (1 - base.fat / 100);
 
-  const labels = [];
-  const ratios = [];
-
-  for (const entry of sorted) {
+  const labels = sorted.map(e => e.date);
+  const ratios = sorted.map(entry => {
     const weightLbs = kgToLbs(entry.weight);
     const fatMass = weightLbs * (entry.fat / 100);
     const leanMass = weightLbs * (1 - entry.fat / 100);
     const fatLost = baseFatMass - fatMass;
     const leanLost = baseLeanMass - leanMass;
 
-    if (leanLost < 0.3) continue;
+    if (leanLost < 0.3) return null;
     const ratio = fatLost / leanLost;
-    if (ratio < 0 || ratio > 10) continue;
-
-    labels.push(entry.date);
-    ratios.push(Math.round(ratio * 100) / 100);
-  }
+    if (ratio < 0 || ratio > 10) return null;
+    return Math.round(ratio * 100) / 100;
+  });
 
   if (labels.length === 0) return;
+
+  const { goal: proteinGoal, floor: proteinFloor } = getProteinGoals();
 
   const proteinByDate = {};
   allMeals.forEach(m => {
@@ -828,6 +838,7 @@ function renderBodyCompRatioChart() {
         const colHalfW = i < ratios.length - 1
           ? (x.getPixelForValue(i + 1) - xCenter) / 2
           : (xCenter - x.getPixelForValue(i - 1)) / 2;
+        if (val === null) return;
         c.fillStyle = val >= 1.0 ? 'rgba(0,212,170,0.07)' : 'rgba(255,107,107,0.07)';
         c.fillRect(xCenter - colHalfW, chartArea.top, colHalfW * 2, chartArea.bottom - chartArea.top);
       });
@@ -849,6 +860,7 @@ function renderBodyCompRatioChart() {
           pointHoverRadius: 5,
           tension: 0.3,
           fill: false,
+          spanGaps: false,
           yAxisID: 'yRatio',
         },
         {
@@ -863,6 +875,30 @@ function renderBodyCompRatioChart() {
           hidden: !showProteinOverlay,
           yAxisID: 'yProtein',
           spanGaps: false,
+        },
+        {
+          label: `Target (${proteinGoal}g)`,
+          data: labels.map(() => proteinGoal),
+          borderColor: 'rgba(108, 99, 255, 0.8)',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+          hidden: !showProteinOverlay,
+          yAxisID: 'yProtein',
+        },
+        {
+          label: `Floor (${proteinFloor}g)`,
+          data: labels.map(() => proteinFloor),
+          borderColor: 'rgba(108, 99, 255, 0.8)',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+          hidden: !showProteinOverlay,
+          yAxisID: 'yProtein',
         },
       ],
     },

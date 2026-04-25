@@ -4638,5 +4638,248 @@
         "total_protein": 59.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-23T19:53:29.056836",
+        "date": "2026-04-23",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 x tuna sashimi (.75 oz each), 2 x salmon sushi (.75 oz salmon), 1 x yellow tail sushi (.75 oz yellow tail), 2 x shrimp tempura, 1 x yam tempura, 4 peices tempura shrimp sushi roll, 3 pieces salmon and avacado roll, 1.5 oz edamame beans",
+        "items": [
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 62,
+                "protein": 13.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.6,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38519343470
+            },
+            {
+                "foodName": "Salmon Sushi",
+                "calories": 84,
+                "protein": 8.2,
+                "totalCarbohydrate": 8.4,
+                "totalFat": 2.8,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38518236955
+            },
+            {
+                "foodName": "Yellowtail Sushi",
+                "calories": 42,
+                "protein": 4.1,
+                "totalCarbohydrate": 4.2,
+                "totalFat": 1.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38518706357
+            },
+            {
+                "foodName": "Shrimp Tempura",
+                "calories": 118,
+                "protein": 9.4,
+                "totalCarbohydrate": 9.8,
+                "totalFat": 5.2,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38520187200
+            },
+            {
+                "foodName": "Yam Tempura",
+                "calories": 95,
+                "protein": 1.8,
+                "totalCarbohydrate": 16.2,
+                "totalFat": 3.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38518530343
+            },
+            {
+                "foodName": "Tempura Shrimp Sushi Roll",
+                "calories": 168,
+                "protein": 8.8,
+                "totalCarbohydrate": 18.4,
+                "totalFat": 6.8,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38518706360
+            },
+            {
+                "foodName": "Salmon Avocado Roll",
+                "calories": 126,
+                "protein": 7.2,
+                "totalCarbohydrate": 12.6,
+                "totalFat": 5.4,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38519431741
+            },
+            {
+                "foodName": "Edamame Beans",
+                "calories": 63,
+                "protein": 5.4,
+                "totalCarbohydrate": 5.1,
+                "totalFat": 2.7,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38518667707
+            }
+        ],
+        "total_calories": 758,
+        "total_protein": 58.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-24T07:35:05.760071",
+        "date": "2026-04-24",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "7.98 oz skinless chicken breast (52g protein, 240 cal), 1.44 oz low fat cottage cheese (5g protein, 29 cal), 1.02 oz edamame (3.4g protein, 35 cal), 1 cup raw spinach (0.9g protein, 7 cal)",
+        "items": [
+            {
+                "foodName": "Skinless Chicken Breast",
+                "calories": 240,
+                "protein": 52.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38522116718
+            },
+            {
+                "foodName": "Low Fat Cottage Cheese",
+                "calories": 29,
+                "protein": 5.0,
+                "totalCarbohydrate": 1.2,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38520892363
+            },
+            {
+                "foodName": "Edamame",
+                "calories": 35,
+                "protein": 3.4,
+                "totalCarbohydrate": 2.8,
+                "totalFat": 1.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38522341757
+            },
+            {
+                "foodName": "Raw Spinach",
+                "calories": 7,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38522106873
+            }
+        ],
+        "total_calories": 311,
+        "total_protein": 61.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-24T20:15:31.850560",
+        "date": "2026-04-24",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "Beef & Lamb gyros (700 cal, 28 gram protein), 1 cup of calamari (350 cal, 28 gram protein), 1 cup french fries, 1 Tate's chocolate chip cookie (70 cal), 1/2 tbsp aioli",
+        "items": [
+            {
+                "foodName": "Beef & Lamb gyros",
+                "calories": 700,
+                "protein": 28.0,
+                "totalCarbohydrate": 45.0,
+                "totalFat": 42.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38524435273
+            },
+            {
+                "foodName": "Calamari",
+                "calories": 350,
+                "protein": 28.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 18.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38524112213
+            },
+            {
+                "foodName": "French fries",
+                "calories": 365,
+                "protein": 4.0,
+                "totalCarbohydrate": 63.0,
+                "totalFat": 17.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38525209332
+            },
+            {
+                "foodName": "Tate's chocolate chip cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38525404789
+            },
+            {
+                "foodName": "Aioli",
+                "calories": 45,
+                "protein": 0.1,
+                "totalCarbohydrate": 0.2,
+                "totalFat": 5.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38525277884
+            }
+        ],
+        "total_calories": 1530,
+        "total_protein": 61.1,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
