@@ -625,5 +625,43 @@
             "zone_four_milli": 0,
             "zone_five_milli": 0
         }
+    },
+    {
+        "id": "36ec4cf4-f104-4afe-ba63-a7bcea9e8b24",
+        "sport_name": "running",
+        "start_time": "2026-04-25T11:00:28",
+        "end_time": "2026-04-25T11:39:18",
+        "avg_heart_rate": 142,
+        "calories": 406,
+        "distance_meter": 5.723126,
+        "max_heart_rate": 180,
+        "strain": 12.235548,
+        "zone_durations": {
+            "zone_zero_milli": 153000,
+            "zone_one_milli": 401000,
+            "zone_two_milli": 673000,
+            "zone_three_milli": 799000,
+            "zone_four_milli": 209000,
+            "zone_five_milli": 95000
+        }
+    },
+    {
+        "id": "355710a4-b208-4f35-aa91-54c4c67b47a3",
+        "sport_name": "pilates",
+        "start_time": "2026-04-25T11:42:33",
+        "end_time": "2026-04-25T11:49:52",
+        "avg_heart_rate": 118,
+        "calories": 35,
+        "distance_meter": null,
+        "max_heart_rate": 135,
+        "strain": 4.3876786,
+        "zone_durations": {
+            "zone_zero_milli": 32000,
+            "zone_one_milli": 406000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     }
 ]

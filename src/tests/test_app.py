@@ -1,13 +1,15 @@
 """
-Tests for app.py: goals.json structure, data loading, and HTTP routes.
-Run with: python -m pytest tests/test_app.py -v
+Tests for app.py: goals data structure, data loading, and HTTP routes.
+Run with: python -m unittest tests/test_app.py -v
      or:  python -m unittest discover tests
 """
 
 import http.client
 import json
 import os
+import shutil
 import sys
+import tempfile
 import threading
 import time
 import unittest
@@ -18,16 +20,39 @@ sys.path.insert(0, WEBAPP_DIR)
 
 import app as fitness_app
 
-GOALS_FILE = fitness_app.GOALS_FILE
+GOALS_DATA_DIR = fitness_app.GOALS_DATA_DIR
 _TEST_PORT = 18765
 
 
-# ── 1. goals.json structure ───────────────────────────────────────────────────
+# ── Helpers ───────────────────────────────────────────────────────────────────
 
-class TestGoalsJson(unittest.TestCase):
+def _backup_goals_dir():
+    """Return a dict of filename → raw bytes for every file in GOALS_DATA_DIR."""
+    snapshot = {}
+    for fname in os.listdir(GOALS_DATA_DIR):
+        fpath = os.path.join(GOALS_DATA_DIR, fname)
+        if os.path.isfile(fpath):
+            with open(fpath, 'rb') as f:
+                snapshot[fname] = f.read()
+    return snapshot
+
+
+def _restore_goals_dir(snapshot):
+    """Restore GOALS_DATA_DIR to the given snapshot, removing any extra files."""
+    for fname in os.listdir(GOALS_DATA_DIR):
+        fpath = os.path.join(GOALS_DATA_DIR, fname)
+        if os.path.isfile(fpath) and fname not in snapshot:
+            os.remove(fpath)
+    for fname, data in snapshot.items():
+        with open(os.path.join(GOALS_DATA_DIR, fname), 'wb') as f:
+            f.write(data)
+
+
+# ── 1. goals data structure ───────────────────────────────────────────────────
+
+class TestGoalsData(unittest.TestCase):
     def setUp(self):
-        with open(GOALS_FILE) as f:
-            self.goals = json.load(f)
+        self.goals = fitness_app.load_goals()
 
     def test_top_level_fields_present(self):
         for field in ('dob', 'height_in', 'sex', 'goals'):
@@ -308,6 +333,15 @@ class TestRoutes(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertIn(field, data)
 
+    # /api/reports
+    def test_reports_status_200(self):
+        status, _ = self._get('/api/reports')
+        self.assertEqual(status, 200)
+
+    def test_reports_returns_list(self):
+        _, data = self._get('/api/reports')
+        self.assertIsInstance(data, list)
+
     # /api/sync/status
     def test_sync_status_200(self):
         status, _ = self._get('/api/sync/status')
@@ -349,16 +383,12 @@ class TestPostRoutes(unittest.TestCase):
         cls.thread.daemon = True
         cls.thread.start()
         time.sleep(0.1)
-        # Snapshot goals on disk so we can restore after any POST /api/goals test
-        with open(GOALS_FILE) as f:
-            cls._original_goals = f.read()
+        cls._goals_backup = _backup_goals_dir()
 
     @classmethod
     def tearDownClass(cls):
         cls.server.shutdown()
-        # Restore goals.json to its original content
-        with open(GOALS_FILE, 'w') as f:
-            f.write(cls._original_goals)
+        _restore_goals_dir(cls._goals_backup)
 
     def _post(self, path, payload):
         body = json.dumps(payload).encode()
@@ -383,15 +413,15 @@ class TestPostRoutes(unittest.TestCase):
         _, data = self._post('/api/goals', goals)
         self.assertEqual(data, {'status': 'ok'})
 
-    def test_post_goals_persists_to_disk(self):
+    def test_post_goals_persists_sex_change(self):
         goals = fitness_app.load_goals()
-        goals['_test_marker'] = 'pytest'
+        original_sex = goals.get('sex', 'male')
+        new_sex = 'female' if original_sex == 'male' else 'male'
+        goals['sex'] = new_sex
         self._post('/api/goals', goals)
         reloaded = fitness_app.load_goals()
-        self.assertEqual(reloaded.get('_test_marker'), 'pytest')
-        # Clean up marker
-        del reloaded['_test_marker']
-        fitness_app.save_goals(reloaded)
+        self.assertEqual(reloaded.get('sex'), new_sex)
+        # tearDownClass restores files
 
     def test_post_goals_new_snapshot_appended(self):
         goals = fitness_app.load_goals()
@@ -413,13 +443,14 @@ class TestPostRoutes(unittest.TestCase):
         self._post('/api/goals', goals)
         reloaded = fitness_app.load_goals()
         self.assertEqual(len(reloaded['goals']), original_count + 1)
-        self.assertEqual(reloaded['goals'][-1]['saved_date'], '2099-01-01')
-        # tearDownClass restores goals.json from _original_goals
+        dates = [g['saved_date'] for g in reloaded['goals']]
+        self.assertIn('2099-01-01', dates)
+        # tearDownClass restores files
 
     # POST /api/goals — round-trip read-back via GET
     def test_post_goals_readable_via_get(self):
         goals = fitness_app.load_goals()
-        goals['sex'] = 'male'  # no-op but confirms round-trip
+        goals['sex'] = 'male'
         self._post('/api/goals', goals)
         conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
         conn.request('GET', '/api/goals')
@@ -440,12 +471,10 @@ class TestPostRoutes(unittest.TestCase):
         self.assertIn(data['status'], ('started', 'already_running'))
 
     def test_post_sync_sets_running_state(self):
-        # Fire sync then immediately check status — running may briefly be True
         conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
         conn.request('POST', '/api/sync', body=b'', headers={'Content-Length': '0'})
         conn.getresponse().read()
         conn.close()
-        # Status endpoint reflects sync state
         conn2 = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
         conn2.request('GET', '/api/sync/status')
         resp2 = conn2.getresponse()
@@ -480,7 +509,7 @@ class TestPostRoutes(unittest.TestCase):
         try:
             resp.read()
         except ConnectionResetError:
-            pass  # server closes without body on 404
+            pass
         conn.close()
         self.assertEqual(resp.status, 404)
 
@@ -494,6 +523,33 @@ class TestPostRoutes(unittest.TestCase):
         self.assertEqual(resp.status, 200)
         self.assertEqual(resp.getheader('Access-Control-Allow-Origin'), '*')
         self.assertIn('POST', resp.getheader('Access-Control-Allow-Methods', ''))
+
+    # PUT /api/goals/<id>/extend
+    def test_put_extend_goal_status_200(self):
+        goals = fitness_app.load_goals()
+        goal_id = goals['goals'][0].get('id', 1)
+        body = json.dumps({'new_end_date': '2099-12-31'}).encode()
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('PUT', f'/api/goals/{goal_id}/extend', body=body,
+                     headers={'Content-Type': 'application/json',
+                               'Content-Length': str(len(body))})
+        resp = conn.getresponse()
+        data = json.loads(resp.read())
+        conn.close()
+        self.assertEqual(resp.status, 200)
+        self.assertEqual(data['status'], 'ok')
+        # tearDownClass restores files
+
+    def test_put_extend_goal_unknown_id_returns_404(self):
+        body = json.dumps({'new_end_date': '2099-12-31'}).encode()
+        conn = http.client.HTTPConnection('localhost', _TEST_PORT + 1, timeout=5)
+        conn.request('PUT', '/api/goals/99999/extend', body=body,
+                     headers={'Content-Type': 'application/json',
+                               'Content-Length': str(len(body))})
+        resp = conn.getresponse()
+        resp.read()
+        conn.close()
+        self.assertEqual(resp.status, 404)
 
 
 if __name__ == '__main__':

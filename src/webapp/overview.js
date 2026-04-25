@@ -914,7 +914,7 @@ function renderBodyCompRatioChart() {
           ? (x.getPixelForValue(i + 1) - xCenter) / 2
           : (xCenter - x.getPixelForValue(i - 1)) / 2;
         if (val === null) return;
-        c.fillStyle = val >= 1.0 ? 'rgba(0,212,170,0.07)' : 'rgba(255,107,107,0.07)';
+        c.fillStyle = val >= 1.0 ? 'rgba(0,212,170,0.07)' : 'rgba(255,107,107,0.05)';
         c.fillRect(xCenter - colHalfW, chartArea.top, colHalfW * 2, chartArea.bottom - chartArea.top);
       });
       c.restore();
@@ -935,7 +935,7 @@ function renderBodyCompRatioChart() {
           pointHoverRadius: 5,
           tension: 0.3,
           fill: false,
-          spanGaps: false,
+          spanGaps: true,
           yAxisID: 'yRatio',
         },
         {
@@ -949,7 +949,7 @@ function renderBodyCompRatioChart() {
           fill: false,
           hidden: !showProteinOverlay,
           yAxisID: 'yProtein',
-          spanGaps: false,
+          spanGaps: true,
         },
         {
           label: `Target (${proteinGoal}g)`,

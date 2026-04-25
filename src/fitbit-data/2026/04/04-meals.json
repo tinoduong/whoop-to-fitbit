@@ -4918,5 +4918,66 @@
         "total_protein": 11.8,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-25T12:35:36.497628",
+        "date": "2026-04-25",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "8.04 oz roasted skinless chicken breast (70.5g protein, 375 cal), 1.02 oz black beans (2.6 g protein, 38cal), 4 pecans, 1/4 cup spinach",
+        "items": [
+            {
+                "foodName": "Roasted Skinless Chicken Breast",
+                "calories": 375,
+                "protein": 70.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.2,
+                "amount": 8.04,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38528222103
+            },
+            {
+                "foodName": "Black Beans",
+                "calories": 38,
+                "protein": 2.6,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.2,
+                "amount": 1.02,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38528976390
+            },
+            {
+                "foodName": "Pecans",
+                "calories": 52,
+                "protein": 0.7,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 5.4,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38528241522
+            },
+            {
+                "foodName": "Spinach",
+                "calories": 2,
+                "protein": 0.3,
+                "totalCarbohydrate": 0.4,
+                "totalFat": 0.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38527291676
+            }
+        ],
+        "total_calories": 467,
+        "total_protein": 74.1,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

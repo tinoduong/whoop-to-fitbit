@@ -35,6 +35,230 @@ function avgDailyWorkoutCals() {
   return Math.round(totalCals / 30);
 }
 
+// ===== WARNING SYSTEM =====
+
+function checkGoalWarnings() {
+  const warningEl = document.getElementById('goalWarning');
+  if (!warningEl) return;
+
+  const currentGoal = getCurrentGoal();
+  if (!currentGoal || !currentGoal.goal_date) {
+    warningEl.style.display = 'none';
+    return;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const endDate = new Date(currentGoal.goal_date + 'T00:00:00');
+  const daysLeft = Math.round((endDate - today) / (1000 * 60 * 60 * 24));
+
+  if (daysLeft > 7) {
+    warningEl.style.display = 'none';
+    return;
+  }
+
+  const goalId = currentGoal.id;
+  let icon, message;
+
+  if (daysLeft <= 0) {
+    icon = '🏁';
+    message = `Your goal ended on <strong>${currentGoal.goal_date}</strong>. Ready to close it out?`;
+  } else if (daysLeft <= 3) {
+    icon = '⚠️';
+    message = `<strong>${daysLeft} day${daysLeft === 1 ? '' : 's'}</strong> remaining — goal ends ${currentGoal.goal_date}.`;
+  } else {
+    icon = '⏰';
+    message = `<strong>${daysLeft} days</strong> until your goal ends on ${currentGoal.goal_date}. Start thinking about next steps.`;
+  }
+
+  warningEl.style.display = 'flex';
+  warningEl.innerHTML = `
+    <span class="goal-warning-icon">${icon}</span>
+    <span class="goal-warning-msg">${message}</span>
+    <div class="goal-warning-actions">
+      <button class="warning-btn" onclick="promptExtendGoal(${goalId})">Extend Goal</button>
+      <button class="warning-btn warning-btn-primary" onclick="triggerGenerateReport(${goalId})">Generate Report</button>
+    </div>
+  `;
+}
+
+function promptExtendGoal(goalId) {
+  const current = getCurrentGoal();
+  const currentEnd = current && current.goal_date ? current.goal_date : '';
+  const newDate = prompt(`Extend goal end date (current: ${currentEnd || 'not set'}). Enter new end date (YYYY-MM-DD):`, currentEnd);
+  if (!newDate || newDate === currentEnd) return;
+
+  fetch(`/api/goals/${goalId}/extend`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ new_end_date: newDate }),
+  }).then(async res => {
+    const data = await res.json();
+    if (data.status === 'ok') {
+      await reloadGoalsData();
+      renderGoals();
+    } else {
+      alert(`Failed to extend goal: ${data.error || 'unknown error'}`);
+    }
+  }).catch(err => alert(`Error: ${err.message}`));
+}
+
+async function reloadGoalsData() {
+  const [goalsRes, reportsRes] = await Promise.all([
+    fetch('/api/goals'),
+    fetch('/api/reports'),
+  ]);
+  goals = await goalsRes.json();
+  allReports = await reportsRes.json();
+  if (!goals.goals) goals.goals = [];
+}
+
+// ===== REPORT GENERATION =====
+
+async function triggerGenerateReport(goalId) {
+  const btn = document.querySelector(`[data-generate-report="${goalId}"]`);
+  const statusEl = document.getElementById(`reportStatus-${goalId}`);
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating...'; }
+  if (statusEl) statusEl.textContent = 'Calling Claude — this may take up to 60 seconds…';
+
+  try {
+    const res = await fetch('/api/reports/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ goal_id: goalId }),
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      await reloadGoalsData();
+      renderGoals();
+    } else {
+      if (statusEl) statusEl.textContent = `Error: ${data.message}`;
+      if (btn) { btn.disabled = false; btn.textContent = 'Generate Report'; }
+    }
+  } catch (err) {
+    if (statusEl) statusEl.textContent = `Error: ${err.message}`;
+    if (btn) { btn.disabled = false; btn.textContent = 'Generate Report'; }
+  }
+}
+
+// ===== SUMMARY LINE BUILDERS =====
+
+function buildSummaryLine(summary) {
+  if (!summary) return '—';
+  const { goals_met, goals_total, weight_lost, weight_target, bf_lost, bf_target } = summary;
+
+  const wMet = weight_lost != null && weight_target != null && weight_lost >= weight_target;
+  const bfMet = bf_lost != null && bf_target != null;
+
+  let parts = [`Goal Met: ${goals_met ?? '?'} of ${goals_total ?? '?'}`];
+
+  if (weight_lost != null) {
+    const wLabel = `Weight: lost ${Math.abs(weight_lost).toFixed(1)} lbs` +
+      (weight_target != null ? ` (${Math.abs(weight_lost).toFixed(1)} lbs vs ${Math.abs(weight_target).toFixed(1)} lbs target)` : '') +
+      ` <span class="${wMet ? 'met-label' : 'missed-label'}">${wMet ? 'MET' : 'MISSED'}</span>`;
+    parts.push(wLabel);
+  }
+
+  if (bf_lost != null) {
+    const bfLabel = `Body Fat: lost ${Math.abs(bf_lost).toFixed(1)}%` +
+      (bf_target != null ? ` (vs ${bf_target}% target)` : '') +
+      ` <span class="${bfMet ? 'met-label' : 'missed-label'}">${bfMet ? 'MET' : 'MISSED'}</span>`;
+    parts.push(bfLabel);
+  }
+
+  return parts.join(' &nbsp;|&nbsp; ');
+}
+
+function buildSummaryLineFromGoal(goal) {
+  const currentWeightEntry = allWeight.length ? allWeight[allWeight.length - 1] : null;
+  const startWeightEntry = allWeight.find(w => w.date >= goal.saved_date) || null;
+
+  const startLbs = startWeightEntry ? +(startWeightEntry.weight * KG_TO_LBS).toFixed(1) : null;
+  const endLbs = currentWeightEntry ? +(currentWeightEntry.weight * KG_TO_LBS).toFixed(1) : null;
+  const weightLost = startLbs && endLbs ? +(startLbs - endLbs).toFixed(1) : null;
+  const weightTarget = goal.target_weight && startLbs ? +(startLbs - goal.target_weight).toFixed(1) : null;
+
+  return buildSummaryLine({
+    goals_met: null,
+    goals_total: [goal.target_weight, goal.target_fat].filter(x => x != null).length,
+    weight_lost: weightLost,
+    weight_target: weightTarget,
+    bf_lost: null,
+    bf_target: goal.target_fat,
+  });
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// ===== PAST GOALS =====
+
+function renderPastGoals() {
+  const section = document.getElementById('pastGoalsSection');
+  const container = document.getElementById('pastGoalsList');
+  if (!section || !container) return;
+
+  const allGoalsList = goals.goals || [];
+  const currentGoal = getCurrentGoal();
+  const today = new Date().toISOString().substring(0, 10);
+
+  const pastGoals = allGoalsList
+    .filter(g => g !== currentGoal && g.goal_date && g.goal_date < today)
+    .sort((a, b) => (b.saved_date > a.saved_date ? 1 : -1));
+
+  if (pastGoals.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+
+  container.innerHTML = pastGoals.map(goal => {
+    const report = allReports.find(r => String(r.goal_id) === String(goal.id));
+    const summaryLine = report ? buildSummaryLine(report.summary) : buildSummaryLineFromGoal(goal);
+
+    return `
+      <div class="past-goal-item card" id="past-goal-${goal.id}">
+        <div class="past-goal-header" onclick="togglePastGoal(${goal.id})">
+          <div class="past-goal-left">
+            <span class="past-goal-dates">${goal.saved_date} → ${goal.goal_date}</span>
+            <span class="past-goal-summary">${summaryLine}</span>
+          </div>
+          <div class="past-goal-right">
+            ${!report ? `<button class="report-gen-btn" data-generate-report="${goal.id}"
+                onclick="event.stopPropagation(); triggerGenerateReport(${goal.id})">Generate Report</button>` : ''}
+            <span class="past-goal-chevron" id="chevron-${goal.id}">▼</span>
+          </div>
+        </div>
+        <div class="past-goal-body" id="past-goal-body-${goal.id}" style="display:none">
+          ${report
+            ? `<div class="report-view"><pre class="report-text">${escapeHtml(report.report)}</pre>
+               <div class="report-meta">Generated ${report.generated_at}</div></div>`
+            : `<div id="reportStatus-${goal.id}" class="report-status-msg"></div>
+               <div class="empty-state" style="padding:32px">No report generated yet. Click "Generate Report" to analyze this goal period with Claude.</div>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function togglePastGoal(goalId) {
+  const body = document.getElementById(`past-goal-body-${goalId}`);
+  const chevron = document.getElementById(`chevron-${goalId}`);
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.textContent = isOpen ? '▼' : '▲';
+}
+
+// ===== TDEE PLAN =====
+
 function renderTDEEPlan() {
   const container = document.getElementById('tdeeDetails');
   const currentGoal = getCurrentGoal();
@@ -53,10 +277,7 @@ function renderTDEEPlan() {
     if (goal_date) {
       const daysLeft = Math.max(0, Math.round((new Date(goal_date) - new Date()) / (1000 * 60 * 60 * 24)));
       const currentLbs = allWeight.length ? kgToLbs(allWeight[allWeight.length - 1].weight) : null;
-      const lbsLeft = currentLbs && target_weight
-        ? (currentLbs - target_weight).toFixed(1)
-        : '—';
-
+      const lbsLeft = currentLbs && target_weight ? (currentLbs - target_weight).toFixed(1) : '—';
       daysLeftHtml = `
         <div class="tdee-stat">
           <div class="stat-label">Days Remaining</div>
@@ -160,18 +381,7 @@ function renderTDEEPlan() {
   container.innerHTML = previewHtml;
 }
 
-// ===== GOALS =====
-function renderGoals() {
-  const currentGoal = getCurrentGoal();
-  document.getElementById('targetWeight').value = currentGoal ? (currentGoal.target_weight || '') : '';
-  document.getElementById('targetFat').value = currentGoal ? (currentGoal.target_fat || '') : '';
-  if (currentGoal && currentGoal.goal_date) document.getElementById('goalDate').value = currentGoal.goal_date;
-  if (goals.dob) document.getElementById('dob').value = goals.dob;
-  if (goals.height_in) document.getElementById('heightIn').value = goals.height_in;
-  if (goals.sex) document.getElementById('sex').value = goals.sex;
-  renderGoalProgress();
-  renderTDEEPlan();
-}
+// ===== GOAL PROGRESS =====
 
 function renderGoalProgress() {
   const container = document.getElementById('goalProgress');
@@ -295,6 +505,25 @@ function renderGoalProgress() {
   container.innerHTML = html;
 }
 
+// ===== MAIN RENDER =====
+
+function renderGoals() {
+  const currentGoal = getCurrentGoal();
+  document.getElementById('targetWeight').value = currentGoal ? (currentGoal.target_weight || '') : '';
+  document.getElementById('targetFat').value = currentGoal ? (currentGoal.target_fat || '') : '';
+  if (currentGoal && currentGoal.goal_date) document.getElementById('goalDate').value = currentGoal.goal_date;
+  if (goals.dob) document.getElementById('dob').value = goals.dob;
+  if (goals.height_in) document.getElementById('heightIn').value = goals.height_in;
+  if (goals.sex) document.getElementById('sex').value = goals.sex;
+
+  checkGoalWarnings();
+  renderGoalProgress();
+  renderTDEEPlan();
+  renderPastGoals();
+}
+
+// ===== FORM SETUP =====
+
 function setupGoalsForm() {
   document.getElementById('goalsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -364,13 +593,15 @@ function setupGoalsForm() {
       body: JSON.stringify(goals),
     });
 
+    // Reload so new goal file's id is reflected
+    await reloadGoalsData();
+
     const msg = document.getElementById('goalsSaved');
     msg.textContent = '✓ Saved!';
     setTimeout(() => { msg.textContent = ''; }, 2000);
 
     renderWeightChart();
     renderDailySummary();
-    renderGoalProgress();
-    renderTDEEPlan();
+    renderGoals();
   });
 }

@@ -994,3 +994,206 @@ tbody td {
 .meal-day-collapsible {
   padding-top: 4px;
 }
+
+/* ===== GOAL WARNING BANNER ===== */
+.goal-warning {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: rgba(255, 179, 71, 0.1);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.goal-warning-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.goal-warning-msg {
+  flex: 1;
+  min-width: 200px;
+}
+
+.goal-warning-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.warning-btn {
+  padding: 7px 16px;
+  border-radius: 7px;
+  border: 1px solid var(--warning);
+  background: transparent;
+  color: var(--warning);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.warning-btn:hover {
+  background: rgba(255, 179, 71, 0.15);
+}
+
+.warning-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.warning-btn-primary:hover {
+  opacity: 0.85;
+  background: var(--accent);
+}
+
+/* ===== PAST GOALS ===== */
+.past-goal-item {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.past-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.past-goal-header:hover {
+  background: rgba(108, 99, 255, 0.06);
+}
+
+.past-goal-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.past-goal-dates {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.past-goal-summary {
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.past-goal-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.past-goal-chevron {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+
+.past-goal-header:hover .past-goal-chevron {
+  color: var(--accent);
+}
+
+.past-goal-body {
+  border-top: 1px solid var(--border);
+  padding: 20px;
+}
+
+.report-gen-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.report-gen-btn:hover {
+  background: rgba(108, 99, 255, 0.12);
+}
+
+.report-gen-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.report-status-msg {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+/* ===== REPORT VIEW ===== */
+.report-view {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+.report-text {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.report-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== MET / MISSED LABELS ===== */
+.met-label {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--green);
+  border: 1px solid var(--green);
+  vertical-align: middle;
+}
+
+.missed-label {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(231, 76, 60, 0.15);
+  color: var(--red);
+  border: 1px solid var(--red);
+  vertical-align: middle;
+}

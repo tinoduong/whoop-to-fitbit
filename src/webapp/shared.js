@@ -4,6 +4,7 @@ let allWorkouts = [];
 let allMeals = [];
 let allWeight = [];
 let goals = {};
+let allReports = [];
 let weightChart = null;
 
 let currentChartRange = 'month';
@@ -146,16 +147,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ===== DATA LOADING =====
 async function loadData() {
-  const [workoutsRes, weightRes, mealsRes, goalsRes] = await Promise.all([
+  const [workoutsRes, weightRes, mealsRes, goalsRes, reportsRes] = await Promise.all([
     fetch('/api/workouts'),
     fetch('/api/weight'),
     fetch('/api/meals'),
     fetch('/api/goals'),
+    fetch('/api/reports'),
   ]);
   allWorkouts = await workoutsRes.json();
   allWeight = await weightRes.json();
   allMeals = await mealsRes.json();
   goals = await goalsRes.json();
+  allReports = await reportsRes.json();
   if (!goals.goals) goals.goals = [];
 }
 

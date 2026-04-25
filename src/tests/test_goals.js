@@ -149,13 +149,21 @@ goals = { goals: [SNAP_A, SNAP_B] };
 assertEqual(getCurrentGoal().saved_date, '2026-03-02',
   'returns SNAP_B when SNAP_C is absent');
 
-// ── Tests against real goals.json ─────────────────────────────────────────────
+// ── Tests against real goal files ─────────────────────────────────────────────
 
-console.log('\nReal goals.json data');
+console.log('\nReal goal file data');
 
-const realGoals = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'webapp', 'goals.json'), 'utf8')
-);
+// Reconstruct the goals object from individual goal files + meta (mirrors app.py load_goals())
+const goalsDataDir = path.join(__dirname, '..', 'goal-data', 'goals');
+const metaPath = path.join(goalsDataDir, 'meta.json');
+const meta = fs.existsSync(metaPath) ? JSON.parse(fs.readFileSync(metaPath, 'utf8')) : {};
+const goalFiles = fs.readdirSync(goalsDataDir)
+  .filter(f => f.startsWith('goal_') && f.endsWith('.json'))
+  .sort();
+const goalList = goalFiles.map(f => JSON.parse(fs.readFileSync(path.join(goalsDataDir, f), 'utf8')));
+goalList.sort((a, b) => (a.saved_date > b.saved_date ? 1 : -1));
+
+const realGoals = { ...meta, goals: goalList };
 goals = realGoals;
 
 const current = getCurrentGoal();
