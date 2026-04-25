@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   mealsFiltered = groupedMealDates(allMeals);
   renderMeals();
   renderGoals();
+  renderReports();
   setupWorkoutFilters();
   setupMealFilters();
   setupGoalsForm();

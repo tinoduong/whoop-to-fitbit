@@ -77,7 +77,6 @@ function checkGoalWarnings() {
     <span class="goal-warning-msg">${message}</span>
     <div class="goal-warning-actions">
       <button class="warning-btn" onclick="promptExtendGoal(${goalId})">Extend Goal</button>
-      <button class="warning-btn warning-btn-primary" onclick="triggerGenerateReport(${goalId})">Generate Report</button>
     </div>
   `;
 }
@@ -146,10 +145,10 @@ async function triggerGenerateReport(goalId) {
 
 function buildSummaryLine(summary) {
   if (!summary) return '—';
-  const { goals_met, goals_total, weight_lost, weight_target, bf_lost, bf_target } = summary;
+  const { goals_met, goals_total, weight_lost, weight_target, bf_lost, bf_target, end_bf_pct } = summary;
 
   const wMet = weight_lost != null && weight_target != null && weight_lost >= weight_target;
-  const bfMet = bf_lost != null && bf_target != null;
+  const bfMet = end_bf_pct != null && bf_target != null && end_bf_pct <= bf_target;
 
   let parts = [`Goal Met: ${goals_met ?? '?'} of ${goals_total ?? '?'}`];
 

@@ -15,6 +15,7 @@
       <button class="nav-btn" data-tab="workouts">Workouts</button>
       <button class="nav-btn" data-tab="meals">Meals</button>
       <button class="nav-btn" data-tab="goals">Goals</button>
+      <button class="nav-btn" data-tab="reports">Reports</button>
     </nav>
     <button id="syncBtn" class="sync-btn" style="margin-left:auto" onclick="triggerSync()">&#x21bb; Sync</button>
   </header>
@@ -203,10 +204,50 @@
     </div>
   </section>
 
+  <!-- REPORTS TAB -->
+  <section id="tab-reports" class="tab">
+    <div class="section-header" style="display:flex;align-items:center;justify-content:space-between">
+      <h2>Reports</h2>
+      <button class="save-btn" onclick="openReportModal()">+ New Report</button>
+    </div>
+    <div id="reportsList"></div>
+  </section>
+
+  <!-- REPORT MODAL -->
+  <div id="reportModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Generate Report</h3>
+        <button class="modal-close" onclick="closeReportModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="reportModalGoalRow" class="goal-row" style="display:none">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="reportUseGoal" onchange="onReportUseGoalToggle()" />
+            Use current goal dates
+          </label>
+        </div>
+        <div class="goal-row">
+          <label>Start Date</label>
+          <input type="date" id="reportStartDate" />
+        </div>
+        <div class="goal-row">
+          <label>End Date</label>
+          <input type="date" id="reportEndDate" />
+        </div>
+        <div id="reportModalStatus" class="report-status-msg" style="margin-top:8px"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="save-btn" id="reportModalSubmit" onclick="submitReportModal()">Generate</button>
+      </div>
+    </div>
+  </div>
+
   <script src="shared.js"></script>
   <script src="overview.js"></script>
   <script src="workouts.js"></script>
   <script src="meals.js"></script>
   <script src="goals.js"></script>
+  <script src="reports.js"></script>
 </body>
 </html>

@@ -179,7 +179,7 @@ def load_reports_list():
 
 
 def load_report(goal_id):
-    pattern = os.path.join(REPORTS_DATA_DIR, f"report_{goal_id}_*.json")
+    pattern = os.path.join(REPORTS_DATA_DIR, f"report_goal{goal_id}_*.json")
     files = sorted(glob.glob(pattern))
     if not files:
         return None
@@ -201,22 +201,32 @@ def _rolling_avg_bf(weight_data, center_date_str, window=7):
     return sum(w["fat"] for w in nearby) / len(nearby)
 
 
-def generate_report_data(goal_id):
-    pattern = os.path.join(GOALS_DATA_DIR, f"goal_{goal_id}_*.json")
-    files = glob.glob(pattern)
-    if not files:
-        return None, "Goal not found"
+def generate_report_data(start_date, end_date, goal_id=None):
+    target_weight = None
+    target_fat = None
+    calorie_target = 2000
+    protein_target = 135
 
-    with open(files[0]) as f:
-        goal = json.load(f)
+    if goal_id is not None:
+        pattern = os.path.join(GOALS_DATA_DIR, f"goal_{goal_id}_*.json")
+        files = glob.glob(pattern)
+        if not files:
+            return None, "Goal not found"
+        with open(files[0]) as f:
+            goal = json.load(f)
+        if not start_date:
+            start_date = goal.get("saved_date", "")
+        if not end_date:
+            end_date = goal.get("goal_date", date.today().isoformat())
+        target_weight = goal.get("target_weight")
+        target_fat = goal.get("target_fat")
+        calorie_target = goal.get("saved_target_intake") or goal.get("daily_calorie_goal", 2000)
+        protein_target = goal.get("saved_protein_goal", 135)
 
-    start_date = goal.get("saved_date", "")
-    end_date = goal.get("goal_date", date.today().isoformat())
-    target_weight = goal.get("target_weight")
-    target_fat = goal.get("target_fat")
-    calorie_target = goal.get("saved_target_intake") or goal.get("daily_calorie_goal", 2000)
-    protein_target = goal.get("saved_protein_goal", 135)
-    protein_floor = goal.get("protein_floor", max(100, int(protein_target * 0.8)))
+    if not start_date or not end_date:
+        return None, "start_date and end_date are required"
+
+    protein_floor = max(100, int(protein_target * 0.8))
 
     all_weight = load_all_weight()
     all_meals = load_all_meals()
@@ -440,6 +450,7 @@ def generate_report_data(goal_id):
         "weight_target": weight_target_loss,
         "bf_lost": bf_lost,
         "bf_target": target_fat,
+        "end_bf_pct": round(end_bf, 2) if end_bf is not None else None,
     }
 
     today_str = date.today().isoformat()
@@ -452,7 +463,8 @@ def generate_report_data(goal_id):
         "report": report_text,
     }
 
-    report_path = os.path.join(REPORTS_DATA_DIR, f"report_{goal_id}_{today_str}.json")
+    suffix = f"goal{goal_id}" if goal_id is not None else f"{start_date}_{end_date}"
+    report_path = os.path.join(REPORTS_DATA_DIR, f"report_{suffix}_{today_str}.json")
     with open(report_path, "w") as f:
         json.dump(report_data, f, indent=2)
 
@@ -566,10 +578,12 @@ class FitnessHandler(BaseHTTPRequestHandler):
             body = self.rfile.read(length)
             data = json.loads(body)
             goal_id = data.get("goal_id")
-            if not goal_id:
-                self.send_json({"status": "error", "message": "goal_id required"}, status=400)
+            start_date = data.get("start_date")
+            end_date = data.get("end_date")
+            if not start_date or not end_date:
+                self.send_json({"status": "error", "message": "start_date and end_date are required"}, status=400)
                 return
-            report_data, error = generate_report_data(goal_id)
+            report_data, error = generate_report_data(start_date, end_date, goal_id=goal_id)
             if error:
                 self.send_json({"status": "error", "message": error}, status=500)
             else:
