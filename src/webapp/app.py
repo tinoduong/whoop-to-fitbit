@@ -450,6 +450,7 @@ def generate_report_data(start_date, end_date, goal_id=None):
         "weight_target": weight_target_loss,
         "bf_lost": bf_lost,
         "bf_target": target_fat,
+        "bf_needed": round(start_bf - target_fat, 2) if start_bf is not None and target_fat is not None else None,
         "end_bf_pct": round(end_bf, 2) if end_bf is not None else None,
     }
 
