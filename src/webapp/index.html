@@ -37,12 +37,30 @@
 
     <div class="card">
       <div class="chart-header">
-        <h3>Body Recomposition Efficiency</h3>
-        <button id="proteinOverlayBtn" class="overview-range-btn" onclick="toggleProteinOverlay()">Protein</button>
+        <h3>Body Recomposition</h3>
+      </div>
+      <div id="recompLegend" style="display:flex;gap:16px;align-items:center;padding:0 8px 8px;font-size:12px;color:#8b90a8;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:20px;height:2px;background:#E24B4A;"></span>
+          Fat loss % (Relative to total Fat)
+        </span>
+        <span style="display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:20px;height:0;border-top:2px dashed #1D9E75;"></span>
+          Muscle loss % (Relative to total Muscle)
+        </span>
+        <span style="display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:12px;height:12px;background:rgba(29,158,117,0.25);border-radius:2px;"></span>
+          Fat losing faster (good)
+        </span>
+        <span style="display:flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:12px;height:12px;background:rgba(226,75,74,0.20);border-radius:2px;"></span>
+          Muscle losing faster (bad)
+        </span>
       </div>
       <div class="chart-container">
         <canvas id="bodyCompRatioChart"></canvas>
       </div>
+      <p style="margin:6px 8px 0;font-size:11px;color:#5a5f7a;">Up = lost &middot; Down = gained &middot; Zero line = no change from start</p>
     </div>
 
     <div class="card">

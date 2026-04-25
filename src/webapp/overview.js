@@ -847,20 +847,6 @@ function openWeekModal(weekMonday) {
 
 // ===== BODY COMPOSITION RATIO CHART =====
 let bodyCompRatioChartInstance = null;
-let showProteinOverlay = false;
-
-function toggleProteinOverlay() {
-  showProteinOverlay = !showProteinOverlay;
-  const btn = document.getElementById('proteinOverlayBtn');
-  if (btn) btn.classList.toggle('active', showProteinOverlay);
-  if (bodyCompRatioChartInstance) {
-    const count = bodyCompRatioChartInstance.data.datasets.length;
-    for (let i = 1; i < count; i++) {
-      bodyCompRatioChartInstance.setDatasetVisibility(i, showProteinOverlay);
-    }
-    bodyCompRatioChartInstance.update();
-  }
-}
 
 function renderBodyCompRatioChart() {
   const canvas = document.getElementById('bodyCompRatioChart');
@@ -872,51 +858,55 @@ function renderBodyCompRatioChart() {
     bodyCompRatioChartInstance = null;
   }
 
-  const sorted = filterWeightByRange(currentChartRange).slice().sort((a, b) => a.date.localeCompare(b.date));
-  if (sorted.length < 2) return;
+  const valid = filterWeightByRange(currentChartRange)
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .filter(e => e.weight != null && e.fat != null);
+  if (valid.length < 2) return;
 
-  const base = sorted[0];
-  const baseFatMass = kgToLbs(base.weight) * (base.fat / 100);
-  const baseLeanMass = kgToLbs(base.weight) * (1 - base.fat / 100);
+  const base = valid[0];
+  const baseWeightLbs = kgToLbs(base.weight);
+  const baseFatMass = baseWeightLbs * (base.fat / 100);
+  const baseLeanMass = baseWeightLbs * (1 - base.fat / 100);
 
-  const labels = sorted.map(e => e.date);
-  const ratios = sorted.map(entry => {
+  const labels = valid.map(e => e.date);
+  const fatLostPcts = valid.map(entry => {
     const weightLbs = kgToLbs(entry.weight);
     const fatMass = weightLbs * (entry.fat / 100);
+    return Math.round(((baseFatMass - fatMass) / baseFatMass) * 1000) / 10;
+  });
+  const leanLostPcts = valid.map(entry => {
+    const weightLbs = kgToLbs(entry.weight);
     const leanMass = weightLbs * (1 - entry.fat / 100);
-    const fatLost = baseFatMass - fatMass;
-    const leanLost = baseLeanMass - leanMass;
-
-    if (leanLost < 0.3) return null;
-    const ratio = fatLost / leanLost;
-    if (ratio < 0 || ratio > 10) return null;
-    return Math.round(ratio * 100) / 100;
+    return Math.round(((baseLeanMass - leanMass) / baseLeanMass) * 1000) / 10;
   });
 
-  if (labels.length === 0) return;
-
-  const { goal: proteinGoal, floor: proteinFloor } = getProteinGoals();
-
-  const proteinByDate = {};
-  allMeals.forEach(m => {
-    if (m.total_protein) proteinByDate[m.date] = (proteinByDate[m.date] || 0) + m.total_protein;
-  });
-  const proteinData = labels.map(d => proteinByDate[d] != null ? Math.round(proteinByDate[d] * 10) / 10 : null);
-
-  const columnShadePlugin = {
-    id: 'recompColumnShade',
-    beforeDraw(chart) {
-      const { ctx: c, scales: { x, y }, chartArea } = chart;
+  const betweenLinesPlugin = {
+    id: 'recompBetweenLines',
+    beforeDatasetsDraw(chart) {
+      const { ctx: c, scales: { x, yPct }, chartArea } = chart;
+      const fat = chart.data.datasets[0].data;
+      const lean = chart.data.datasets[1].data;
+      if (!fat.length || !lean.length) return;
       c.save();
-      ratios.forEach((val, i) => {
-        const xCenter = x.getPixelForValue(i);
-        const colHalfW = i < ratios.length - 1
-          ? (x.getPixelForValue(i + 1) - xCenter) / 2
-          : (xCenter - x.getPixelForValue(i - 1)) / 2;
-        if (val === null) return;
-        c.fillStyle = val >= 1.0 ? 'rgba(0,212,170,0.07)' : 'rgba(255,107,107,0.05)';
-        c.fillRect(xCenter - colHalfW, chartArea.top, colHalfW * 2, chartArea.bottom - chartArea.top);
-      });
+      for (let i = 0; i < fat.length - 1; i++) {
+        if (fat[i] == null || lean[i] == null || fat[i + 1] == null || lean[i + 1] == null) continue;
+        const x0 = x.getPixelForValue(i);
+        const x1 = x.getPixelForValue(i + 1);
+        const fatY0 = yPct.getPixelForValue(fat[i]);
+        const fatY1 = yPct.getPixelForValue(fat[i + 1]);
+        const leanY0 = yPct.getPixelForValue(lean[i]);
+        const leanY1 = yPct.getPixelForValue(lean[i + 1]);
+        const fatAbove = fat[i] > lean[i];
+        c.fillStyle = fatAbove ? 'rgba(29,158,117,0.10)' : 'rgba(226,75,74,0.08)';
+        c.beginPath();
+        c.moveTo(x0, fatY0);
+        c.lineTo(x1, fatY1);
+        c.lineTo(x1, leanY1);
+        c.lineTo(x0, leanY0);
+        c.closePath();
+        c.fill();
+      }
       c.restore();
     },
   };
@@ -927,53 +917,29 @@ function renderBodyCompRatioChart() {
       labels,
       datasets: [
         {
-          label: 'Body Recomposition Efficiency',
-          data: ratios,
-          borderColor: 'rgba(0, 212, 170, 0.9)',
-          backgroundColor: 'rgba(0, 212, 170, 0.08)',
+          label: 'Fat loss %',
+          data: fatLostPcts,
+          borderColor: '#E24B4A',
+          backgroundColor: 'transparent',
           pointRadius: 3,
           pointHoverRadius: 5,
           tension: 0.3,
           fill: false,
           spanGaps: true,
-          yAxisID: 'yRatio',
+          yAxisID: 'yPct',
         },
         {
-          label: 'Protein (g)',
-          data: proteinData,
-          borderColor: 'rgba(108, 99, 255, 0.8)',
-          backgroundColor: 'rgba(108, 99, 255, 0.06)',
-          pointRadius: 2,
-          pointHoverRadius: 4,
+          label: 'Muscle loss %',
+          data: leanLostPcts,
+          borderColor: '#1D9E75',
+          backgroundColor: 'transparent',
+          borderDash: [6, 4],
+          pointRadius: 3,
+          pointHoverRadius: 5,
           tension: 0.3,
           fill: false,
-          hidden: !showProteinOverlay,
-          yAxisID: 'yProtein',
           spanGaps: true,
-        },
-        {
-          label: `Target (${proteinGoal}g)`,
-          data: labels.map(() => proteinGoal),
-          borderColor: 'rgba(108, 99, 255, 0.8)',
-          borderWidth: 1.5,
-          borderDash: [6, 4],
-          pointRadius: 0,
-          tension: 0,
-          fill: false,
-          hidden: !showProteinOverlay,
-          yAxisID: 'yProtein',
-        },
-        {
-          label: `Floor (${proteinFloor}g)`,
-          data: labels.map(() => proteinFloor),
-          borderColor: 'rgba(108, 99, 255, 0.8)',
-          borderWidth: 1.5,
-          borderDash: [4, 4],
-          pointRadius: 0,
-          tension: 0,
-          fill: false,
-          hidden: !showProteinOverlay,
-          yAxisID: 'yProtein',
+          yAxisID: 'yPct',
         },
       ],
     },
@@ -985,8 +951,8 @@ function renderBodyCompRatioChart() {
         tooltip: {
           callbacks: {
             label: item => item.datasetIndex === 0
-              ? `Efficiency: ${item.parsed.y.toFixed(2)}`
-              : `Protein: ${item.parsed.y}g`,
+              ? `Fat loss: ${item.parsed.y.toFixed(1)}%`
+              : `Muscle loss: ${item.parsed.y.toFixed(1)}%`,
           },
         },
       },
@@ -1004,42 +970,39 @@ function renderBodyCompRatioChart() {
           },
           grid: { color: 'rgba(46,50,80,0.5)' },
         },
-        yRatio: {
+        yPct: {
           type: 'linear',
           position: 'left',
-          title: { display: true, text: 'Fat Lost / Lean Lost', color: '#00d4aa' },
-          ticks: { color: '#00d4aa' },
+          title: { display: true, text: 'Fat loss % / Muscle loss %', color: '#8b90a8' },
+          ticks: {
+            color: '#8b90a8',
+            callback: value => `${value.toFixed(1)}%`,
+          },
           grid: { color: 'rgba(46,50,80,0.5)' },
-        },
-        yProtein: {
-          type: 'linear',
-          position: 'right',
-          min: 0,
-          suggestedMax: proteinGoal ? proteinGoal * 1.2 : 200,
-          title: { display: true, text: 'Protein (g)', color: '#6c63ff' },
-          ticks: { color: '#6c63ff' },
-          grid: { drawOnChartArea: false },
+          afterDataLimits(scale) {
+            const range = scale.max - scale.min;
+            const pad = range * 0.15 || 1;
+            scale.min -= pad;
+            scale.max += pad;
+          },
         },
       },
     },
-    plugins: [columnShadePlugin, {
-      id: 'ratioReferenceLine',
-      afterDraw(chart) {
-        const { ctx: c, chartArea: { left, right }, scales: { yRatio } } = chart;
-        const yPos = yRatio.getPixelForValue(1.0);
+    plugins: [betweenLinesPlugin, {
+      id: 'recompZeroLine',
+      afterDatasetsDraw(chart) {
+        const { ctx: c, scales: { x, yPct }, chartArea: { left, right } } = chart;
+        const yPos = yPct.getPixelForValue(0);
         if (yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
         c.save();
         c.beginPath();
-        c.setLineDash([6, 4]);
-        c.strokeStyle = 'rgba(255,255,255,0.35)';
-        c.lineWidth = 1.5;
+        c.setLineDash([4, 4]);
+        c.strokeStyle = 'rgba(136,135,128,0.5)';
+        c.lineWidth = 1;
         c.moveTo(left, yPos);
         c.lineTo(right, yPos);
         c.stroke();
         c.setLineDash([]);
-        c.fillStyle = 'rgba(255,255,255,0.45)';
-        c.font = '11px sans-serif';
-        c.fillText('1.0', right + 4, yPos + 4);
         c.restore();
       },
     }],
