@@ -16,6 +16,7 @@
       <button class="nav-btn" data-tab="meals">Meals</button>
       <button class="nav-btn" data-tab="goals">Goals</button>
     </nav>
+    <button id="syncBtn" class="sync-btn" style="margin-left:auto" onclick="triggerSync()">&#x21bb; Sync</button>
   </header>
 
   <!-- OVERVIEW TAB -->
@@ -70,6 +71,16 @@
         <input type="text" id="workoutSearch" placeholder="Search sport..." />
         <select id="workoutSportFilter">
           <option value="">All Sports</option>
+        </select>
+        <select id="workoutDayFilter">
+          <option value="">All Days</option>
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+          <option value="0">Sunday</option>
         </select>
         <input type="date" id="workoutDateFrom" />
         <span>to</span>

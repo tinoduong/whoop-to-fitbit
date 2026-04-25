@@ -4881,5 +4881,42 @@
         "total_protein": 61.1,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-24T23:32:54.976880",
+        "date": "2026-04-24",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 1/4 cup blueberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 11.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38525348879
+            },
+            {
+                "foodName": "Blueberries",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38525838589
+            }
+        ],
+        "total_calories": 86,
+        "total_protein": 11.8,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

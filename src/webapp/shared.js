@@ -159,6 +159,13 @@ async function loadData() {
   if (!goals.goals) goals.goals = [];
 }
 
+async function reloadAllData() {
+  await loadData();
+  buildAvailableMonths();
+  workoutsFiltered = sortedWorkouts(allWorkouts);
+  mealsFiltered = groupedMealDates(allMeals);
+}
+
 // ===== GOAL SNAPSHOT HELPERS =====
 function getGoalForDate(date) {
   const snapshots = goals.goals || [];

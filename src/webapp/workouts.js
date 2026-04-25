@@ -565,6 +565,7 @@ function setupWorkoutFilters() {
   document.getElementById('workoutResetBtn').addEventListener('click', () => {
     document.getElementById('workoutSearch').value = '';
     document.getElementById('workoutSportFilter').value = '';
+    document.getElementById('workoutDayFilter').value = '';
     document.getElementById('workoutDateFrom').value = '';
     document.getElementById('workoutDateTo').value = '';
     workoutsFiltered = sortedWorkouts(allWorkouts);
@@ -572,11 +573,13 @@ function setupWorkoutFilters() {
     renderWorkouts();
   });
   document.getElementById('workoutSearch').addEventListener('input', applyWorkoutFilters);
+  document.getElementById('workoutDayFilter').addEventListener('change', applyWorkoutFilters);
 }
 
 function applyWorkoutFilters() {
   const search = document.getElementById('workoutSearch').value.toLowerCase();
   const sport = document.getElementById('workoutSportFilter').value;
+  const dayOfWeek = document.getElementById('workoutDayFilter').value;
   const dateFrom = document.getElementById('workoutDateFrom').value;
   const dateTo = document.getElementById('workoutDateTo').value;
 
@@ -584,6 +587,7 @@ function applyWorkoutFilters() {
     const date = getDateFromISO(w.start_time);
     if (search && !w.sport_name.toLowerCase().includes(search)) return false;
     if (sport && w.sport_name !== sport) return false;
+    if (dayOfWeek !== '' && new Date(date + 'T00:00:00').getDay() !== Number(dayOfWeek)) return false;
     if (dateFrom && date < dateFrom) return false;
     if (dateTo && date > dateTo) return false;
     return true;

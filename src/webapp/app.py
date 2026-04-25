@@ -9,6 +9,7 @@ import os
 import sys
 import glob
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
 from urllib.parse import urlparse, parse_qs
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,6 +23,9 @@ WHOOP_DATA_DIR = os.path.join(BASE_DIR, "whoop-data")
 WEBAPP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 GOALS_FILE = os.path.join(WEBAPP_DIR, "goals.json")
+
+_sync_lock = threading.Lock()
+_sync_state = {"running": False, "last_status": None, "last_run": None, "last_error": None}
 
 
 
@@ -118,6 +122,8 @@ class FitnessHandler(BaseHTTPRequestHandler):
             self.send_json(load_all_meals())
         elif path == "/api/goals":
             self.send_json(load_goals())
+        elif path == "/api/sync/status":
+            self.send_json(_sync_state)
         else:
             self.send_response(404)
             self.end_headers()
@@ -132,6 +138,35 @@ class FitnessHandler(BaseHTTPRequestHandler):
             goals = json.loads(body)
             save_goals(goals)
             self.send_json({"status": "ok"})
+
+        elif path == "/api/sync":
+            with _sync_lock:
+                if _sync_state["running"]:
+                    self.send_json({"status": "already_running"})
+                    return
+                _sync_state["running"] = True
+
+            def do_sync():
+                try:
+                    orig_dir = os.getcwd()
+                    os.chdir(SRC_DIR)
+                    try:
+                        import scheduler
+                        ok = scheduler.run_sync()
+                        _sync_state["last_status"] = "ok" if ok else "error"
+                    finally:
+                        os.chdir(orig_dir)
+                except Exception as e:
+                    import traceback
+                    _sync_state["last_status"] = f"error: {e}"
+                    _sync_state["last_error"] = traceback.format_exc()
+                finally:
+                    from datetime import datetime
+                    _sync_state["last_run"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    _sync_state["running"] = False
+
+            threading.Thread(target=do_sync, daemon=True).start()
+            self.send_json({"status": "started"})
 
         elif path == "/api/log-meal":
             length = int(self.headers.get("Content-Length", 0))

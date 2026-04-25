@@ -1,5 +1,80 @@
 // ===== OVERVIEW TAB =====
 
+(function injectSyncStyles() {
+  if (document.getElementById('syncBtnStyles')) return;
+  const s = document.createElement('style');
+  s.id = 'syncBtnStyles';
+  s.textContent = `
+    .sync-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 6px 14px; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .sync-btn:hover:not(:disabled) { border-color: #6c63ff; color: #e8eaf0; }
+    .sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .sync-btn.syncing { border-color: #6c63ff; color: #6c63ff; }
+    .sync-btn.done { border-color: #00d4aa; color: #00d4aa; }
+    .sync-btn.error { border-color: #ff6b6b; color: #ff6b6b; }
+  `;
+  document.head.appendChild(s);
+})();
+
+async function triggerSync() {
+  const btn = document.getElementById('syncBtn');
+  if (!btn || btn.disabled) return;
+  btn.disabled = true;
+  btn.className = 'sync-btn syncing';
+  btn.textContent = '↻ Syncing…';
+
+  try {
+    const res = await fetch('/api/sync', { method: 'POST' });
+    const data = await res.json();
+    if (data.status === 'already_running') {
+      btn.textContent = '↻ Already running…';
+    } else {
+      btn.textContent = '↻ Syncing…';
+      pollSyncStatus(btn);
+      return;
+    }
+  } catch (e) {
+    btn.className = 'sync-btn error';
+    btn.textContent = '↻ Error';
+  }
+
+  setTimeout(() => resetSyncBtn(btn), 3000);
+}
+
+function pollSyncStatus(btn) {
+  const interval = setInterval(async () => {
+    try {
+      const res = await fetch('/api/sync/status');
+      const data = await res.json();
+      if (!data.running) {
+        clearInterval(interval);
+        if (data.last_status === 'ok') {
+          btn.className = 'sync-btn done';
+          btn.textContent = '✓ Synced';
+          await reloadAllData();
+          renderOverview();
+        } else {
+          btn.className = 'sync-btn error';
+          btn.textContent = '↻ Failed';
+          if (data.last_status) btn.title = data.last_status;
+          console.error('Sync failed:', data.last_status, data.last_error);
+        }
+        setTimeout(() => resetSyncBtn(btn), 3000);
+      }
+    } catch (e) {
+      clearInterval(interval);
+      btn.className = 'sync-btn error';
+      btn.textContent = '↻ Error';
+      setTimeout(() => resetSyncBtn(btn), 3000);
+    }
+  }, 2000);
+}
+
+function resetSyncBtn(btn) {
+  btn.disabled = false;
+  btn.className = 'sync-btn';
+  btn.textContent = '↻ Sync';
+}
+
 function renderOverview() {
   renderWeightChart();
   renderBodyCompRatioChart();
@@ -939,6 +1014,8 @@ function renderBodyCompRatioChart() {
         yProtein: {
           type: 'linear',
           position: 'right',
+          min: 0,
+          suggestedMax: proteinGoal ? proteinGoal * 1.2 : 200,
           title: { display: true, text: 'Protein (g)', color: '#6c63ff' },
           ticks: { color: '#6c63ff' },
           grid: { drawOnChartArea: false },
