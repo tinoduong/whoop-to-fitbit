@@ -85,14 +85,19 @@ function renderOverview() {
 function setupChartRangeBtns() {
   if (document.getElementById('overviewRangeHeader')) return;
 
-  if (!document.getElementById('overviewRangeStyles')) {
+  if (!document.getElementById('periodSelectStyles')) {
     const style = document.createElement('style');
-    style.id = 'overviewRangeStyles';
+    style.id = 'periodSelectStyles';
     style.textContent = `
-      .overview-range-toggle { display: flex; gap: 4px; }
-      .overview-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
-      .overview-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
-      .overview-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
+      .period-select-group { display: flex; gap: 8px; align-items: center; }
+      .period-type-select, .period-value-select {
+        background: rgba(20,22,35,0.9); border: 1px solid rgba(139,144,168,0.3);
+        color: #e8eaf0; border-radius: 6px; padding: 5px 10px; font-size: 0.82rem;
+        cursor: pointer; outline: none; transition: border-color 0.15s;
+      }
+      .period-type-select:hover, .period-value-select:hover,
+      .period-type-select:focus, .period-value-select:focus { border-color: #6c63ff; }
+      .period-type-select option, .period-value-select option { background: #1a1c2e; }
     `;
     document.head.appendChild(style);
   }
@@ -100,15 +105,8 @@ function setupChartRangeBtns() {
   const overviewTab = document.getElementById('tab-overview');
   const headerEl = document.createElement('div');
   headerEl.id = 'overviewRangeHeader';
-  headerEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;padding:0 4px';
-  headerEl.innerHTML = `
-    <div class="overview-range-toggle">
-      <button class="overview-range-btn" data-range="week">1 week</button>
-      <button class="overview-range-btn active" data-range="month">1 month</button>
-      <button class="overview-range-btn" data-range="year">1 year</button>
-      <button class="overview-range-btn" data-range="all">All time</button>
-    </div>
-  `;
+  headerEl.style.cssText = 'display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:16px;padding:0 4px';
+  headerEl.innerHTML = `<div class="period-select-group" id="overviewPeriodGroup"></div>`;
   const sectionHeader = overviewTab.querySelector('.section-header');
   if (sectionHeader) {
     sectionHeader.insertAdjacentElement('afterend', headerEl);
@@ -116,32 +114,71 @@ function setupChartRangeBtns() {
     overviewTab.insertBefore(headerEl, overviewTab.firstElementChild);
   }
 
-  headerEl.querySelectorAll('.overview-range-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      headerEl.querySelectorAll('.overview-range-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentChartRange = btn.dataset.range;
-      pushUrl({ range: currentChartRange });
+  buildOverviewPeriodSelects();
+}
+
+function buildOverviewPeriodSelects() {
+  const group = document.getElementById('overviewPeriodGroup');
+  if (!group) return;
+
+  const dates = allWeight.map(w => w.date);
+  const periods = getAvailablePeriods(dates, currentChartRange);
+  const currentKey = getCurrentPeriodKey(currentChartRange);
+  if (!currentChartPeriod || !periods.includes(currentChartPeriod)) {
+    currentChartPeriod = periods.includes(currentKey) ? currentKey : (periods[0] || '');
+    pushUrl({ rperiod: currentChartPeriod || null });
+  }
+
+  const typeOptions = [
+    { value: 'all', label: 'All time' },
+    { value: 'year', label: 'Year' },
+    { value: 'month', label: 'Month' },
+    { value: 'week', label: 'Week' },
+  ];
+
+  const periodSelectHTML = currentChartRange !== 'all' ? `
+    <select id="overviewRangePeriod" class="period-value-select">
+      ${periods.map(p => `<option value="${p}" ${p === currentChartPeriod ? 'selected' : ''}>${formatPeriodLabel(p, currentChartRange)}</option>`).join('')}
+    </select>
+  ` : '';
+
+  group.innerHTML = `
+    <select id="overviewRangeType" class="period-type-select">
+      ${typeOptions.map(o => `<option value="${o.value}" ${o.value === currentChartRange ? 'selected' : ''}>${o.label}</option>`).join('')}
+    </select>
+    ${periodSelectHTML}
+  `;
+
+  document.getElementById('overviewRangeType').addEventListener('change', e => {
+    currentChartRange = e.target.value;
+    currentChartPeriod = '';
+    pushUrl({ range: currentChartRange, rperiod: null });
+    buildOverviewPeriodSelects();
+    renderWeightChart();
+    renderBodyCompRatioChart();
+  });
+
+  const periodSel = document.getElementById('overviewRangePeriod');
+  if (periodSel) {
+    periodSel.addEventListener('change', e => {
+      currentChartPeriod = e.target.value;
+      pushUrl({ rperiod: currentChartPeriod });
       renderWeightChart();
       renderBodyCompRatioChart();
     });
-  });
+  }
 }
 
 function filterWeightByRange(range) {
   if (!allWeight.length) return allWeight;
-  const now = new Date(allWeight[allWeight.length - 1].date + 'T00:00:00');
-  let cutoff;
-  if (range === 'week') {
-    cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - 7);
-  } else if (range === 'month') {
-    cutoff = new Date(now); cutoff.setMonth(cutoff.getMonth() - 1);
-  } else if (range === 'year') {
-    cutoff = new Date(now); cutoff.setFullYear(cutoff.getFullYear() - 1);
-  } else {
-    return allWeight;
-  }
-  return allWeight.filter(w => new Date(w.date + 'T00:00:00') >= cutoff);
+  if (range === 'all' || !currentChartPeriod) return allWeight;
+  return allWeight.filter(w => {
+    const d = w.date;
+    if (range === 'week') return getWeekStart(d) === currentChartPeriod;
+    if (range === 'month') return d.slice(0, 7) === currentChartPeriod;
+    if (range === 'year') return d.slice(0, 4) === currentChartPeriod;
+    return true;
+  });
 }
 
 function renderWeightChart() {

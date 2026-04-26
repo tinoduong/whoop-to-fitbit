@@ -8,6 +8,7 @@ let allReports = [];
 let weightChart = null;
 
 let currentChartRange = 'month';
+let currentChartPeriod = '';
 
 let availableMonths = [];
 let currentMonthIndex = 0;
@@ -20,7 +21,48 @@ let mealsFiltered = [];
 let mealsPage = 1;
 const MEALS_PER_PAGE = 7;
 
-let workoutSummaryRange = '30d';
+let workoutSummaryRange = 'month';
+let workoutSummaryPeriod = '';
+let mealsChartPeriod = '';
+
+// ===== PERIOD HELPERS =====
+function getWeekStart(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().slice(0, 10);
+}
+
+function getAvailablePeriods(dates, rangeType) {
+  if (rangeType === 'week') return [...new Set(dates.map(d => getWeekStart(d)))].sort().reverse();
+  if (rangeType === 'month') return [...new Set(dates.map(d => d.slice(0, 7)))].sort().reverse();
+  if (rangeType === 'year') return [...new Set(dates.map(d => d.slice(0, 4)))].sort().reverse();
+  return [];
+}
+
+function formatPeriodLabel(period, rangeType) {
+  if (rangeType === 'week') {
+    const d = new Date(period + 'T00:00:00');
+    const end = new Date(d);
+    end.setDate(end.getDate() + 6);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) +
+      ' – ' + end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  if (rangeType === 'month') {
+    const [y, m] = period.split('-');
+    return new Date(+y, +m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+  return period;
+}
+
+function getCurrentPeriodKey(rangeType) {
+  const today = new Date().toISOString().slice(0, 10);
+  if (rangeType === 'week') return getWeekStart(today);
+  if (rangeType === 'month') return today.slice(0, 7);
+  if (rangeType === 'year') return today.slice(0, 4);
+  return '';
+}
 
 const KG_TO_LBS = 2.20462;
 function kgToLbs(kg) { return +(kg * KG_TO_LBS).toFixed(1); }
@@ -52,12 +94,14 @@ function restoreFromUrl() {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.id === 'tab-' + tab));
 
   const range = p.get('range') || 'month';
-  if (range !== currentChartRange) {
+  const rperiod = p.get('rperiod') || '';
+  if (range !== currentChartRange || rperiod !== currentChartPeriod) {
     currentChartRange = range;
+    currentChartPeriod = rperiod;
+    buildOverviewPeriodSelects();
     renderWeightChart();
+    renderBodyCompRatioChart();
   }
-  document.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
-  document.querySelectorAll('.overview-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
 
   const month = p.get('month');
   if (month && availableMonths.includes(month) && availableMonths.indexOf(month) !== currentMonthIndex) {
@@ -65,13 +109,15 @@ function restoreFromUrl() {
     renderDailySummary();
   }
 
-  const wrange = p.get('wrange') || '30d';
-  if (wrange !== workoutSummaryRange) {
+  const wrange = p.get('wrange') || 'month';
+  const wrperiod = p.get('wrperiod') || '';
+  if (wrange !== workoutSummaryRange || wrperiod !== workoutSummaryPeriod) {
     workoutSummaryRange = wrange;
+    workoutSummaryPeriod = wrperiod;
+    buildWorkoutPeriodSelects();
     renderWorkoutSummary();
     renderIntensityTrends();
   }
-  document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === workoutSummaryRange));
 
   const wpage = parseInt(p.get('wpage')) || 1;
   if (wpage !== workoutsPage) {
@@ -79,9 +125,12 @@ function restoreFromUrl() {
     renderWorkouts();
   }
 
-  const mrange = p.get('mrange') || '30d';
-  if (mrange !== mealsChartRange) {
+  const mrange = p.get('mrange') || 'month';
+  const mrperiod = p.get('mrperiod') || '';
+  if (mrange !== mealsChartRange || mrperiod !== mealsChartPeriod) {
     mealsChartRange = mrange;
+    mealsChartPeriod = mrperiod;
+    buildMealsPeriodSelects();
     const ps = document.getElementById('proteinChartSection');
     const cs = document.getElementById('calorieChartSection');
     if (ps) ps.remove();
@@ -89,7 +138,6 @@ function restoreFromUrl() {
     renderProteinChart();
     renderCalorieChart();
   }
-  document.querySelectorAll('.meals-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === mealsChartRange));
 
   const mpage = parseInt(p.get('mpage')) || 1;
   if (mpage !== mealsPage) {
@@ -106,9 +154,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Apply URL state to vars before first render
   const p = new URLSearchParams(window.location.search);
   if (p.get('range')) currentChartRange = p.get('range');
+  if (p.get('rperiod')) currentChartPeriod = p.get('rperiod');
   if (p.get('wrange')) workoutSummaryRange = p.get('wrange');
+  if (p.get('wrperiod')) workoutSummaryPeriod = p.get('wrperiod');
   if (p.get('wpage')) workoutsPage = parseInt(p.get('wpage')) || 1;
   if (p.get('mrange')) mealsChartRange = p.get('mrange');
+  if (p.get('mrperiod')) mealsChartPeriod = p.get('mrperiod');
   if (p.get('mpage')) mealsPage = parseInt(p.get('mpage')) || 1;
 
   buildAvailableMonths();
@@ -130,12 +181,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupMonthNav();
   setupDayModal();
   setupLogMealModal();
-
-  // Sync button active states with state vars (some buttons hardcode their default)
-  document.querySelectorAll('.range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
-  document.querySelectorAll('.overview-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === currentChartRange));
-  document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === workoutSummaryRange));
-  document.querySelectorAll('.meals-range-btn').forEach(b => b.classList.toggle('active', b.dataset.range === mealsChartRange));
 
   // Apply tab from URL
   const tab = p.get('tab') || 'overview';

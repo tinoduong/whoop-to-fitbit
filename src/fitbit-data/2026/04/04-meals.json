@@ -4979,5 +4979,151 @@
         "total_protein": 74.1,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-25T19:15:38.769091",
+        "date": "2026-04-25",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3.1 oz roasted portobello mushroom, 1.38 oz roasted aparagus, 1/4 cup royal wild rice blend, 8.2 oz roasted salmon with no skin, 1.5 tbsp mango salsa, 1 tbsp olive oil, 1/4 cup boiled corn (no butter)",
+        "items": [
+            {
+                "foodName": "Roasted Portobello Mushroom",
+                "calories": 22,
+                "protein": 2.1,
+                "totalCarbohydrate": 4.3,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38529622462
+            },
+            {
+                "foodName": "Roasted Asparagus",
+                "calories": 8,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.6,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38529661187
+            },
+            {
+                "foodName": "Royal Wild Rice Blend",
+                "calories": 85,
+                "protein": 3.5,
+                "totalCarbohydrate": 17.0,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38529866919
+            },
+            {
+                "foodName": "Roasted Salmon No Skin",
+                "calories": 513,
+                "protein": 72.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 23.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38529161478
+            },
+            {
+                "foodName": "Mango Salsa",
+                "calories": 12,
+                "protein": 0.2,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38529269312
+            },
+            {
+                "foodName": "Olive Oil",
+                "calories": 119,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 13.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38530777909
+            },
+            {
+                "foodName": "Boiled Corn",
+                "calories": 31,
+                "protein": 1.2,
+                "totalCarbohydrate": 7.3,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38530876010
+            }
+        ],
+        "total_calories": 790,
+        "total_protein": 80.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-25T19:45:07.922390",
+        "date": "2026-04-25",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 1 Tate's chocolate chip cookie (70 cals), 1/4 cup raspberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 12.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38529896935
+            },
+            {
+                "foodName": "Tate's Chocolate Chip Cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38530944984
+            },
+            {
+                "foodName": "Raspberries",
+                "calories": 16,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38530396760
+            }
+        ],
+        "total_calories": 151,
+        "total_protein": 13.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

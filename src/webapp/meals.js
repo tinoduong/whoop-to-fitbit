@@ -2,40 +2,17 @@
 
 let proteinChart = null;
 let calorieChart = null;
-let mealsChartRange = '30d';
-
-function injectMealsChartStyles() {
-  if (document.getElementById('mealsChartStyles')) return;
-  const style = document.createElement('style');
-  style.id = 'mealsChartStyles';
-  style.textContent = `
-    #mealChartsHeader { margin-bottom: 0; }
-    .meals-chart-range-toggle { display: flex; gap: 4px; }
-    .meals-range-btn { background: transparent; border: 1px solid rgba(139,144,168,0.3); color: #8b90a8; border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
-    .meals-range-btn:hover { border-color: #6c63ff; color: #e8eaf0; }
-    .meals-range-btn.active { background: rgba(108,99,255,0.15); border-color: #6c63ff; color: #6c63ff; font-weight: 600; }
-  `;
-  document.head.appendChild(style);
-}
+let mealsChartRange = 'month';
 
 function setupMealsChartRangeToggle() {
   const existing = document.getElementById('mealChartsHeader');
   if (existing) return;
 
-  injectMealsChartStyles();
-
   const mealsTab = document.getElementById('tab-meals');
   const headerEl = document.createElement('div');
   headerEl.id = 'mealChartsHeader';
-  headerEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;padding:0 4px';
-  headerEl.innerHTML = `
-    <div class="meals-chart-range-toggle">
-      <button class="meals-range-btn" data-range="7d">1 week</button>
-      <button class="meals-range-btn active" data-range="30d">1 month</button>
-      <button class="meals-range-btn" data-range="1y">1 year</button>
-      <button class="meals-range-btn" data-range="all">All time</button>
-    </div>
-  `;
+  headerEl.style.cssText = 'display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:16px;padding:0 4px';
+  headerEl.innerHTML = `<div class="period-select-group" id="mealsPeriodGroup"></div>`;
   const sectionHeader = mealsTab.querySelector('.section-header');
   if (sectionHeader) {
     sectionHeader.insertAdjacentElement('afterend', headerEl);
@@ -43,12 +20,59 @@ function setupMealsChartRangeToggle() {
     mealsTab.insertBefore(headerEl, mealsTab.firstElementChild);
   }
 
-  headerEl.querySelectorAll('.meals-range-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      headerEl.querySelectorAll('.meals-range-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      mealsChartRange = btn.dataset.range;
-      pushUrl({ mrange: mealsChartRange });
+  buildMealsPeriodSelects();
+}
+
+function buildMealsPeriodSelects() {
+  const group = document.getElementById('mealsPeriodGroup');
+  if (!group) return;
+
+  const dates = allMeals.map(m => m.date);
+  const periods = getAvailablePeriods(dates, mealsChartRange);
+  const currentKey = getCurrentPeriodKey(mealsChartRange);
+  if (!mealsChartPeriod || !periods.includes(mealsChartPeriod)) {
+    mealsChartPeriod = periods.includes(currentKey) ? currentKey : (periods[0] || '');
+    pushUrl({ mrperiod: mealsChartPeriod || null });
+  }
+
+  const typeOptions = [
+    { value: 'all', label: 'All time' },
+    { value: 'year', label: 'Year' },
+    { value: 'month', label: 'Month' },
+    { value: 'week', label: 'Week' },
+  ];
+
+  const periodSelectHTML = mealsChartRange !== 'all' ? `
+    <select id="mealsRangePeriod" class="period-value-select">
+      ${periods.map(p => `<option value="${p}" ${p === mealsChartPeriod ? 'selected' : ''}>${formatPeriodLabel(p, mealsChartRange)}</option>`).join('')}
+    </select>
+  ` : '';
+
+  group.innerHTML = `
+    <select id="mealsRangeType" class="period-type-select">
+      ${typeOptions.map(o => `<option value="${o.value}" ${o.value === mealsChartRange ? 'selected' : ''}>${o.label}</option>`).join('')}
+    </select>
+    ${periodSelectHTML}
+  `;
+
+  document.getElementById('mealsRangeType').addEventListener('change', e => {
+    mealsChartRange = e.target.value;
+    mealsChartPeriod = '';
+    pushUrl({ mrange: mealsChartRange, mrperiod: null });
+    buildMealsPeriodSelects();
+    const ps = document.getElementById('proteinChartSection');
+    const cs = document.getElementById('calorieChartSection');
+    if (ps) ps.remove();
+    if (cs) cs.remove();
+    renderProteinChart();
+    renderCalorieChart();
+  });
+
+  const periodSel = document.getElementById('mealsRangePeriod');
+  if (periodSel) {
+    periodSel.addEventListener('change', e => {
+      mealsChartPeriod = e.target.value;
+      pushUrl({ mrperiod: mealsChartPeriod });
       const ps = document.getElementById('proteinChartSection');
       const cs = document.getElementById('calorieChartSection');
       if (ps) ps.remove();
@@ -56,7 +80,7 @@ function setupMealsChartRangeToggle() {
       renderProteinChart();
       renderCalorieChart();
     });
-  });
+  }
 }
 
 function injectProteinChartStyles() {
@@ -93,13 +117,14 @@ function getProteinGoals() {
 
 function getMealsForProteinRange(range) {
   if (!allMeals.length) return allMeals;
-  const now = new Date();
-  const cutoff = new Date(now);
-  if (range === '7d') cutoff.setDate(cutoff.getDate() - 7);
-  else if (range === '30d') cutoff.setDate(cutoff.getDate() - 30);
-  else if (range === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
-  else return allMeals;
-  return allMeals.filter(m => new Date(m.date + 'T00:00:00') >= cutoff);
+  if (range === 'all' || !mealsChartPeriod) return allMeals;
+  return allMeals.filter(m => {
+    const d = m.date;
+    if (range === 'week') return getWeekStart(d) === mealsChartPeriod;
+    if (range === 'month') return d.slice(0, 7) === mealsChartPeriod;
+    if (range === 'year') return d.slice(0, 4) === mealsChartPeriod;
+    return true;
+  });
 }
 
 function renderProteinChart() {
@@ -293,13 +318,14 @@ function renderProteinChart() {
 // ===== CALORIE VS GOAL CHART =====
 function getMealsForCalorieRange(range) {
   if (!allMeals.length) return allMeals;
-  const now = new Date();
-  const cutoff = new Date(now);
-  if (range === '7d') cutoff.setDate(cutoff.getDate() - 7);
-  else if (range === '30d') cutoff.setDate(cutoff.getDate() - 30);
-  else if (range === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
-  else return allMeals;
-  return allMeals.filter(m => new Date(m.date + 'T00:00:00') >= cutoff);
+  if (range === 'all' || !mealsChartPeriod) return allMeals;
+  return allMeals.filter(m => {
+    const d = m.date;
+    if (range === 'week') return getWeekStart(d) === mealsChartPeriod;
+    if (range === 'month') return d.slice(0, 7) === mealsChartPeriod;
+    if (range === 'year') return d.slice(0, 4) === mealsChartPeriod;
+    return true;
+  });
 }
 
 function renderCalorieChart() {

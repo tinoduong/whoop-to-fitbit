@@ -322,27 +322,67 @@ function injectWorkoutSummaryStyles() {
   document.head.appendChild(style);
 }
 
-function setupWorkoutSummaryToggle() {
-  document.querySelectorAll('.workout-summary-range-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.workout-summary-range-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      workoutSummaryRange = btn.dataset.range;
-      pushUrl({ wrange: workoutSummaryRange });
+function buildWorkoutPeriodSelects() {
+  const group = document.getElementById('workoutPeriodGroup');
+  if (!group) return;
+
+  const dates = allWorkouts.map(w => getDateFromISO(w.start_time));
+  const periods = getAvailablePeriods(dates, workoutSummaryRange);
+  const currentKey = getCurrentPeriodKey(workoutSummaryRange);
+  if (!workoutSummaryPeriod || !periods.includes(workoutSummaryPeriod)) {
+    workoutSummaryPeriod = periods.includes(currentKey) ? currentKey : (periods[0] || '');
+    pushUrl({ wrperiod: workoutSummaryPeriod || null });
+  }
+
+  const typeOptions = [
+    { value: 'all', label: 'All time' },
+    { value: 'year', label: 'Year' },
+    { value: 'month', label: 'Month' },
+    { value: 'week', label: 'Week' },
+  ];
+
+  const periodSelectHTML = workoutSummaryRange !== 'all' ? `
+    <select id="workoutRangePeriod" class="period-value-select">
+      ${periods.map(p => `<option value="${p}" ${p === workoutSummaryPeriod ? 'selected' : ''}>${formatPeriodLabel(p, workoutSummaryRange)}</option>`).join('')}
+    </select>
+  ` : '';
+
+  group.innerHTML = `
+    <select id="workoutRangeType" class="period-type-select">
+      ${typeOptions.map(o => `<option value="${o.value}" ${o.value === workoutSummaryRange ? 'selected' : ''}>${o.label}</option>`).join('')}
+    </select>
+    ${periodSelectHTML}
+  `;
+
+  document.getElementById('workoutRangeType').addEventListener('change', e => {
+    workoutSummaryRange = e.target.value;
+    workoutSummaryPeriod = '';
+    pushUrl({ wrange: workoutSummaryRange, wrperiod: null });
+    buildWorkoutPeriodSelects();
+    renderWorkoutSummary();
+    renderIntensityTrends();
+  });
+
+  const periodSel = document.getElementById('workoutRangePeriod');
+  if (periodSel) {
+    periodSel.addEventListener('change', e => {
+      workoutSummaryPeriod = e.target.value;
+      pushUrl({ wrperiod: workoutSummaryPeriod });
       renderWorkoutSummary();
       renderIntensityTrends();
     });
-  });
+  }
 }
 
 function getWorkoutsForSummaryRange() {
-  if (workoutSummaryRange === 'all') return allWorkouts;
-  const now = new Date();
-  const cutoff = new Date(now);
-  if (workoutSummaryRange === '7d') cutoff.setDate(cutoff.getDate() - 7);
-  if (workoutSummaryRange === '30d') cutoff.setDate(cutoff.getDate() - 30);
-  if (workoutSummaryRange === '1y') cutoff.setFullYear(cutoff.getFullYear() - 1);
-  return allWorkouts.filter(w => new Date(w.start_time) >= cutoff);
+  if (workoutSummaryRange === 'all' || !workoutSummaryPeriod) return allWorkouts;
+  return allWorkouts.filter(w => {
+    const d = getDateFromISO(w.start_time);
+    if (workoutSummaryRange === 'week') return getWeekStart(d) === workoutSummaryPeriod;
+    if (workoutSummaryRange === 'month') return d.slice(0, 7) === workoutSummaryPeriod;
+    if (workoutSummaryRange === 'year') return d.slice(0, 4) === workoutSummaryPeriod;
+    return true;
+  });
 }
 
 function renderWorkoutSummary() {
@@ -422,20 +462,15 @@ function renderWorkouts() {
       const headerEl = document.createElement('div');
       headerEl.id = 'workoutTabHeader';
       headerEl.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-          <div class="workout-summary-range-toggle">
-            <button class="workout-summary-range-btn" data-range="7d">1 week</button>
-            <button class="workout-summary-range-btn active" data-range="30d">1 month</button>
-            <button class="workout-summary-range-btn" data-range="1y">1 year</button>
-            <button class="workout-summary-range-btn" data-range="all">All time</button>
-          </div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-bottom:16px">
+          <div class="period-select-group" id="workoutPeriodGroup"></div>
         </div>
         <div id="workoutSummaryBar"></div>
         <div id="intensityTrendsSection" style="margin-top:20px"></div>
         <hr class="workout-tab-divider" style="margin-top:2rem">
       `;
       tableContainer.parentElement.insertBefore(headerEl, tableContainer);
-      setupWorkoutSummaryToggle();
+      buildWorkoutPeriodSelects();
     }
     renderWorkoutSummary();
     renderIntensityTrends();
