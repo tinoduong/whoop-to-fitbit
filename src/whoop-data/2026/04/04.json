@@ -663,5 +663,81 @@
             "zone_four_milli": 0,
             "zone_five_milli": 0
         }
+    },
+    {
+        "id": "6b3a599b-cce5-4bf0-98f5-c981e761bd27",
+        "sport_name": "weightlifting",
+        "start_time": "2026-04-26T14:49:10",
+        "end_time": "2026-04-26T15:37:42",
+        "avg_heart_rate": 106,
+        "calories": 145,
+        "distance_meter": null,
+        "max_heart_rate": 150,
+        "strain": 10.904058,
+        "zone_durations": {
+            "zone_zero_milli": 1555000,
+            "zone_one_milli": 1221000,
+            "zone_two_milli": 134000,
+            "zone_three_milli": 1000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "e4e79451-90c8-4dfd-a5e3-1087d53f822c",
+        "sport_name": "running",
+        "start_time": "2026-04-26T15:38:59",
+        "end_time": "2026-04-26T16:13:34",
+        "avg_heart_rate": 134,
+        "calories": 295,
+        "distance_meter": 148.02042,
+        "max_heart_rate": 172,
+        "strain": 9.111901,
+        "zone_durations": {
+            "zone_zero_milli": 214000,
+            "zone_one_milli": 381000,
+            "zone_two_milli": 1357010,
+            "zone_three_milli": 49000,
+            "zone_four_milli": 74000,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "2b88e558-0d47-4188-8e2d-e14886ead842",
+        "sport_name": "weightlifting",
+        "start_time": "2026-04-28T06:01:44",
+        "end_time": "2026-04-28T06:36:56",
+        "avg_heart_rate": 107,
+        "calories": 105,
+        "distance_meter": null,
+        "max_heart_rate": 135,
+        "strain": 8.997895,
+        "zone_durations": {
+            "zone_zero_milli": 1120020,
+            "zone_one_milli": 991990,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "a7de4282-4a99-43c2-84d9-3809f2617f10",
+        "sport_name": "running",
+        "start_time": "2026-04-28T06:37:25",
+        "end_time": "2026-04-28T07:04:14",
+        "avg_heart_rate": 152,
+        "calories": 334,
+        "distance_meter": 4.504561,
+        "max_heart_rate": 173,
+        "strain": 11.991505,
+        "zone_durations": {
+            "zone_zero_milli": 0,
+            "zone_one_milli": 209000,
+            "zone_two_milli": 66000,
+            "zone_three_milli": 1057000,
+            "zone_four_milli": 267000,
+            "zone_five_milli": 10000
+        }
     }
 ]

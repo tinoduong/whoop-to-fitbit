@@ -5125,5 +5125,798 @@
         "total_protein": 13.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-26T14:40:33.477665",
+        "date": "2026-04-26",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "Bacon, Breakfast Link Sausage, Belgian Waffle, Non-fat Greek Yogurt, Cantaloupe Melon, Strawberries, Natural Peanut Butter, Bell Pepper Quiche (no cream, no cheese), Homemade Breakfast Potatoes",
+        "items": [
+            {
+                "foodName": "Bacon",
+                "calories": 86,
+                "protein": 6.0,
+                "totalCarbohydrate": 0.2,
+                "totalFat": 6.8,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38533715873
+            },
+            {
+                "foodName": "Breakfast Link Sausage",
+                "calories": 48,
+                "protein": 2.6,
+                "totalCarbohydrate": 0.4,
+                "totalFat": 4.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534676471
+            },
+            {
+                "foodName": "Belgian Waffle",
+                "calories": 250,
+                "protein": 5.0,
+                "totalCarbohydrate": 33.0,
+                "totalFat": 11.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534431737
+            },
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 35,
+                "protein": 6.3,
+                "totalCarbohydrate": 4.0,
+                "totalFat": 0.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38533245877
+            },
+            {
+                "foodName": "Cantaloupe Melon",
+                "calories": 8,
+                "protein": 0.2,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 0.0,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534333725
+            },
+            {
+                "foodName": "Strawberries",
+                "calories": 8,
+                "protein": 0.2,
+                "totalCarbohydrate": 1.9,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534402418
+            },
+            {
+                "foodName": "Natural Peanut Butter",
+                "calories": 28,
+                "protein": 1.1,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 2.4,
+                "amount": 0.3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38533050086
+            },
+            {
+                "foodName": "Bell Pepper Quiche (no cream, no cheese)",
+                "calories": 140,
+                "protein": 6.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 9.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38533696200
+            },
+            {
+                "foodName": "Homemade Breakfast Potatoes",
+                "calories": 140,
+                "protein": 2.8,
+                "totalCarbohydrate": 22.0,
+                "totalFat": 5.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534039524
+            }
+        ],
+        "total_calories": 743,
+        "total_protein": 30.2,
+        "all_uploaded": true,
+        "amended": true,
+        "previous_version": {
+            "logged_at": "2026-04-26T14:34:12.512540",
+            "raw_description": "2 peices of bacon, 1 breakfast link sausage, 1 belgain waffle (250 cal, 5 g protein), 1/4 cup non-fat greek yogurt, 1/4 cup cantelop melon, 1/4 cup strawberries, .3 tbps natural peanut butter, 1 slice of bell pepper quiche (no cream, no cheese)",
+            "total_calories": 603,
+            "total_protein": 27.4
+        }
+    },
+    {
+        "logged_at": "2026-04-26T16:44:15.730037",
+        "date": "2026-04-26",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "2.62 oz roasted skinless chicken breast",
+        "items": [
+            {
+                "foodName": "Roasted Skinless Chicken Breast",
+                "calories": 123,
+                "protein": 23.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 2.7,
+                "amount": 2.62,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38535512215
+            }
+        ],
+        "total_calories": 123,
+        "total_protein": 23.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-26T19:54:14.628988",
+        "date": "2026-04-26",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "10.04 oz baked salmon, 1 oz wild rice uncle bens, 1.2 oz baked portobello mushroom, 1.42 oz cooked asperagus, 3 Tbsp mango and pepper salsa",
+        "items": [
+            {
+                "foodName": "Baked Salmon",
+                "calories": 412,
+                "protein": 57.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 18.2,
+                "amount": 10.04,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38535222079
+            },
+            {
+                "foodName": "Wild Rice Uncle Bens",
+                "calories": 103,
+                "protein": 4.3,
+                "totalCarbohydrate": 22.0,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534947979
+            },
+            {
+                "foodName": "Baked Portobello Mushroom",
+                "calories": 7,
+                "protein": 0.7,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 0.1,
+                "amount": 1.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38535574916
+            },
+            {
+                "foodName": "Cooked Asparagus",
+                "calories": 8,
+                "protein": 0.9,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 0.1,
+                "amount": 1.42,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38536172571
+            },
+            {
+                "foodName": "Mango and Pepper Salsa",
+                "calories": 45,
+                "protein": 0.6,
+                "totalCarbohydrate": 11.4,
+                "totalFat": 0.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38536486370
+            }
+        ],
+        "total_calories": 575,
+        "total_protein": 63.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-26T19:58:58.567132",
+        "date": "2026-04-26",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 1 Tate's chocolate chip cookie (70 cals), 1/4 cup raspberries",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 12.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38535741243
+            },
+            {
+                "foodName": "Tate's Chocolate Chip Cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38535055873
+            },
+            {
+                "foodName": "Raspberries",
+                "calories": 16,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38534752208
+            }
+        ],
+        "total_calories": 151,
+        "total_protein": 13.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-27T07:32:29.958346",
+        "date": "2026-04-27",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "6.94 oz roasted skinless chicken breast, 1.16 oz roasted eggplant, 1.38 oz roasted sweet potato, .78oz roasted acorn squash, 1.12 oz pomegranate seeds, 1 cup raw arugula",
+        "items": [
+            {
+                "foodName": "Roasted Skinless Chicken Breast",
+                "calories": 385,
+                "protein": 72.3,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.4,
+                "amount": 6.94,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38537143786
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 8,
+                "protein": 0.3,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 0.1,
+                "amount": 1.16,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38538328886
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 35,
+                "protein": 0.8,
+                "totalCarbohydrate": 8.1,
+                "totalFat": 0.1,
+                "amount": 1.38,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38537692336
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 12,
+                "protein": 0.2,
+                "totalCarbohydrate": 3.1,
+                "totalFat": 0.0,
+                "amount": 0.78,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38537094636
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 28,
+                "protein": 0.6,
+                "totalCarbohydrate": 6.3,
+                "totalFat": 0.4,
+                "amount": 1.12,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38537330228
+            },
+            {
+                "foodName": "Raw Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38538123204
+            }
+        ],
+        "total_calories": 473,
+        "total_protein": 74.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-27T18:57:34.269095",
+        "date": "2026-04-27",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1/2 cup cooked white rice, 1.1 oz edamame beans, .8 oz cooked mushrooms, 4.48 oz pan fried New York strip steak",
+        "items": [
+            {
+                "foodName": "Cooked White Rice",
+                "calories": 103,
+                "protein": 2.1,
+                "totalCarbohydrate": 22.3,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542552039
+            },
+            {
+                "foodName": "Edamame Beans",
+                "calories": 37,
+                "protein": 3.2,
+                "totalCarbohydrate": 2.9,
+                "totalFat": 1.5,
+                "amount": 1.1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38541406011
+            },
+            {
+                "foodName": "Cooked Mushrooms",
+                "calories": 6,
+                "protein": 0.8,
+                "totalCarbohydrate": 1.2,
+                "totalFat": 0.1,
+                "amount": 0.8,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38541788000
+            },
+            {
+                "foodName": "Pan Fried New York Strip Steak",
+                "calories": 360,
+                "protein": 31.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 25.1,
+                "amount": 4.48,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542346120
+            }
+        ],
+        "total_calories": 506,
+        "total_protein": 37.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-27T19:24:09.965214",
+        "date": "2026-04-27",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542631166
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-27T21:58:29.096366",
+        "date": "2026-04-28",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "7.10 oz roasted skinless chicken breast, 1.12 oz roasted egg plant, 1.2 oz roasted sweet potato, .88 oz roasted acorn squash, 1.1 oz roasted beets, 1.24 oz pomegranate seeds, 1 cup raw arugula",
+        "items": [
+            {
+                "foodName": "Roasted Skinless Chicken Breast",
+                "calories": 400,
+                "protein": 75.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542575631
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 8,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.9,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38543456973
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 29,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.8,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542438429
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 14,
+                "protein": 0.3,
+                "totalCarbohydrate": 3.6,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542957705
+            },
+            {
+                "foodName": "Roasted Beets",
+                "calories": 14,
+                "protein": 0.5,
+                "totalCarbohydrate": 3.2,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38542124913
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 24,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38543574629
+            },
+            {
+                "foodName": "Raw Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38543858984
+            }
+        ],
+        "total_calories": 494,
+        "total_protein": 77.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-28T19:07:00.801433",
+        "date": "2026-04-28",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5oz cooked pork chop (no bone), 3.84 oz cooked cabbage, 2.07 oz cooked zuchinni",
+        "items": [
+            {
+                "foodName": "Cooked Pork Chop",
+                "calories": 343,
+                "protein": 31.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 23.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38553623618
+            },
+            {
+                "foodName": "Cooked Cabbage",
+                "calories": 28,
+                "protein": 1.3,
+                "totalCarbohydrate": 6.8,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38553820076
+            },
+            {
+                "foodName": "Cooked Zucchini",
+                "calories": 12,
+                "protein": 1.2,
+                "totalCarbohydrate": 2.3,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38552975282
+            }
+        ],
+        "total_calories": 383,
+        "total_protein": 33.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-28T19:13:02.843147",
+        "date": "2026-04-28",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38553712158
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-28T19:40:38.516091",
+        "date": "2026-04-28",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "Non-fat Greek Yogurt, Tate's Chocolate Chip Cookie, Raspberries, Cantaloupe",
+        "items": [
+            {
+                "foodName": "Non-fat Greek Yogurt",
+                "calories": 65,
+                "protein": 12.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38553840675
+            },
+            {
+                "foodName": "Tate's Chocolate Chip Cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38553015541
+            },
+            {
+                "foodName": "Raspberries",
+                "calories": 16,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38554312269
+            },
+            {
+                "foodName": "Cantaloupe",
+                "calories": 25,
+                "protein": 0.6,
+                "totalCarbohydrate": 6.2,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38552878178
+            }
+        ],
+        "total_calories": 176,
+        "total_protein": 14.0,
+        "all_uploaded": true,
+        "amended": true,
+        "previous_version": {
+            "logged_at": "2026-04-28T19:25:51.902247",
+            "raw_description": "1/2 cup non-fat greek yogurt, 1 Tate's chocolate chip cookie (70 cals), 1/4 cup raspberries",
+            "total_calories": 151,
+            "total_protein": 13.4
+        }
+    },
+    {
+        "logged_at": "2026-04-28T20:45:37.672428",
+        "date": "2026-04-28",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "2.6 oz pork chop (no bone)",
+        "items": [
+            {
+                "foodName": "Pork Chop (boneless)",
+                "calories": 192,
+                "protein": 26.3,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38554117280
+            }
+        ],
+        "total_calories": 192,
+        "total_protein": 26.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-29T07:34:07.669950",
+        "date": "2026-04-29",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "roasted chicken skinless 7.12oz (62.6g protein, 333cal), roasted beets 1.52oz (0.7g protein, 19cal), roasted sweet potato 1.42oz (0.8g protein, 36cal), roasted eggplant 1.38oz (0.4g protein, 14cal), roasted acorn squash 1.26oz (0.4g protein, 20cal), arugula raw 1 cup (0.5g protein, 5cal)",
+        "items": [
+            {
+                "foodName": "Roasted Chicken Skinless",
+                "calories": 333,
+                "protein": 62.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38557408090
+            },
+            {
+                "foodName": "Roasted Beets",
+                "calories": 19,
+                "protein": 0.7,
+                "totalCarbohydrate": 4.3,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38557604892
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 36,
+                "protein": 0.8,
+                "totalCarbohydrate": 8.3,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38556463479
+            },
+            {
+                "foodName": "Roasted Eggplant",
+                "calories": 14,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.2,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38557201433
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 20,
+                "protein": 0.4,
+                "totalCarbohydrate": 5.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38558155607
+            },
+            {
+                "foodName": "Arugula Raw",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38558942883
+            }
+        ],
+        "total_calories": 427,
+        "total_protein": 65.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

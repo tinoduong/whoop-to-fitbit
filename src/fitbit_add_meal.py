@@ -144,25 +144,58 @@ Return ONLY valid JSON, no explanation, no markdown."""
 
 def parse_meal_with_claude(meal_description, meal_type):
     """Parse a meal description into structured food items with nutrition."""
-    prompt = f"""Parse this meal description into a JSON array of food items with nutritional estimates.
+    prompt = f"""You are a precise nutrition calculator. Parse this meal into a JSON array of food items with accurate nutritional values derived from USDA FoodData Central data.
+
 Meal type: {meal_type}
 Meal description: {meal_description}
 
-Return ONLY a valid JSON array, no explanation, no markdown. Each item must have:
-- foodName (string)
+For EACH food item, follow this exact methodology:
+1. Identify the food and its preparation method — cooking method matters (roasted vs boiled vs raw have different values; use the closest match)
+2. Look up the per-100g macros from USDA FoodData Central, preferring SR Legacy or Foundation Foods entries for the matched preparation
+3. Determine the serving weight in grams — if given in oz, convert: grams = oz × 28.3495
+4. Scale each macro: (weight_g / 100) × per_100g_value
+5. Round calories to the nearest integer; protein, carbs, fat to 1 decimal place
+
+Reference USDA per-100g values (cooked weight unless noted):
+- Chicken breast, roasted, skinless: 165 kcal, 31.0g P, 0.0g C, 3.6g F
+- Chicken thigh, roasted, skinless: 179 kcal, 24.8g P, 0.0g C, 8.0g F
+- Beef ground 85/15, pan-broiled: 215 kcal, 26.1g P, 0.0g C, 11.8g F
+- Beef steak (sirloin), broiled: 207 kcal, 28.7g P, 0.0g C, 9.7g F
+- Salmon Atlantic, cooked dry heat: 206 kcal, 20.4g P, 0.0g C, 13.4g F
+- Shrimp, cooked moist heat: 99 kcal, 20.9g P, 0.9g C, 1.1g F
+- Pork tenderloin, roasted: 166 kcal, 26.2g P, 0.0g C, 5.7g F
+- White rice, cooked: 130 kcal, 2.7g P, 28.6g C, 0.3g F
+- Potato, baked with skin: 93 kcal, 2.5g P, 21.6g C, 0.1g F
+- Broccoli, boiled: 35 kcal, 2.4g P, 7.2g C, 0.4g F
+- Egg, scrambled: 149 kcal, 10.1g P, 1.6g C, 11.0g F
+- Oats, cooked with water: 71 kcal, 2.5g P, 12.0g C, 1.5g F
+- Greek yogurt, plain, nonfat: 59 kcal, 10.2g P, 3.6g C, 0.4g F
+- Cottage cheese, 2%: 81 kcal, 11.0g P, 3.4g C, 2.3g F
+- Whole milk: 61 kcal, 3.2g P, 4.8g C, 3.3g F
+- Beer, regular (355ml can ≈ 353g): 43 kcal, 0.5g P, 3.6g C, 0.0g F
+- Wine, red (5oz ≈ 150ml ≈ 154g): 85 kcal, 0.1g P, 2.6g C, 0.0g F
+- Olive oil: 884 kcal, 0.0g P, 0.0g C, 100.0g F
+- Banana, raw: 89 kcal, 1.1g P, 23.0g C, 0.3g F
+- Blueberries, raw: 57 kcal, 0.7g P, 14.5g C, 0.3g F
+
+For items not in this list, use your best USDA-grounded estimate for that preparation method and scale the same way.
+
+Return ONLY a valid JSON array — no explanation, no markdown. Each item must have:
+- foodName (string, include preparation method, e.g. "Chicken Breast, roasted")
 - calories (integer)
 - protein (float, grams)
 - totalCarbohydrate (float, grams)
 - totalFat (float, grams)
-- amount (float)
+- amount (float, serving size in the original stated unit)
 - unitId (integer, use 304 for serving)
 
-Example:
-[
-  {{"foodName": "Grilled Chicken Breast", "calories": 165, "protein": 31.0, "totalCarbohydrate": 0.0, "totalFat": 3.6, "amount": 1, "unitId": 304}}
-]"""
+Example — "5oz grilled chicken breast":
+weight_g = 5 × 28.3495 = 141.7g
+calories = round((141.7/100) × 165) = 234
+protein  = round((141.7/100) × 31.0, 1) = 43.9
+Result: [{{"foodName": "Chicken Breast, roasted", "calories": 234, "protein": 43.9, "totalCarbohydrate": 0.0, "totalFat": 5.1, "amount": 5, "unitId": 304}}]"""
 
-    raw = call_claude(prompt, max_tokens=1000)
+    raw = call_claude(prompt, max_tokens=1500)
     if not raw:
         return None
     try:

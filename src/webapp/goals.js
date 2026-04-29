@@ -50,6 +50,7 @@ function checkGoalWarnings() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const endDate = new Date(currentGoal.goal_date + 'T00:00:00');
+  endDate.setDate(endDate.getDate() + 1);
   const daysLeft = Math.round((endDate - today) / (1000 * 60 * 60 * 24));
 
   if (daysLeft > 7) {
@@ -274,7 +275,9 @@ function renderTDEEPlan() {
 
     let daysLeftHtml = '';
     if (goal_date) {
-      const daysLeft = Math.max(0, Math.round((new Date(goal_date) - new Date()) / (1000 * 60 * 60 * 24)));
+      const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
+      const goalEnd = new Date(goal_date + 'T00:00:00'); goalEnd.setDate(goalEnd.getDate() + 1);
+      const daysLeft = Math.max(0, Math.round((goalEnd - todayMidnight) / (1000 * 60 * 60 * 24)));
       const currentLbs = allWeight.length ? kgToLbs(allWeight[allWeight.length - 1].weight) : null;
       const lbsLeft = currentLbs && target_weight ? (currentLbs - target_weight).toFixed(1) : '—';
       daysLeftHtml = `
@@ -439,18 +442,21 @@ function renderGoalProgress() {
   const weightLost = +(firstLbs - latestLbs).toFixed(1);
   const weightLostPct = firstLbs > 0 ? +((weightLost / firstLbs) * 100).toFixed(1) : 0;
   const fatLost = (first.fat != null && latest.fat != null) ? +(first.fat - latest.fat).toFixed(2) : null;
-  const fatLostPct = (fatLost != null && first.fat > 0) ? +((fatLost / first.fat) * 100).toFixed(1) : 0;
+  const startingFatLbs = first.fat != null ? +(first.fat / 100 * firstLbs).toFixed(1) : null;
+  const fatLostLbs = (fatLost != null) ? +((first.fat / 100 * firstLbs) - (latest.fat / 100 * latestLbs)).toFixed(1) : null;
+  const fatLostPct = (fatLostLbs != null && startingFatLbs > 0) ? +((fatLostLbs / startingFatLbs) * 100).toFixed(1) : 0;
   const weightToGoal = currentGoal?.target_weight ? +(latestLbs - currentGoal.target_weight).toFixed(1) : null;
   const fatToGoal = currentGoal?.target_fat ? +(latest.fat - currentGoal.target_fat).toFixed(2) : null;
 
   const MS_PER_DAY = 1000 * 60 * 60 * 24;
-  const todayMs = Date.now();
+  const todayMidnightMs = (() => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
   let daysRunning = null, daysLeft = null, totalDays = null;
   if (currentGoal?.saved_date) {
-    daysRunning = Math.max(0, Math.round((todayMs - new Date(currentGoal.saved_date).getTime()) / MS_PER_DAY));
+    daysRunning = Math.max(0, Math.round((todayMidnightMs - new Date(currentGoal.saved_date).getTime()) / MS_PER_DAY));
   }
   if (currentGoal?.goal_date) {
-    daysLeft = Math.max(0, Math.round((new Date(currentGoal.goal_date).getTime() - todayMs) / MS_PER_DAY));
+    const goalEndMs = new Date(currentGoal.goal_date + 'T00:00:00').getTime() + MS_PER_DAY;
+    daysLeft = Math.max(0, Math.round((goalEndMs - todayMidnightMs) / MS_PER_DAY));
     if (daysRunning !== null) totalDays = daysRunning + daysLeft;
   }
 
@@ -486,8 +492,8 @@ function renderGoalProgress() {
         </div>
         <div class="tdee-stat">
           <div class="stat-label">Total fat lost</div>
-          <div class="stat-value" style="color:${fatLost != null ? (fatLost >= 0 ? 'var(--green)' : 'var(--red)') : 'inherit'}">${fatLost != null ? (fatLost >= 0 ? '-' : '+') + Math.abs(fatLost) + '%' : '—'}</div>
-          <div class="stat-sub">${fatLost != null ? Math.abs(fatLostPct) + '% reduction' : 'no fat data'}</div>
+          <div class="stat-value" style="color:${fatLostLbs != null ? (fatLostLbs >= 0 ? 'var(--green)' : 'var(--red)') : 'inherit'}">${fatLostLbs != null ? (fatLostLbs >= 0 ? '-' : '+') + Math.abs(fatLostLbs) + ' lbs' : '—'}</div>
+          <div class="stat-sub">${fatLostLbs != null ? Math.abs(fatLostPct) + '% of starting fat mass' : 'no fat data'}</div>
         </div>
         <div class="tdee-stat">
           <div class="stat-label">Fat to goal</div>
