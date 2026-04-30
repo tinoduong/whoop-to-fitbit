@@ -5918,5 +5918,127 @@
         "total_protein": 65.4,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-29T18:59:30.539743",
+        "date": "2026-04-29",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 oz tuna sashimi, 1 salmon sushi (.74 oz salmon each), 2 tempura shrimp, 4 pieces of California roll, 3 pieces of smoke salmon roll, 1 piece tempura yam, 4 pieces tempura shrimp roll",
+        "items": [
+            {
+                "foodName": "Tuna Sashimi",
+                "calories": 62,
+                "protein": 13.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.6,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38561624035
+            },
+            {
+                "foodName": "Salmon Sushi",
+                "calories": 40,
+                "protein": 6.0,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 1.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38562882494
+            },
+            {
+                "foodName": "Tempura Shrimp",
+                "calories": 120,
+                "protein": 14.0,
+                "totalCarbohydrate": 8.0,
+                "totalFat": 4.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38561918996
+            },
+            {
+                "foodName": "California Roll",
+                "calories": 120,
+                "protein": 8.0,
+                "totalCarbohydrate": 16.0,
+                "totalFat": 3.2,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38562223761
+            },
+            {
+                "foodName": "Smoked Salmon Roll",
+                "calories": 105,
+                "protein": 9.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 2.7,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38562164979
+            },
+            {
+                "foodName": "Tempura Yam",
+                "calories": 85,
+                "protein": 2.0,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38561987872
+            },
+            {
+                "foodName": "Tempura Shrimp Roll",
+                "calories": 160,
+                "protein": 8.0,
+                "totalCarbohydrate": 20.0,
+                "totalFat": 6.0,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38562538495
+            }
+        ],
+        "total_calories": 692,
+        "total_protein": 60.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-29T19:00:18.329954",
+        "date": "2026-04-29",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 Tate's chocolate chip cookie (70 cal)",
+        "items": [
+            {
+                "foodName": "Tate's chocolate chip cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 10.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38562213943
+            }
+        ],
+        "total_calories": 70,
+        "total_protein": 1.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
