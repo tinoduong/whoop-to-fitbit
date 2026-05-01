@@ -1023,6 +1023,17 @@ function renderBodyCompRatioChart() {
             scale.max += pad;
           },
         },
+        yRight: {
+          type: 'linear',
+          position: 'right',
+          display: true,
+          min: 0,
+          max: 20,
+          grid: { drawOnChartArea: false, color: 'transparent', tickColor: 'transparent' },
+          ticks: { color: 'transparent', callback: value => `${value.toFixed(1)}%`, maxTicksLimit: 5 },
+          border: { color: 'transparent' },
+          title: { display: false },
+        },
       },
     },
     plugins: [betweenLinesPlugin, {
