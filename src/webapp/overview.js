@@ -320,16 +320,16 @@ function renderWeightChart() {
         yWeight: {
           type: 'linear',
           position: 'left',
-          ticks: { color: '#6c63ff' },
+          ticks: { color: '#8b90a8' },
           grid: { color: 'rgba(46,50,80,0.5)' },
-          title: { display: true, text: 'Weight (lbs)', color: '#6c63ff' },
+          title: { display: true, text: 'Weight (lbs)', color: '#8b90a8' },
         },
         yFat: {
           type: 'linear',
           position: 'right',
-          ticks: { color: '#00d4aa' },
+          ticks: { color: '#8b90a8' },
           grid: { drawOnChartArea: false },
-          title: { display: true, text: 'Body Fat (%)', color: '#00d4aa' },
+          title: { display: true, text: 'Body Fat (%)', color: '#8b90a8' },
         },
       },
     },
@@ -917,6 +917,28 @@ function renderBodyCompRatioChart() {
     const leanMass = weightLbs * (1 - entry.fat / 100);
     return Math.round(((baseLeanMass - leanMass) / baseLeanMass) * 1000) / 10;
   });
+
+  const mondayLinesPlugin = {
+    id: 'recompMondayLines',
+    afterDraw(chart) {
+      const { ctx: c, scales: { x }, chartArea: { top, bottom } } = chart;
+      c.save();
+      c.strokeStyle = 'rgba(220, 60, 60, 0.35)';
+      c.lineWidth = 1;
+      c.setLineDash([3, 5]);
+      labels.forEach((dateStr, i) => {
+        const d = new Date(dateStr + 'T00:00:00');
+        if (d.getDay() === 1) {
+          const xPos = x.getPixelForValue(i);
+          c.beginPath();
+          c.moveTo(xPos, top);
+          c.lineTo(xPos, bottom);
+          c.stroke();
+        }
+      });
+      c.restore();
+    },
+  };
 
   const betweenLinesPlugin = {
     id: 'recompBetweenLines',
