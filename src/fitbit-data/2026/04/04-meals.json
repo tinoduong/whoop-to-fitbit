@@ -6040,5 +6040,218 @@
         "total_protein": 1.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-04-30T07:35:46.271687",
+        "date": "2026-04-30",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "7.16 oz roasted skinless chicken breast, 1.1 oz roasted sweet potato, 1.56 oz roasted beets, 1.24 oz roasted acorn, 1.34 oz pomegranate seeds, 1 cup raw arugula",
+        "items": [
+            {
+                "foodName": "Roasted Skinless Chicken Breast",
+                "calories": 404,
+                "protein": 75.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38564777164
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 27,
+                "protein": 0.5,
+                "totalCarbohydrate": 6.3,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38565996256
+            },
+            {
+                "foodName": "Roasted Beets",
+                "calories": 20,
+                "protein": 0.8,
+                "totalCarbohydrate": 4.6,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38565406274
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 16,
+                "protein": 0.3,
+                "totalCarbohydrate": 4.1,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38565868477
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 32,
+                "protein": 0.6,
+                "totalCarbohydrate": 7.3,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38564983654
+            },
+            {
+                "foodName": "Raw Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38565937217
+            }
+        ],
+        "total_calories": 504,
+        "total_protein": 78.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-30T19:18:44.454615",
+        "date": "2026-04-30",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "8.28 oz pork chops (no bone), 2.4 oz cooked cabbage, 1.2 oz cooked zucchini, 1.2 oz French fries",
+        "items": [
+            {
+                "foodName": "Pork Chops (no bone)",
+                "calories": 617,
+                "protein": 57.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 41.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38570357443
+            },
+            {
+                "foodName": "Cooked Cabbage",
+                "calories": 17,
+                "protein": 0.8,
+                "totalCarbohydrate": 4.1,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38570672094
+            },
+            {
+                "foodName": "Cooked Zucchini",
+                "calories": 7,
+                "protein": 0.7,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38571016162
+            },
+            {
+                "foodName": "French Fries",
+                "calories": 103,
+                "protein": 1.4,
+                "totalCarbohydrate": 13.1,
+                "totalFat": 5.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38571114451
+            }
+        ],
+        "total_calories": 744,
+        "total_protein": 60.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-04-30T20:00:50.653055",
+        "date": "2026-04-30",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "Non Fat Greek Yogurt, Strawberries, Tates Cookie, Blueberries",
+        "items": [
+            {
+                "foodName": "Non Fat Greek Yogurt",
+                "calories": 65,
+                "protein": 11.5,
+                "totalCarbohydrate": 6.0,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38570397713
+            },
+            {
+                "foodName": "Strawberries",
+                "calories": 27,
+                "protein": 0.6,
+                "totalCarbohydrate": 6.5,
+                "totalFat": 0.3,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38570397714
+            },
+            {
+                "foodName": "Tates Cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38571036533
+            },
+            {
+                "foodName": "Blueberries",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38571213604
+            }
+        ],
+        "total_calories": 183,
+        "total_protein": 13.4,
+        "all_uploaded": true,
+        "amended": true,
+        "previous_version": {
+            "logged_at": "2026-04-30T19:44:53.597301",
+            "raw_description": "1/2 cup non fat greek yogurt, 3 oz strawberries, 1 Tates cookie (70 cal)",
+            "total_calories": 162,
+            "total_protein": 13.1
+        }
     }
 ]

@@ -2,7 +2,22 @@
 
 let proteinChart = null;
 let calorieChart = null;
+let alcoholChart = null;
 let mealsChartRange = 'month';
+
+const ALCOHOL_KEYWORDS_SUB = ['beer', 'wine', 'whiskey', 'vodka', 'liquor', 'cocktail', 'bourbon', 'tequila', 'lager', 'cider', 'champagne', 'sake', 'amaretto'];
+const ALCOHOL_KEYWORDS_WB = ['ale', 'rum', 'gin'];
+const NON_ALCOHOLIC_MARKERS = ['non-alcoholic', 'athletic upside dawn', 'upside dawn athletic', 'athletic brewing', 'fake beer'];
+const COOKING_FRAGMENTS = ['sauce', 'vinegar', 'marinade', 'glaze', 'broth'];
+
+function isAlcoholicFoodItem(foodName) {
+  const n = foodName.toLowerCase();
+  if (NON_ALCOHOLIC_MARKERS.some(m => n.includes(m))) return false;
+  if (COOKING_FRAGMENTS.some(f => n.includes(f))) return false;
+  if (ALCOHOL_KEYWORDS_SUB.some(kw => n.includes(kw))) return true;
+  if (ALCOHOL_KEYWORDS_WB.some(kw => new RegExp(`\\b${kw}\\b`).test(n))) return true;
+  return false;
+}
 
 function setupMealsChartRangeToggle() {
   const existing = document.getElementById('mealChartsHeader');
@@ -62,10 +77,13 @@ function buildMealsPeriodSelects() {
     buildMealsPeriodSelects();
     const ps = document.getElementById('proteinChartSection');
     const cs = document.getElementById('calorieChartSection');
+    const as = document.getElementById('alcoholChartSection');
     if (ps) ps.remove();
     if (cs) cs.remove();
+    if (as) as.remove();
     renderProteinChart();
     renderCalorieChart();
+    renderAlcoholChart();
   });
 
   const periodSel = document.getElementById('mealsRangePeriod');
@@ -75,10 +93,13 @@ function buildMealsPeriodSelects() {
       pushUrl({ mrperiod: mealsChartPeriod });
       const ps = document.getElementById('proteinChartSection');
       const cs = document.getElementById('calorieChartSection');
+      const as = document.getElementById('alcoholChartSection');
       if (ps) ps.remove();
       if (cs) cs.remove();
+      if (as) as.remove();
       renderProteinChart();
       renderCalorieChart();
+      renderAlcoholChart();
     });
   }
 }
@@ -515,6 +536,219 @@ function renderCalorieChart() {
   });
 }
 
+// ===== ALCOHOL CHART =====
+function getMealsForAlcoholRange(range) {
+  if (!allMeals.length) return allMeals;
+  if (range === 'all' || !mealsChartPeriod) return allMeals;
+  return allMeals.filter(m => {
+    const d = m.date;
+    if (range === 'week') return getWeekStart(d) === mealsChartPeriod;
+    if (range === 'month') return d.slice(0, 7) === mealsChartPeriod;
+    if (range === 'year') return d.slice(0, 4) === mealsChartPeriod;
+    return true;
+  });
+}
+
+function renderAlcoholChart() {
+  injectProteinChartStyles();
+
+  if (!document.getElementById('alcoholChartSection')) {
+    const calorieSection = document.getElementById('calorieChartSection');
+    if (!calorieSection) return;
+    const section = document.createElement('div');
+    section.id = 'alcoholChartSection';
+    section.className = 'card';
+    section.style.padding = '20px 24px';
+    calorieSection.insertAdjacentElement('afterend', section);
+  }
+
+  const section = document.getElementById('alcoholChartSection');
+  const filtered = getMealsForAlcoholRange(mealsChartRange);
+
+  const dailyTotal = {};
+  filtered.forEach(meal => {
+    dailyTotal[meal.date] = (dailyTotal[meal.date] || 0) + (meal.total_calories || 0);
+  });
+
+  const alcDays = {};
+  filtered.forEach(meal => {
+    const rawLower = (meal.raw_description || '').toLowerCase();
+    const hasAlc = ALCOHOL_KEYWORDS_SUB.some(kw => rawLower.includes(kw)) ||
+      ALCOHOL_KEYWORDS_WB.some(kw => new RegExp(`\\b${kw}\\b`).test(rawLower));
+    if (!hasAlc) return;
+    if (NON_ALCOHOLIC_MARKERS.some(m => rawLower.includes(m))) return;
+
+    (meal.items || []).forEach(item => {
+      if (!isAlcoholicFoodItem(item.foodName)) return;
+      const cals = item.calories || 0;
+      const n = item.foodName.toLowerCase();
+      let calsPerStd = 150;
+      if (['wine', 'champagne', 'sake'].some(kw => n.includes(kw))) calsPerStd = 120;
+      else if (['whiskey', 'vodka', 'bourbon', 'tequila', 'liquor'].some(kw => n.includes(kw))) calsPerStd = 100;
+      else if (ALCOHOL_KEYWORDS_WB.some(kw => new RegExp(`\\b${kw}\\b`).test(n))) calsPerStd = 100;
+      else if (['cocktail', 'amaretto'].some(kw => n.includes(kw))) calsPerStd = 180;
+
+      if (!alcDays[meal.date]) alcDays[meal.date] = { alcCals: 0, stdDrinks: 0 };
+      alcDays[meal.date].alcCals += cals;
+      alcDays[meal.date].stdDrinks += cals / calsPerStd;
+    });
+  });
+
+  // Use all logged dates (same timescale as other charts), blank for non-drinking days
+  const dates = Object.keys(dailyTotal).sort();
+  const drinkingDates = Object.keys(alcDays);
+
+  if (drinkingDates.length === 0) {
+    section.innerHTML = `
+      <div class="protein-chart-header">
+        <div class="protein-chart-title">Alcohol</div>
+      </div>
+      <div style="text-align:center;color:#8b90a8;padding:32px 0;font-size:0.85rem">No alcohol logged in this period</div>
+    `;
+    if (alcoholChart) { alcoholChart.destroy(); alcoholChart = null; }
+    return;
+  }
+
+  const alcCalsArr = dates.map(d => alcDays[d] ? Math.round(alcDays[d].alcCals) : 0);
+  const stdDrinksArr = dates.map(d => alcDays[d] ? Math.round(alcDays[d].stdDrinks * 10) / 10 : 0);
+  // null on non-drinking days so the line doesn't interpolate through zeros
+  const pctArr = dates.map(d => {
+    if (!alcDays[d]) return null;
+    const total = dailyTotal[d] || 0;
+    return total ? Math.round((alcDays[d].alcCals / total) * 100) : null;
+  });
+
+  const totalDrinkingDays = drinkingDates.length;
+  const totalStdDrinks = drinkingDates.reduce((a, d) => a + (Math.round(alcDays[d].stdDrinks * 10) / 10), 0);
+  const totalAlcCals = drinkingDates.reduce((a, d) => a + Math.round(alcDays[d].alcCals), 0);
+  const validPcts = pctArr.filter(v => v !== null);
+  const avgPct = validPcts.length ? Math.round(validPcts.reduce((a, b) => a + b, 0) / validPcts.length) : 0;
+  const avgStdPerDay = (totalStdDrinks / totalDrinkingDays).toFixed(1);
+
+  const tickColor = '#8b90a8';
+  const gridColor = 'rgba(139,144,168,0.12)';
+  const tt = { backgroundColor: '#1a1d27', borderColor: '#2e3250', borderWidth: 1, titleColor: '#e8eaf0', bodyColor: '#8b90a8' };
+
+  // Food % = 100 on non-drinking days, (100 - alc%) on drinking days
+  const foodPctArr = dates.map((d, i) => 100 - (pctArr[i] ?? 0));
+
+  section.innerHTML = `
+    <div class="protein-chart-header">
+      <div class="protein-chart-title">Alcohol</div>
+    </div>
+    <div class="protein-chart-metrics">
+      <div class="protein-metric">
+        <div class="protein-metric-label">Drinking days</div>
+        <div class="protein-metric-value">${totalDrinkingDays}</div>
+        <div class="protein-metric-sub">in this period</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Total std drinks</div>
+        <div class="protein-metric-value">${totalStdDrinks.toFixed(1)}</div>
+        <div class="protein-metric-sub">${avgStdPerDay} avg per drinking day</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Alcohol kcal</div>
+        <div class="protein-metric-value">${totalAlcCals.toLocaleString()}</div>
+        <div class="protein-metric-sub">total across drinking days</div>
+      </div>
+      <div class="protein-metric">
+        <div class="protein-metric-label">Avg % of daily kcal</div>
+        <div class="protein-metric-value" style="color:#EF9F27">${avgPct}%</div>
+        <div class="protein-metric-sub">on drinking days only</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:8px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:#EF9F27"></div>Alcohol
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#8b90a8">
+        <div style="width:10px;height:10px;border-radius:2px;background:rgba(108,99,255,0.45)"></div>Food
+      </div>
+    </div>
+    <div style="position:relative;width:100%;height:220px">
+      <canvas id="alcoholBarChart"></canvas>
+    </div>
+    <div style="font-size:0.7rem;color:rgba(139,144,168,0.5);margin-top:8px">Std drinks estimated from calories · beer ~150 kcal/drink · wine ~120 · spirits ~100 · cocktails ~180</div>
+  `;
+
+  if (alcoholChart) alcoholChart.destroy();
+
+  const labels = dates.map(d => {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  });
+
+  alcoholChart = new Chart(document.getElementById('alcoholBarChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Alcohol',
+          data: dates.map((d, i) => pctArr[i] ?? 0),
+          backgroundColor: 'rgba(239,159,39,0.75)',
+          borderColor: '#EF9F27',
+          borderWidth: 1,
+          stack: 'daily',
+        },
+        {
+          label: 'Food',
+          data: foodPctArr,
+          backgroundColor: 'rgba(108,99,255,0.25)',
+          borderColor: 'rgba(108,99,255,0.4)',
+          borderWidth: 1,
+          stack: 'daily',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...tt,
+          callbacks: {
+            label: ctx => {
+              const i = ctx.dataIndex;
+              if (ctx.dataset.label === 'Alcohol') {
+                const pct = pctArr[i] ?? 0;
+                if (!pct) return null;
+                return ` Alcohol: ${pct}% (${alcCalsArr[i].toLocaleString()} kcal · ${stdDrinksArr[i]} std drinks)`;
+              }
+              if (ctx.dataset.label === 'Food') {
+                return ` Food: ${foodPctArr[i]}%`;
+              }
+              return '';
+            },
+          },
+          filter: item => {
+            if (item.dataset.label === 'Alcohol') return (pctArr[item.dataIndex] ?? 0) > 0;
+            return true;
+          },
+        },
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { color: tickColor, font: { size: 10 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 20 },
+          grid: { color: gridColor },
+        },
+        y: {
+          stacked: true,
+          min: 0,
+          max: 100,
+          ticks: { color: tickColor, font: { size: 11 }, callback: v => v + '%' },
+          grid: { color: gridColor },
+          title: { display: true, text: '% of daily kcal', color: tickColor, font: { size: 11 } },
+        },
+      },
+    },
+  });
+}
+
 function groupedMealDates(meals) {
   const byDate = {};
   meals.forEach(meal => {
@@ -528,6 +762,7 @@ function renderMeals() {
   setupMealsChartRangeToggle();
   renderProteinChart();
   renderCalorieChart();
+  renderAlcoholChart();
   const container = document.getElementById('mealsContainer');
   const paginationEl = document.getElementById('mealsPagination');
 
