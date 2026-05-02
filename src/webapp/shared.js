@@ -1,5 +1,7 @@
 // ===== SHARED GLOBALS =====
 
+const NON_STRAIN_SPORTS = new Set(['contrast-therapy']);
+
 let allWorkouts = [];
 let allMeals = [];
 let allWeight = [];
@@ -232,7 +234,7 @@ function getGoalForDate(date) {
 }
 
 function getCurrentGoal() {
-  const snapshots = goals.goals || [];
+  const snapshots = (goals.goals || []).filter(g => !g.is_closed);
   if (!snapshots.length) return null;
   return snapshots.reduce((a, b) => a.saved_date > b.saved_date ? a : b);
 }

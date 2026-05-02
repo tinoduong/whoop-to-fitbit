@@ -1,0 +1,344 @@
+[
+    {
+        "logged_at": "2026-05-01T07:31:20.218978",
+        "date": "2026-05-01",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "4.66 oz roasted skinless chicken breast, 1.24 oz roasted sweet potato, .74 oz roasted acorn squash, 1.58 oz pomegranate seeds, .74 oz edamame beans, 1 cup raw arugula",
+        "items": [
+            {
+                "foodName": "Roasted Skinless Chicken Breast",
+                "calories": 185,
+                "protein": 35.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 4.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38572749576
+            },
+            {
+                "foodName": "Roasted Sweet Potato",
+                "calories": 30,
+                "protein": 0.7,
+                "totalCarbohydrate": 7.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38572857674
+            },
+            {
+                "foodName": "Roasted Acorn Squash",
+                "calories": 12,
+                "protein": 0.2,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38571992600
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 37,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.4,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38571943619
+            },
+            {
+                "foodName": "Edamame Beans",
+                "calories": 26,
+                "protein": 2.2,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 1.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38572100680
+            },
+            {
+                "foodName": "Raw Arugula",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38572926547
+            }
+        ],
+        "total_calories": 295,
+        "total_protein": 39.3,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-01T19:49:19.254864",
+        "date": "2026-05-01",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "8.60 oz grilled skinless chicken thighs. 2.84 oz flour tortillas ,  .72 oz Wegman's salsa, .42 oz Wegman's guacamole , .24 oz sour cream",
+        "items": [
+            {
+                "foodName": "Chicken Thigh, roasted, skinless",
+                "calories": 436,
+                "protein": 60.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 19.5,
+                "amount": 8.6,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38575671341
+            },
+            {
+                "foodName": "Flour Tortilla",
+                "calories": 218,
+                "protein": 5.8,
+                "totalCarbohydrate": 35.4,
+                "totalFat": 6.5,
+                "amount": 2.84,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38575523854
+            },
+            {
+                "foodName": "Salsa",
+                "calories": 7,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.6,
+                "totalFat": 0.0,
+                "amount": 0.72,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38574479615
+            },
+            {
+                "foodName": "Guacamole",
+                "calories": 19,
+                "protein": 0.2,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 1.8,
+                "amount": 0.42,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38574705661
+            },
+            {
+                "foodName": "Sour Cream",
+                "calories": 14,
+                "protein": 0.2,
+                "totalCarbohydrate": 0.3,
+                "totalFat": 1.4,
+                "amount": 0.24,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38574908890
+            }
+        ],
+        "total_calories": 694,
+        "total_protein": 66.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-01T20:03:28.534555",
+        "date": "2026-05-01",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38575043942
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-01T20:44:21.554190",
+        "date": "2026-05-01",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1.2 oz blueberries, 3.28 oz strawberries, 1 Tates cookie (70 cal)",
+        "items": [
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 19,
+                "protein": 0.2,
+                "totalCarbohydrate": 4.9,
+                "totalFat": 0.1,
+                "amount": 1.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38575662375
+            },
+            {
+                "foodName": "Strawberries, raw",
+                "calories": 30,
+                "protein": 0.6,
+                "totalCarbohydrate": 7.3,
+                "totalFat": 0.3,
+                "amount": 3.28,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38575288844
+            },
+            {
+                "foodName": "Tates cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38575996365
+            }
+        ],
+        "total_calories": 119,
+        "total_protein": 1.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-02T09:18:53.829450",
+        "date": "2026-05-02",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3 eggs (180 calories), 1.56 oz low fat cottage cheese, 2.78 oz orange, 0.42 oz cooked bacon, 1 breakfast sausage link",
+        "items": [
+            {
+                "foodName": "Egg, whole, cooked, scrambled",
+                "calories": 180,
+                "protein": 18.2,
+                "totalCarbohydrate": 2.9,
+                "totalFat": 19.8,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577080428
+            },
+            {
+                "foodName": "Cottage cheese, lowfat, 2% milkfat",
+                "calories": 36,
+                "protein": 4.9,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 1.0,
+                "amount": 1.56,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577326163
+            },
+            {
+                "foodName": "Orange, raw",
+                "calories": 35,
+                "protein": 0.7,
+                "totalCarbohydrate": 8.8,
+                "totalFat": 0.1,
+                "amount": 2.78,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577984631
+            },
+            {
+                "foodName": "Pork, cured, bacon, cooked, pan-fried",
+                "calories": 63,
+                "protein": 4.2,
+                "totalCarbohydrate": 0.1,
+                "totalFat": 4.9,
+                "amount": 0.42,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577463753
+            },
+            {
+                "foodName": "Pork sausage, fresh, cooked",
+                "calories": 80,
+                "protein": 4.5,
+                "totalCarbohydrate": 0.3,
+                "totalFat": 6.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38576952898
+            }
+        ],
+        "total_calories": 394,
+        "total_protein": 32.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-02T12:18:55.832914",
+        "date": "2026-05-02",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "4 oz orange, 1 pack tuna creations herb and garlic (15 G protein, 110 cal)",
+        "items": [
+            {
+                "foodName": "Orange, raw",
+                "calories": 53,
+                "protein": 1.2,
+                "totalCarbohydrate": 13.3,
+                "totalFat": 0.1,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577379160
+            },
+            {
+                "foodName": "Tuna, herb and garlic flavored",
+                "calories": 110,
+                "protein": 15.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 4.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577172878
+            }
+        ],
+        "total_calories": 163,
+        "total_protein": 16.2,
+        "all_uploaded": true,
+        "amended": false
+    }
+]

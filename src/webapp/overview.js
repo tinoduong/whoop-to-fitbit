@@ -282,6 +282,27 @@ function renderWeightChart() {
     });
   }
 
+  const legendEl = document.getElementById('weightLegend');
+  if (legendEl) {
+    const item = (color, label, dashed, idx) =>
+      `<span data-didx="${idx}" style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none;" ` +
+      `onclick="toggleWeightDataset(${idx},this)">` +
+      `<span style="display:inline-block;width:20px;height:${dashed ? '0' : '2px'};` +
+      `${dashed ? `border-top:2px dashed ${color}` : `background:${color}`};"></span>` +
+      `${label}</span>`;
+    let html =
+      item('#6c63ff', 'Weight (lbs)', false, 0) +
+      item('rgba(108,99,255,0.5)', 'Weight trend', true, 1) +
+      item('#00d4aa', 'Body Fat (%)', false, 2) +
+      item('rgba(0,212,170,0.5)', 'Body Fat trend', true, 3);
+    let nextIdx = 4;
+    if (currentGoal && currentGoal.target_weight)
+      html += item('rgba(108,99,255,0.4)', 'Goal Weight (lbs)', true, nextIdx++);
+    if (currentGoal && currentGoal.target_fat)
+      html += item('rgba(0,212,170,0.4)', 'Goal Fat (%)', true, nextIdx++);
+    legendEl.innerHTML = html;
+  }
+
   if (weightChart) weightChart.destroy();
 
   weightChart = new Chart(ctx, {
@@ -293,7 +314,7 @@ function renderWeightChart() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#e8eaf0', font: { size: 12 } } },
+        legend: { display: false },
         tooltip: {
           backgroundColor: '#1a1d27',
           borderColor: '#2e3250',
@@ -334,6 +355,14 @@ function renderWeightChart() {
       },
     },
   });
+}
+
+function toggleWeightDataset(idx, el) {
+  if (!weightChart) return;
+  const visible = weightChart.isDatasetVisible(idx);
+  weightChart.setDatasetVisibility(idx, !visible);
+  weightChart.update();
+  el.style.opacity = visible ? '0.35' : '1';
 }
 
 // ===== MONTH NAV =====
@@ -769,7 +798,7 @@ function openWeekModal(weekMonday) {
 
   const allWeekWorkouts = weekDates.flatMap(d => (dailyMap[d] || {}).workouts || []);
   const workoutDays = [...new Set(allWeekWorkouts.map(w => getDateFromISO(w.start_time)))];
-  const totalWorkoutCals = allWeekWorkouts.reduce((s, w) => s + (w.calories || 0), 0);
+  const totalWorkoutCals = allWeekWorkouts.filter(w => !NON_STRAIN_SPORTS.has(w.sport_name)).reduce((s, w) => s + (w.calories || 0), 0);
 
   const weekWeightEntries = allWeight.filter(w => w.date >= weekMonday && w.date <= weekEnd);
   let weightHtml = '<div class="day-modal-empty">No weight data this week</div>';
@@ -1058,7 +1087,7 @@ function renderBodyCompRatioChart() {
         },
       },
     },
-    plugins: [betweenLinesPlugin, {
+    plugins: [mondayLinesPlugin, betweenLinesPlugin, {
       id: 'recompZeroLine',
       afterDatasetsDraw(chart) {
         const { ctx: c, scales: { x, yPct }, chartArea: { left, right } } = chart;

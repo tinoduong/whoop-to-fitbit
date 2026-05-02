@@ -18,6 +18,7 @@ function renderReports() {
       : `${report.goal_start} → ${report.goal_end}`;
     const summaryLine = report.summary ? buildSummaryLine(report.summary) : '';
 
+    const filename = report._filename || '';
     return `
       <div class="past-goal-item card" id="report-item-${report.generated_at}">
         <div class="past-goal-header" onclick="toggleReportItem('${report.generated_at}')">
@@ -27,6 +28,7 @@ function renderReports() {
           </div>
           <div class="past-goal-right">
             <span style="font-size:0.75rem;color:#8b90a8">Generated ${report.generated_at}</span>
+            ${filename ? `<button class="report-delete-btn" onclick="event.stopPropagation(); deleteReport('${escapeHtml(filename)}')" title="Delete report">✕</button>` : ''}
             <span class="past-goal-chevron" id="report-chevron-${report.generated_at}">▼</span>
           </div>
         </div>
@@ -38,6 +40,21 @@ function renderReports() {
       </div>
     `;
   }).join('');
+}
+
+async function deleteReport(filename) {
+  if (!confirm('Delete this report? This cannot be undone.')) return;
+  try {
+    const res = await fetch(`/api/reports/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+    if (res.ok) {
+      await reloadGoalsData();
+      renderReports();
+    } else {
+      alert('Failed to delete report.');
+    }
+  } catch (err) {
+    alert(`Error: ${err.message}`);
+  }
 }
 
 function toggleReportItem(key) {

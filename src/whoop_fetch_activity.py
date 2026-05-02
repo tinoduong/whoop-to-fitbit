@@ -71,7 +71,7 @@ def fetch_workouts(start_dt, interactive=True):
             records = data.get('records', [])
 
             for w in records:
-                score = w.get('score', {})
+                score = w.get('score') or {}
                 kj = score.get('kilojoule', 0)
 
                 # Base object for Fitbit upload — extra fields not included

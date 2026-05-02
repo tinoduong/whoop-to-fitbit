@@ -1,0 +1,71 @@
+[
+    {
+        "id": "577d3c9f-c6ea-4eea-8e09-78cc540d9c5e",
+        "sport_name": "running",
+        "start_time": "2026-05-01T06:07:43",
+        "end_time": "2026-05-01T06:34:24",
+        "avg_heart_rate": 145,
+        "calories": 294,
+        "distance_meter": 3.5321705,
+        "max_heart_rate": 171,
+        "strain": 10.970479,
+        "zone_durations": {
+            "zone_zero_milli": 155000,
+            "zone_one_milli": 106000,
+            "zone_two_milli": 478000,
+            "zone_three_milli": 557000,
+            "zone_four_milli": 305000,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "2d9ea373-c71c-478c-89ce-22133f222268",
+        "sport_name": "weightlifting",
+        "start_time": "2026-05-01T06:34:41",
+        "end_time": "2026-05-01T07:00:40",
+        "avg_heart_rate": 125,
+        "calories": 170,
+        "distance_meter": null,
+        "max_heart_rate": 144,
+        "strain": 8.484736,
+        "zone_durations": {
+            "zone_zero_milli": 118000,
+            "zone_one_milli": 1347000,
+            "zone_two_milli": 94000,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "d5e5749a-8308-432f-93f4-556d6a00a950",
+        "sport_name": "contrast-therapy",
+        "start_time": "2026-05-02T10:52:00",
+        "end_time": "2026-05-02T11:56:00",
+        "avg_heart_rate": 0,
+        "calories": 0,
+        "distance_meter": 0,
+        "max_heart_rate": 0,
+        "strain": 0,
+        "zone_durations": {}
+    },
+    {
+        "id": "57572852-49de-4cf1-b2a9-122dbcb29484",
+        "sport_name": "running",
+        "start_time": "2026-05-02T13:05:50",
+        "end_time": "2026-05-02T13:51:54",
+        "avg_heart_rate": 156,
+        "calories": 617,
+        "distance_meter": 5843.301,
+        "max_heart_rate": 181,
+        "strain": 15.071971,
+        "zone_durations": {
+            "zone_zero_milli": 36000,
+            "zone_one_milli": 110000,
+            "zone_two_milli": 179000,
+            "zone_three_milli": 1246000,
+            "zone_four_milli": 1052010,
+            "zone_five_milli": 141000
+        }
+    }
+]

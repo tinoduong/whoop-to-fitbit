@@ -62,7 +62,7 @@ function renderIntensityTrends() {
 
   const strainByDate = {};
   sorted.forEach(w => {
-    if (w.strain == null) return;
+    if (w.strain == null || NON_STRAIN_SPORTS.has(w.sport_name)) return;
     const date = getDateFromISO(w.start_time);
     if (strainByDate[date] == null || w.strain > strainByDate[date]) {
       strainByDate[date] = w.strain;
@@ -396,9 +396,10 @@ function renderWorkoutSummary() {
     return;
   }
 
-  const totalCals = workouts.reduce((s, w) => s + (w.calories || 0), 0);
-  const avgStrain = workouts.reduce((s, w) => s + (w.strain || 0), 0) / workouts.length;
-  const avgHR = Math.round(workouts.reduce((s, w) => s + (w.avg_heart_rate || 0), 0) / workouts.length);
+  const calcWorkouts = workouts.filter(w => !NON_STRAIN_SPORTS.has(w.sport_name));
+  const totalCals = calcWorkouts.reduce((s, w) => s + (w.calories || 0), 0);
+  const avgStrain = calcWorkouts.length ? calcWorkouts.reduce((s, w) => s + (w.strain || 0), 0) / calcWorkouts.length : 0;
+  const avgHR = calcWorkouts.length ? Math.round(calcWorkouts.reduce((s, w) => s + (w.avg_heart_rate || 0), 0) / calcWorkouts.length) : 0;
   const uniqueDays = new Set(workouts.map(w => getDateFromISO(w.start_time))).size;
 
   container.innerHTML = `
@@ -513,11 +514,14 @@ function renderWorkouts() {
 
     dayWorkouts.forEach(w => {
       totalDurMs += (new Date(w.end_time) - new Date(w.start_time));
-      totalCals += w.calories || 0;
-      totalDist += w.distance_meter || 0;
-      sumAvgHR += w.avg_heart_rate || 0;
-      if ((w.max_heart_rate || 0) > maxHR) maxHR = w.max_heart_rate;
-      if (w.strain != null) { sumStrain += w.strain; strainCount++; }
+      const isRecovery = NON_STRAIN_SPORTS.has(w.sport_name);
+      if (!isRecovery) {
+        totalCals += w.calories || 0;
+        totalDist += w.distance_meter || 0;
+        sumAvgHR += w.avg_heart_rate || 0;
+        if ((w.max_heart_rate || 0) > maxHR) maxHR = w.max_heart_rate;
+        if (w.strain != null) { sumStrain += w.strain; strainCount++; }
+      }
       const zd = w.zone_durations || {};
       z0 += zd.zone_zero_milli || 0;
       z1 += zd.zone_one_milli || 0;
@@ -528,7 +532,8 @@ function renderWorkouts() {
     });
 
     const totalMins = Math.round(totalDurMs / 60000);
-    const avgHR = Math.round(sumAvgHR / dayWorkouts.length);
+    const calcCount = dayWorkouts.filter(w => !NON_STRAIN_SPORTS.has(w.sport_name)).length;
+    const avgHR = calcCount ? Math.round(sumAvgHR / calcCount) : 0;
     const avgStrain = strainCount ? sumStrain / strainCount : null;
 
     const durStr = totalMins >= 60

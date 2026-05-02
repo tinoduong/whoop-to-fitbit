@@ -27,6 +27,8 @@ WHOOP_DATA_DIR = os.path.join(BASE_DIR, "whoop-data")
 WEBAPP_DIR = os.path.dirname(os.path.abspath(__file__))
 GOALS_DATA_DIR = os.path.join(BASE_DIR, "goal-data", "goals")
 REPORTS_DATA_DIR = os.path.join(BASE_DIR, "goal-data", "reports")
+
+NON_STRAIN_SPORTS = {"contrast-therapy"}
 META_DATA_DIR = os.path.join(BASE_DIR, "meta-data")
 
 os.makedirs(GOALS_DATA_DIR, exist_ok=True)
@@ -131,6 +133,30 @@ def extend_goal(goal_id, new_end_date):
         json.dump(goal, f, indent=2)
     return True
 
+def close_goal(goal_id):
+    pattern = os.path.join(GOALS_DATA_DIR, f"goal_{goal_id}_*.json")
+    files = glob.glob(pattern)
+    if not files:
+        return False
+    with open(files[0]) as f:
+        goal = json.load(f)
+    goal["is_closed"] = True
+    with open(files[0], "w") as f:
+        json.dump(goal, f, indent=2)
+    return True
+
+def reopen_goal(goal_id):
+    pattern = os.path.join(GOALS_DATA_DIR, f"goal_{goal_id}_*.json")
+    files = glob.glob(pattern)
+    if not files:
+        return False
+    with open(files[0]) as f:
+        goal = json.load(f)
+    goal.pop("is_closed", None)
+    with open(files[0], "w") as f:
+        json.dump(goal, f, indent=2)
+    return True
+
 
 # ===== DATA LOADERS =====
 
@@ -174,8 +200,22 @@ def load_reports_list():
     pattern = os.path.join(REPORTS_DATA_DIR, "report_*.json")
     for filepath in sorted(glob.glob(pattern)):
         with open(filepath) as f:
-            reports.append(json.load(f))
+            data = json.load(f)
+        data["_filename"] = os.path.basename(filepath)
+        reports.append(data)
     return reports
+
+
+def delete_report(filename):
+    # Restrict to basename only, no path traversal
+    filename = os.path.basename(filename)
+    if not filename.startswith("report_") or not filename.endswith(".json"):
+        return False
+    filepath = os.path.join(REPORTS_DATA_DIR, filename)
+    if not os.path.exists(filepath):
+        return False
+    os.remove(filepath)
+    return True
 
 
 def load_report(goal_id):
@@ -235,6 +275,7 @@ def generate_report_data(start_date, end_date, goal_id=None):
     weight_data = [w for w in all_weight if start_date <= w["date"] <= end_date]
     meals_data = [m for m in all_meals if start_date <= m["date"] <= end_date]
     workouts_data = [w for w in all_workouts if start_date <= w["start_time"][:10] <= end_date]
+    strain_workouts_data = [w for w in workouts_data if w.get("sport_name") not in NON_STRAIN_SPORTS]
 
     if not weight_data:
         return None, "No weight data found for goal period"
@@ -270,7 +311,8 @@ def generate_report_data(start_date, end_date, goal_id=None):
         m = meals_by_date.get(ds)
         wos = workouts_by_date.get(ds, [])
 
-        daily_strain = round(sum(wo.get("strain", 0) for wo in wos), 2) if wos else None
+        strain_wos = [wo for wo in wos if wo.get("sport_name") not in NON_STRAIN_SPORTS]
+        daily_strain = round(sum(wo.get("strain", 0) for wo in strain_wos), 2) if strain_wos else None
 
         daily_records.append({
             "date": ds,
@@ -318,7 +360,7 @@ def generate_report_data(start_date, end_date, goal_id=None):
     avg_strain = round(sum(r["workout_strain"] for r in workout_days) / total_sessions, 2) if workout_days else None
 
     sport_counts = {}
-    for w in workouts_data:
+    for w in strain_workouts_data:
         sport = w.get("sport_name", "unknown")
         sport_counts[sport] = sport_counts.get(sport, 0) + 1
 
@@ -660,6 +702,35 @@ class FitnessHandler(BaseHTTPRequestHandler):
                 self.send_json({"status": "ok"})
             else:
                 self.send_json({"error": "Goal not found"}, status=404)
+        elif re.match(r'^/api/goals/\d+/close$', path):
+            parts = path.split('/')
+            goal_id = parts[3]
+            if close_goal(goal_id):
+                self.send_json({"status": "ok"})
+            else:
+                self.send_json({"error": "Goal not found"}, status=404)
+        elif re.match(r'^/api/goals/\d+/reopen$', path):
+            parts = path.split('/')
+            goal_id = parts[3]
+            if reopen_goal(goal_id):
+                self.send_json({"status": "ok"})
+            else:
+                self.send_json({"error": "Goal not found"}, status=404)
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_DELETE(self):
+        parsed = urlparse(self.path)
+        path = parsed.path
+
+        m = re.match(r'^/api/reports/([^/]+\.json)$', path)
+        if m:
+            filename = m.group(1)
+            if delete_report(filename):
+                self.send_json({"status": "ok"})
+            else:
+                self.send_json({"error": "Report not found"}, status=404)
         else:
             self.send_response(404)
             self.end_headers()
@@ -667,7 +738,7 @@ class FitnessHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 

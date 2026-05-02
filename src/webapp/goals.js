@@ -64,6 +64,16 @@ function checkGoalWarnings() {
   if (daysLeft <= 0) {
     icon = '🏁';
     message = `Your goal ended on <strong>${currentGoal.goal_date}</strong>. Ready to close it out?`;
+    warningEl.style.display = 'flex';
+    warningEl.innerHTML = `
+      <span class="goal-warning-icon">${icon}</span>
+      <span class="goal-warning-msg">${message}</span>
+      <div class="goal-warning-actions">
+        <button class="warning-btn" onclick="promptExtendGoal(${goalId})">Extend Goal</button>
+        <button class="warning-btn warning-btn-close" onclick="closeGoal(${goalId})">Close Goal</button>
+      </div>
+    `;
+    return;
   } else if (daysLeft <= 3) {
     icon = '⚠️';
     message = `<strong>${daysLeft} day${daysLeft === 1 ? '' : 's'}</strong> remaining — goal ends ${currentGoal.goal_date}.`;
@@ -85,8 +95,15 @@ function checkGoalWarnings() {
 function promptExtendGoal(goalId) {
   const current = getCurrentGoal();
   const currentEnd = current && current.goal_date ? current.goal_date : '';
-  const newDate = prompt(`Extend goal end date (current: ${currentEnd || 'not set'}). Enter new end date (YYYY-MM-DD):`, currentEnd);
-  if (!newDate || newDate === currentEnd) return;
+  const raw = prompt(`Extend goal end date (current: ${currentEnd || 'not set'}). Enter new end date (YYYY-MM-DD):`, currentEnd);
+  if (!raw || raw === currentEnd) return;
+
+  const parsed = new Date(raw);
+  if (isNaN(parsed.getTime())) {
+    alert('Invalid date. Please use YYYY-MM-DD format (e.g. 2026-05-31).');
+    return;
+  }
+  const newDate = parsed.toISOString().substring(0, 10);
 
   fetch(`/api/goals/${goalId}/extend`, {
     method: 'PUT',
@@ -101,6 +118,41 @@ function promptExtendGoal(goalId) {
       alert(`Failed to extend goal: ${data.error || 'unknown error'}`);
     }
   }).catch(err => alert(`Error: ${err.message}`));
+}
+
+function closeGoal(goalId) {
+  if (!confirm('Mark this goal as closed? It will move to Past Goals.')) return;
+  fetch(`/api/goals/${goalId}/close`, { method: 'PUT' })
+    .then(async res => {
+      if (!res.ok) {
+        alert(`Failed to close goal (server error ${res.status}). Try restarting the server.`);
+        return;
+      }
+      const data = await res.json();
+      if (data.status === 'ok') {
+        await reloadGoalsData();
+        renderGoals();
+      } else {
+        alert(`Failed to close goal: ${data.error || 'unknown error'}`);
+      }
+    }).catch(err => alert(`Error: ${err.message}`));
+}
+
+function reopenGoal(goalId) {
+  fetch(`/api/goals/${goalId}/reopen`, { method: 'PUT' })
+    .then(async res => {
+      if (!res.ok) {
+        alert(`Failed to reopen goal (server error ${res.status}). Try restarting the server.`);
+        return;
+      }
+      const data = await res.json();
+      if (data.status === 'ok') {
+        await reloadGoalsData();
+        renderGoals();
+      } else {
+        alert(`Failed to reopen goal: ${data.error || 'unknown error'}`);
+      }
+    }).catch(err => alert(`Error: ${err.message}`));
 }
 
 async function reloadGoalsData() {
@@ -230,6 +282,7 @@ function renderPastGoals() {
             <span class="past-goal-summary">${summaryLine}</span>
           </div>
           <div class="past-goal-right">
+            ${goal.is_closed ? `<button class="report-gen-btn" onclick="event.stopPropagation(); reopenGoal(${goal.id})">Reopen Goal</button>` : ''}
             ${!report ? `<button class="report-gen-btn" data-generate-report="${goal.id}"
                 onclick="event.stopPropagation(); triggerGenerateReport(${goal.id})">Generate Report</button>` : ''}
             <span class="past-goal-chevron" id="chevron-${goal.id}">▼</span>

@@ -1053,6 +1053,15 @@ tbody td {
   background: var(--accent);
 }
 
+.warning-btn-close {
+  border-color: #8b90a8;
+  color: #8b90a8;
+}
+
+.warning-btn-close:hover {
+  background: rgba(139, 144, 168, 0.15);
+}
+
 /* ===== PAST GOALS ===== */
 .past-goal-item {
   padding: 0;
@@ -1102,6 +1111,23 @@ tbody td {
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
+}
+
+.report-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+}
+
+.report-delete-btn:hover {
+  color: var(--danger);
+  background: rgba(255, 92, 92, 0.12);
 }
 
 .past-goal-chevron {
