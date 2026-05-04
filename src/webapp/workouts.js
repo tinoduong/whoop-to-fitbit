@@ -504,6 +504,8 @@ function renderWorkouts() {
   const start = (workoutsPage - 1) * WORKOUTS_PER_PAGE;
   const pageDays = dayKeys.slice(start, start + WORKOUTS_PER_PAGE);
 
+  injectWorkoutExpandStyles();
+
   tbody.innerHTML = pageDays.map(date => {
     const dayWorkouts = workoutsByDate[date];
 
@@ -581,8 +583,8 @@ function renderWorkouts() {
     const distStr = totalDist > 200 ? (totalDist / 1609.34).toFixed(2) + ' mi' : '—';
 
     return `
-      <tr>
-        <td>${formatDate(date)}</td>
+      <tr id="workout-row-${date}" class="workout-row-clickable" onclick="toggleWorkoutRow('${date}')">
+        <td><span class="wchevron" id="wchevron-${date}">▶</span>${formatDate(date)}</td>
         <td>${sportTags}${countBadge}</td>
         <td>${durStr}</td>
         <td>${avgHR} / <span style="color:#8b90a8">${maxHR || '—'}</span></td>
@@ -634,4 +636,125 @@ function applyWorkoutFilters() {
   }));
   workoutsPage = 1;
   renderWorkouts();
+}
+
+function injectWorkoutExpandStyles() {
+  if (document.getElementById('workoutExpandStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'workoutExpandStyles';
+  style.textContent = `
+    .workout-row-clickable { cursor: pointer; transition: background 0.12s; }
+    .workout-row-clickable:hover { background: rgba(108,99,255,0.06); }
+    .wchevron { display: inline-block; font-size: 0.65rem; color: #8b90a8; margin-right: 6px; transition: transform 0.15s; vertical-align: middle; }
+    .wchevron.open { transform: rotate(90deg); }
+    .workout-expand-row td { padding: 0 !important; border-top: none !important; }
+    .workout-expand-container { display: flex; flex-wrap: wrap; gap: 10px; padding: 8px 12px 14px 28px; background: rgba(108,99,255,0.03); border-bottom: 1px solid rgba(46,50,80,0.6); }
+    .workout-expand-card { background: rgba(20,22,40,0.8); border: 1px solid rgba(46,50,80,0.7); border-radius: 10px; padding: 12px 16px; min-width: 220px; flex: 1; max-width: 420px; }
+    .workout-expand-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .workout-expand-time { font-size: 0.75rem; color: #8b90a8; }
+    .workout-expand-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .workout-expand-stat { background: rgba(108,99,255,0.07); border-radius: 7px; padding: 5px 10px; }
+    .wes-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #8b90a8; display: block; margin-bottom: 1px; }
+    .wes-val { font-size: 0.9rem; font-weight: 600; color: #e8eaf0; }
+    .workout-expand-zone-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; gap: 1px; margin-bottom: 6px; }
+    .workout-expand-zone-labels { display: flex; flex-wrap: wrap; gap: 6px; }
+    .workout-expand-zone-label { font-size: 0.68rem; color: #8b90a8; display: flex; align-items: center; gap: 3px; }
+    .workout-expand-zone-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  `;
+  document.head.appendChild(style);
+}
+
+function toggleWorkoutRow(date) {
+  const expandId = `workout-expand-${date}`;
+  const existing = document.getElementById(expandId);
+  const chevron = document.getElementById(`wchevron-${date}`);
+
+  if (existing) {
+    const isOpen = existing.style.display !== 'none';
+    existing.style.display = isOpen ? 'none' : 'table-row';
+    if (chevron) chevron.classList.toggle('open', !isOpen);
+    return;
+  }
+
+  const dayWorkouts = workoutsFiltered.filter(w => getDateFromISO(w.start_time) === date);
+  const expandRow = document.createElement('tr');
+  expandRow.id = expandId;
+  expandRow.className = 'workout-expand-row';
+
+  const td = document.createElement('td');
+  td.colSpan = 8;
+  td.innerHTML = buildWorkoutExpandHtml(dayWorkouts);
+  expandRow.appendChild(td);
+
+  document.getElementById(`workout-row-${date}`).insertAdjacentElement('afterend', expandRow);
+  if (chevron) chevron.classList.add('open');
+}
+
+function buildWorkoutExpandHtml(dayWorkouts) {
+  const zoneColors = [
+    { color: '#888780', label: 'Z0' },
+    { color: '#5DCAA5', label: 'Z1 easy' },
+    { color: '#EF9F27', label: 'Z2 aerobic' },
+    { color: '#E24B4A', label: 'Z3 threshold' },
+    { color: '#993556', label: 'Z4 max' },
+    { color: '#6c63ff', label: 'Z5' },
+  ];
+
+  const cards = dayWorkouts.map(w => {
+    const durMs = new Date(w.end_time) - new Date(w.start_time);
+    const mins = Math.round(durMs / 60000);
+    const durStr = mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`;
+    const startTime = new Date(w.start_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    const stats = [{ label: 'Duration', val: durStr }];
+    if (w.avg_heart_rate) stats.push({ label: 'Avg HR', val: `${w.avg_heart_rate} bpm` });
+    if (w.max_heart_rate) stats.push({ label: 'Max HR', val: `${w.max_heart_rate} bpm` });
+    if (w.calories) stats.push({ label: 'Calories', val: `${w.calories} kcal` });
+    if (w.distance_meter > 200) stats.push({ label: 'Distance', val: `${(w.distance_meter / 1609.34).toFixed(2)} mi` });
+    if (w.strain != null && !NON_STRAIN_SPORTS.has(w.sport_name)) stats.push({ label: 'Strain', val: w.strain.toFixed(1) });
+
+    const statsHtml = stats.map(s =>
+      `<div class="workout-expand-stat"><span class="wes-label">${s.label}</span><span class="wes-val">${s.val}</span></div>`
+    ).join('');
+
+    const zd = w.zone_durations || {};
+    const zones = [
+      zd.zone_zero_milli || 0,
+      zd.zone_one_milli || 0,
+      zd.zone_two_milli || 0,
+      zd.zone_three_milli || 0,
+      zd.zone_four_milli || 0,
+      zd.zone_five_milli || 0,
+    ];
+    const zTotal = zones.reduce((a, b) => a + b, 0);
+    let zonesHtml = '';
+    if (zTotal > 0) {
+      const barSegs = zones.map((z, i) => z > 0
+        ? `<div style="flex:${z};background:${zoneColors[i].color}"></div>`
+        : ''
+      ).join('');
+      const labels = zones.map((z, i) => {
+        if (!z) return '';
+        const m = Math.round(z / 60000);
+        return `<span class="workout-expand-zone-label"><span class="workout-expand-zone-dot" style="background:${zoneColors[i].color}"></span>${zoneColors[i].label} ${m}m</span>`;
+      }).filter(Boolean).join('');
+      zonesHtml = `
+        <div>
+          <div class="workout-expand-zone-bar">${barSegs}</div>
+          <div class="workout-expand-zone-labels">${labels}</div>
+        </div>`;
+    }
+
+    return `
+      <div class="workout-expand-card">
+        <div class="workout-expand-header">
+          <span class="sport-tag ${sportClass(w.sport_name)}">${w.sport_name.replace(/-/g, ' ')}</span>
+          <span class="workout-expand-time">${startTime}</span>
+        </div>
+        <div class="workout-expand-stats">${statsHtml}</div>
+        ${zonesHtml}
+      </div>`;
+  }).join('');
+
+  return `<div class="workout-expand-container">${cards}</div>`;
 }

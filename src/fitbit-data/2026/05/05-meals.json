@@ -340,5 +340,385 @@
         "total_protein": 16.2,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-05-02T14:34:01.133049",
+        "date": "2026-05-02",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "pure protein chocolate peanut butter bar (20g protein, 200 calories)",
+        "items": [
+            {
+                "foodName": "Protein bar, chocolate peanut butter",
+                "calories": 200,
+                "protein": 20.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 8.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38577588976
+            }
+        ],
+        "total_calories": 200,
+        "total_protein": 20.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-02T18:05:58.012139",
+        "date": "2026-05-02",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "8 oz grilled ribeye, 2.4 oz green apple, .24 oz cooked bacon, .1 oz parmesan cheese, 1/2 tbsp balsamic vinegar (17 cal), 3 oz roasted sweet potato",
+        "items": [
+            {
+                "foodName": "Beef ribeye, grilled",
+                "calories": 647,
+                "protein": 65.3,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 41.2,
+                "amount": 8,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38580733579
+            },
+            {
+                "foodName": "Apple, raw",
+                "calories": 35,
+                "protein": 0.2,
+                "totalCarbohydrate": 9.3,
+                "totalFat": 0.1,
+                "amount": 2.4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38581559115
+            },
+            {
+                "foodName": "Bacon, cooked",
+                "calories": 23,
+                "protein": 1.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.8,
+                "amount": 0.24,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38581156001
+            },
+            {
+                "foodName": "Parmesan cheese",
+                "calories": 12,
+                "protein": 1.1,
+                "totalCarbohydrate": 0.1,
+                "totalFat": 0.8,
+                "amount": 0.1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38580379833
+            },
+            {
+                "foodName": "Balsamic vinegar",
+                "calories": 17,
+                "protein": 0.0,
+                "totalCarbohydrate": 4.2,
+                "totalFat": 0.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38580831868
+            },
+            {
+                "foodName": "Sweet potato, roasted",
+                "calories": 76,
+                "protein": 1.7,
+                "totalCarbohydrate": 18.1,
+                "totalFat": 0.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38581421555
+            }
+        ],
+        "total_calories": 810,
+        "total_protein": 69.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-02T18:42:49.677109",
+        "date": "2026-05-02",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "2.5oz strawberries, 1.3 oz blueberries, 1 Tates cookie (70 cal)",
+        "items": [
+            {
+                "foodName": "Strawberries, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.5,
+                "totalFat": 0.2,
+                "amount": 2.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38580058077
+            },
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.3,
+                "totalFat": 0.1,
+                "amount": 1.3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38581186276
+            },
+            {
+                "foodName": "Tates cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38580243352
+            }
+        ],
+        "total_calories": 114,
+        "total_protein": 1.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-03T10:11:47.606038",
+        "date": "2026-05-03",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3 eggs (180 calories), 2.26 oz green apple, 1.3oz low fat cottage cheese, 1.7 oz roasted sweet potato",
+        "items": [
+            {
+                "foodName": "Egg, whole, cooked, scrambled",
+                "calories": 180,
+                "protein": 12.2,
+                "totalCarbohydrate": 1.9,
+                "totalFat": 13.3,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38582538423
+            },
+            {
+                "foodName": "Apple, raw, with skin",
+                "calories": 33,
+                "protein": 0.2,
+                "totalCarbohydrate": 8.8,
+                "totalFat": 0.1,
+                "amount": 2.26,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38583431903
+            },
+            {
+                "foodName": "Cottage cheese, lowfat, 1% milkfat",
+                "calories": 29,
+                "protein": 4.0,
+                "totalCarbohydrate": 1.2,
+                "totalFat": 0.8,
+                "amount": 1.3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38582567933
+            },
+            {
+                "foodName": "Sweet potato, cooked, roasted",
+                "calories": 76,
+                "protein": 1.4,
+                "totalCarbohydrate": 17.7,
+                "totalFat": 0.1,
+                "amount": 1.7,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38582263168
+            }
+        ],
+        "total_calories": 318,
+        "total_protein": 17.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-03T12:37:14.434159",
+        "date": "2026-05-03",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "pure protein chocolate peanut butter bar (20g protein, 200 calories), 1 pack tuna creations herb and garlic (15 G protein, 110 cal)",
+        "items": [
+            {
+                "foodName": "Protein bar, chocolate peanut butter",
+                "calories": 200,
+                "protein": 20.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 8.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38584421426
+            },
+            {
+                "foodName": "Tuna, canned in water with herbs and garlic",
+                "calories": 110,
+                "protein": 15.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 4.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38583062468
+            }
+        ],
+        "total_calories": 310,
+        "total_protein": 35.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-03T17:36:45.255418",
+        "date": "2026-05-03",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5.96 oz grilled ribeye steak, 1.84 oz roasted sweet potato, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Ribeye Steak, grilled",
+                "calories": 567,
+                "protein": 48.5,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 39.9,
+                "amount": 5.96,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38584006300
+            },
+            {
+                "foodName": "Sweet Potato, roasted",
+                "calories": 90,
+                "protein": 2.0,
+                "totalCarbohydrate": 20.7,
+                "totalFat": 0.2,
+                "amount": 1.84,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38584389516
+            },
+            {
+                "foodName": "Arugula, raw",
+                "calories": 20,
+                "protein": 2.1,
+                "totalCarbohydrate": 2.9,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38584006302
+            }
+        ],
+        "total_calories": 677,
+        "total_protein": 52.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-03T17:39:22.922490",
+        "date": "2026-05-03",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Protein Shake",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38585270550
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-03T18:28:50.672568",
+        "date": "2026-05-03",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "4.16 oz non-fat green yogurt Chobani, 2.58 oz fresh raspberries , 1 Tates cookie (70 cal)",
+        "items": [
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 70,
+                "protein": 12.0,
+                "totalCarbohydrate": 4.2,
+                "totalFat": 0.5,
+                "amount": 4.16,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38585232602
+            },
+            {
+                "foodName": "Raspberries, raw",
+                "calories": 38,
+                "protein": 0.9,
+                "totalCarbohydrate": 8.8,
+                "totalFat": 0.5,
+                "amount": 2.58,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38584527929
+            },
+            {
+                "foodName": "Cookie, chocolate chip",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38584832828
+            }
+        ],
+        "total_calories": 178,
+        "total_protein": 13.9,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
