@@ -105,5 +105,119 @@
             "zone_four_milli": 0,
             "zone_five_milli": 0
         }
+    },
+    {
+        "id": "75376913-5e6b-4cba-aada-de253d26be74",
+        "sport_name": "weightlifting",
+        "start_time": "2026-05-05T06:09:23",
+        "end_time": "2026-05-05T06:39:08",
+        "avg_heart_rate": 108,
+        "calories": 101,
+        "distance_meter": null,
+        "max_heart_rate": 133,
+        "strain": 8.143366,
+        "zone_durations": {
+            "zone_zero_milli": 881000,
+            "zone_one_milli": 905000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "1a99b774-7dce-4087-9eae-6a2662be6fa7",
+        "sport_name": "running",
+        "start_time": "2026-05-05T06:39:33",
+        "end_time": "2026-05-05T07:06:37",
+        "avg_heart_rate": 150,
+        "calories": 328,
+        "distance_meter": 27.726652,
+        "max_heart_rate": 174,
+        "strain": 11.9691725,
+        "zone_durations": {
+            "zone_zero_milli": 0,
+            "zone_one_milli": 286000,
+            "zone_two_milli": 176000,
+            "zone_three_milli": 822000,
+            "zone_four_milli": 307000,
+            "zone_five_milli": 32000
+        }
+    },
+    {
+        "id": "41fb1cef-0ffb-4fa0-90d4-c82751c68f45",
+        "sport_name": "running",
+        "start_time": "2026-05-06T06:10:36",
+        "end_time": "2026-05-06T06:38:52",
+        "avg_heart_rate": 139,
+        "calories": 271,
+        "distance_meter": 2.6178186,
+        "max_heart_rate": 160,
+        "strain": 9.473554,
+        "zone_durations": {
+            "zone_zero_milli": 131000,
+            "zone_one_milli": 332000,
+            "zone_two_milli": 614010,
+            "zone_three_milli": 619000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "bee77bb6-cbfd-4823-8f99-4e76d73988e6",
+        "sport_name": "weightlifting",
+        "start_time": "2026-05-06T06:39:10",
+        "end_time": "2026-05-06T07:01:44",
+        "avg_heart_rate": 124,
+        "calories": 144,
+        "distance_meter": null,
+        "max_heart_rate": 150,
+        "strain": 7.5013986,
+        "zone_durations": {
+            "zone_zero_milli": 19000,
+            "zone_one_milli": 1136000,
+            "zone_two_milli": 193000,
+            "zone_three_milli": 6000,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "08221830-0d75-4e5b-a5e3-caec0ab185d4",
+        "sport_name": "running",
+        "start_time": "2026-05-08T06:17:06",
+        "end_time": "2026-05-08T06:43:46",
+        "avg_heart_rate": 138,
+        "calories": 250,
+        "distance_meter": 3.1696768,
+        "max_heart_rate": 171,
+        "strain": 9.225637,
+        "zone_durations": {
+            "zone_zero_milli": 95000,
+            "zone_one_milli": 369050,
+            "zone_two_milli": 545010,
+            "zone_three_milli": 426000,
+            "zone_four_milli": 165000,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "e5061288-3483-4a9c-b752-86f4386e6794",
+        "sport_name": "weightlifting",
+        "start_time": "2026-05-08T06:44:45",
+        "end_time": "2026-05-08T07:11:52",
+        "avg_heart_rate": 117,
+        "calories": 126,
+        "distance_meter": null,
+        "max_heart_rate": 142,
+        "strain": 8.164438,
+        "zone_durations": {
+            "zone_zero_milli": 552000,
+            "zone_one_milli": 996000,
+            "zone_two_milli": 79000,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     }
 ]

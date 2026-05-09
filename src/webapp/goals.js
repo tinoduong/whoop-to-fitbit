@@ -1,29 +1,5 @@
 // ===== GOALS TAB =====
 
-const ACTIVITY_FACTOR = 1.375;
-
-function calcAge(dobStr) {
-  const dob = new Date(dobStr);
-  const today = new Date();
-  let age = today.getFullYear() - dob.getFullYear();
-  const m = today.getMonth() - dob.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
-  return age;
-}
-
-function calcBMR(weightLbs, heightIn, age, sex) {
-  const weightKg = weightLbs / KG_TO_LBS;
-  const heightCm = heightIn * 2.54;
-  if (sex === 'male') {
-    return 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
-  } else {
-    return 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
-  }
-}
-
-function calcTDEE(weightLbs, heightIn, age, sex) {
-  return Math.round(calcBMR(weightLbs, heightIn, age, sex) * ACTIVITY_FACTOR);
-}
 
 function avgDailyWorkoutCals() {
   if (!allWorkouts.length) return 0;
@@ -383,6 +359,9 @@ function renderTDEEPlan() {
         On workout days, add that day's burned calories to your target.${warning}
       </div>
       ${historyHtml}
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <button onclick="closeGoal(${currentGoal.id})" style="background:transparent;border:1px solid var(--danger);color:var(--danger);border-radius:6px;padding:5px 14px;font-size:0.78rem;cursor:pointer;">End Goal</button>
+      </div>
     `;
     return;
   }

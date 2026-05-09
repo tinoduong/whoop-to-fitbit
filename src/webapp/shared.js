@@ -69,6 +69,43 @@ function getCurrentPeriodKey(rangeType) {
 const KG_TO_LBS = 2.20462;
 function kgToLbs(kg) { return +(kg * KG_TO_LBS).toFixed(1); }
 
+const ACTIVITY_FACTOR = 1.375;
+
+function calcAge(dobStr) {
+  const dob = new Date(dobStr);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+  return age;
+}
+
+function calcBMR(weightLbs, heightIn, age, sex) {
+  const weightKg = weightLbs / KG_TO_LBS;
+  const heightCm = heightIn * 2.54;
+  if (sex === 'male') {
+    return 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+  } else {
+    return 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+  }
+}
+
+function calcTDEE(weightLbs, heightIn, age, sex) {
+  return Math.round(calcBMR(weightLbs, heightIn, age, sex) * ACTIVITY_FACTOR);
+}
+
+// Returns { tdee, proteinGoal } from current weight/fat + meta, or null if data is missing.
+function getMaintenanceFallback() {
+  if (!allWeight.length || !goals.dob || !goals.height_in || !goals.sex) return null;
+  const latest = allWeight[allWeight.length - 1];
+  const weightLbs = kgToLbs(latest.weight);
+  const age = calcAge(goals.dob);
+  const tdee = calcTDEE(weightLbs, goals.height_in, age, goals.sex);
+  const lbm = latest.fat != null ? weightLbs * (1 - latest.fat / 100) : null;
+  const proteinGoal = lbm ? Math.round(lbm * 1.2) : 110;
+  return { tdee, proteinGoal };
+}
+
 // ===== URL HELPERS =====
 function pushUrl(updates) {
   const params = new URLSearchParams(window.location.search);
@@ -330,7 +367,9 @@ function buildDailyMap() {
 function getTargetIntakeForDate(date, workoutCalories) {
   const snap = getGoalForDate(date);
   if (!snap) {
-    return { targetIntake: 2000 + workoutCalories, tdee: null, deficit: 0 };
+    const fb = getMaintenanceFallback();
+    const tdee = fb ? fb.tdee : 2000;
+    return { targetIntake: tdee + workoutCalories, tdee: fb ? tdee : null, deficit: 0, isMaintenance: true };
   }
   const tdee = snap.saved_tdee || null;
   const deficit = snap.saved_deficit || 0;
