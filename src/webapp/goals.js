@@ -174,28 +174,20 @@ async function triggerGenerateReport(goalId) {
 
 function buildSummaryLine(summary) {
   if (!summary) return '—';
-  const { goals_met, goals_total, weight_lost, weight_target, bf_lost, bf_target, bf_needed, end_bf_pct } = summary;
-
-  const wMet = weight_lost != null && weight_target != null && weight_lost >= weight_target;
-  const bfMet = end_bf_pct != null && bf_target != null && end_bf_pct <= bf_target;
-
-  let parts = [`Goal Met: ${goals_met ?? '?'} of ${goals_total ?? '?'}`];
+  const { weight_lost, bf_lost } = summary;
+  const parts = [];
 
   if (weight_lost != null) {
-    const wLabel = `Weight: lost ${Math.abs(weight_lost).toFixed(1)} lbs` +
-      (weight_target != null ? ` (vs. ${Math.abs(weight_target).toFixed(1)} lbs needed)` : '') +
-      ` <span class="${wMet ? 'met-label' : 'missed-label'}">${wMet ? 'MET' : 'MISSED'}</span>`;
-    parts.push(wLabel);
+    const dir = weight_lost >= 0 ? 'lost' : 'gained';
+    parts.push(`Weight: ${dir} ${Math.abs(weight_lost).toFixed(1)} lbs`);
   }
 
   if (bf_lost != null) {
-    const bfLabel = `Body Fat: lost ${Math.abs(bf_lost).toFixed(1)}%` +
-      (bf_needed != null ? ` (vs. ${Math.abs(bf_needed).toFixed(1)}% needed)` : '') +
-      ` <span class="${bfMet ? 'met-label' : 'missed-label'}">${bfMet ? 'MET' : 'MISSED'}</span>`;
-    parts.push(bfLabel);
+    const dir = bf_lost >= 0 ? 'lost' : 'gained';
+    parts.push(`Body Fat: ${dir} ${Math.abs(bf_lost).toFixed(1)}%`);
   }
 
-  return parts.join(' &nbsp;|&nbsp; ');
+  return parts.length ? parts.join(' &nbsp;|&nbsp; ') : '—';
 }
 
 function buildSummaryLineFromGoal(goal) {
