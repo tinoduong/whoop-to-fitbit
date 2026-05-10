@@ -1634,5 +1634,264 @@
         "total_protein": 68.1,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T11:03:46.591403",
+        "date": "2026-05-09",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3 eggs (60 cals each), 1oz low fat cottage cheese",
+        "items": [
+            {
+                "foodName": "Egg, scrambled",
+                "calories": 268,
+                "protein": 18.1,
+                "totalCarbohydrate": 2.9,
+                "totalFat": 19.8,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38624037140
+            },
+            {
+                "foodName": "Cottage cheese, low fat",
+                "calories": 23,
+                "protein": 3.1,
+                "totalCarbohydrate": 1.0,
+                "totalFat": 0.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38624135641
+            }
+        ],
+        "total_calories": 291,
+        "total_protein": 21.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T13:41:27.187020",
+        "date": "2026-05-09",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "2tbsp non-fat greek yogurt, 1oz pomegranate seeds, 1 tuna pack (19g protein, 80 cal)",
+        "items": [
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 4,
+                "protein": 0.3,
+                "totalCarbohydrate": 0.1,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38625537527
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38625694535
+            },
+            {
+                "foodName": "Tuna, canned in water",
+                "calories": 80,
+                "protein": 19.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38624638701
+            }
+        ],
+        "total_calories": 107,
+        "total_protein": 19.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T15:27:23.780847",
+        "date": "2026-05-09",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1.94 oz grill ribeye",
+        "items": [
+            {
+                "foodName": "Beef Ribeye, grilled",
+                "calories": 143,
+                "protein": 19.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 6.4,
+                "amount": 1.94,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38625402608
+            }
+        ],
+        "total_calories": 143,
+        "total_protein": 19.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T21:10:41.457813",
+        "date": "2026-05-09",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "1 Johnson's bratwurst, 1.5 cups rotini pasta, 1/4 cup tomato sauce with mushrooms",
+        "items": [
+            {
+                "foodName": "Bratwurst, cooked",
+                "calories": 297,
+                "protein": 12.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 26.9,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38625781268
+            },
+            {
+                "foodName": "Rotini pasta, cooked",
+                "calories": 221,
+                "protein": 8.1,
+                "totalCarbohydrate": 44.4,
+                "totalFat": 1.1,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38626204288
+            },
+            {
+                "foodName": "Tomato sauce with mushrooms",
+                "calories": 17,
+                "protein": 1.0,
+                "totalCarbohydrate": 3.9,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38626223562
+            }
+        ],
+        "total_calories": 535,
+        "total_protein": 21.1,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T21:11:48.812846",
+        "date": "2026-05-09",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": ".75 cup non fat greek yogurt, 1 Tates cookie (70 cal), 1oz pomegranate seeds",
+        "items": [
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 105,
+                "protein": 18.1,
+                "totalCarbohydrate": 6.4,
+                "totalFat": 0.7,
+                "amount": 0.75,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38626312007
+            },
+            {
+                "foodName": "Cookie, chocolate chip",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38628223731
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38626184462
+            }
+        ],
+        "total_calories": 198,
+        "total_protein": 19.6,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T21:14:54.668666",
+        "date": "2026-05-09",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1 muscle milk protein shake (25g protein, 160 cal)",
+        "items": [
+            {
+                "foodName": "Protein shake, Muscle Milk",
+                "calories": 160,
+                "protein": 25.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38628842889
+            }
+        ],
+        "total_calories": 160,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-09T21:32:03.805919",
+        "date": "2026-05-09",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "two hard boiled eggs",
+        "items": [
+            {
+                "foodName": "Egg, hard-boiled",
+                "calories": 310,
+                "protein": 25.0,
+                "totalCarbohydrate": 1.1,
+                "totalFat": 21.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38628273115
+            }
+        ],
+        "total_calories": 310,
+        "total_protein": 25.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

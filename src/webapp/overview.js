@@ -947,6 +947,22 @@ function renderBodyCompRatioChart() {
     return Math.round(((baseLeanMass - leanMass) / baseLeanMass) * 1000) / 10;
   });
 
+  function linReg(data) {
+    const pts = data.map((y, x) => ({ x, y })).filter(p => p.y != null);
+    if (pts.length < 2) return data.map(() => null);
+    const n = pts.length;
+    const sumX = pts.reduce((s, p) => s + p.x, 0);
+    const sumY = pts.reduce((s, p) => s + p.y, 0);
+    const sumXY = pts.reduce((s, p) => s + p.x * p.y, 0);
+    const sumX2 = pts.reduce((s, p) => s + p.x * p.x, 0);
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+    return data.map((_, i) => Math.round((slope * i + intercept) * 10) / 10);
+  }
+
+  const fatTrend = linReg(fatLostPcts);
+  const leanTrend = linReg(leanLostPcts);
+
   const mondayLinesPlugin = {
     id: 'recompMondayLines',
     afterDraw(chart) {
@@ -1029,6 +1045,34 @@ function renderBodyCompRatioChart() {
           spanGaps: true,
           yAxisID: 'yPct',
         },
+        {
+          label: 'Fat trend',
+          data: fatTrend,
+          borderColor: 'rgba(226,75,74,0.55)',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: [10, 4],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          tension: 0,
+          fill: false,
+          spanGaps: true,
+          yAxisID: 'yPct',
+        },
+        {
+          label: 'Lean trend',
+          data: leanTrend,
+          borderColor: 'rgba(29,158,117,0.55)',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: [10, 4],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          tension: 0,
+          fill: false,
+          spanGaps: true,
+          yAxisID: 'yPct',
+        },
       ],
     },
     options: {
@@ -1037,6 +1081,7 @@ function renderBodyCompRatioChart() {
       plugins: {
         legend: { display: false },
         tooltip: {
+          filter: item => item.datasetIndex <= 1,
           callbacks: {
             label: item => item.datasetIndex === 0
               ? `Fat loss: ${item.parsed.y.toFixed(1)}%`
