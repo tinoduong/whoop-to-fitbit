@@ -134,7 +134,7 @@ function getProteinGoals() {
   if (snap && snap.saved_protein_goal) {
     return { goal: snap.saved_protein_goal, floor: Math.round(snap.saved_protein_goal / 1.2) };
   }
-  const fb = getMaintenanceFallback();
+  const fb = getMaintenanceFallback(new Date().toISOString().slice(0, 10));
   const goal = fb ? fb.proteinGoal : 135;
   return { goal, floor: Math.round(goal / 1.2) };
 }

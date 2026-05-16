@@ -94,16 +94,46 @@ function calcTDEE(weightLbs, heightIn, age, sex) {
   return Math.round(calcBMR(weightLbs, heightIn, age, sex) * ACTIVITY_FACTOR);
 }
 
-// Returns { tdee, proteinGoal } from current weight/fat + meta, or null if data is missing.
-function getMaintenanceFallback() {
+// Returns { tdee, proteinGoal } using the average weight from the closest completed week before date.
+// Falls back to the most recent entry on or before date if no prior week has data.
+function getMaintenanceFallback(date) {
   if (!allWeight.length || !goals.dob || !goals.height_in || !goals.sex) return null;
-  const latest = allWeight[allWeight.length - 1];
-  const weightLbs = kgToLbs(latest.weight);
+
+  // Walk back week by week (Mon–Sun) looking for entries, up to 52 weeks
+  const weekMonday = getWeekStart(date);
+  let entry = null;
+  for (let i = 1; i <= 52; i++) {
+    const wStart = offsetDate(weekMonday, -7 * i);
+    const wEnd = offsetDate(wStart, 6);
+    const entries = allWeight.filter(w => w.date >= wStart && w.date <= wEnd);
+    if (entries.length) {
+      const avgKg = entries.reduce((s, w) => s + w.weight, 0) / entries.length;
+      const avgFat = entries.some(w => w.fat != null)
+        ? entries.filter(w => w.fat != null).reduce((s, w) => s + w.fat, 0) / entries.filter(w => w.fat != null).length
+        : null;
+      entry = { weight: avgKg, fat: avgFat };
+      break;
+    }
+  }
+
+  // Final fallback: most recent entry on or before date
+  if (!entry) {
+    const prior = allWeight.filter(w => w.date <= date);
+    entry = prior.length ? prior[prior.length - 1] : allWeight[allWeight.length - 1];
+  }
+
+  const weightLbs = kgToLbs(entry.weight);
   const age = calcAge(goals.dob);
   const tdee = calcTDEE(weightLbs, goals.height_in, age, goals.sex);
-  const lbm = latest.fat != null ? weightLbs * (1 - latest.fat / 100) : null;
+  const lbm = entry.fat != null ? weightLbs * (1 - entry.fat / 100) : null;
   const proteinGoal = lbm ? Math.round(lbm * 1.2) : 110;
   return { tdee, proteinGoal };
+}
+
+function offsetDate(dateStr, days) {
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
 }
 
 // ===== URL HELPERS =====
@@ -367,7 +397,7 @@ function buildDailyMap() {
 function getTargetIntakeForDate(date, workoutCalories) {
   const snap = getGoalForDate(date);
   if (!snap) {
-    const fb = getMaintenanceFallback();
+    const fb = getMaintenanceFallback(date);
     const tdee = fb ? fb.tdee : 2000;
     return { targetIntake: tdee + workoutCalories, tdee: fb ? tdee : null, deficit: 0, isMaintenance: true };
   }
