@@ -206,6 +206,56 @@ def load_reports_list():
     return reports
 
 
+def delete_meal(date_str, meal_type, logged_at):
+    """Delete a meal from local JSON and remove its items from Fitbit."""
+    try:
+        dt = datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        return False, "Invalid date format"
+
+    year = dt.strftime("%Y")
+    month = dt.strftime("%m")
+    meal_file = os.path.join(FITBIT_DATA_DIR, year, month, f"{month}-meals.json")
+
+    if not os.path.exists(meal_file):
+        return False, "Meal file not found"
+
+    with open(meal_file) as f:
+        db = json.load(f)
+
+    idx = next(
+        (i for i, r in enumerate(db)
+         if r.get("date") == date_str
+         and r.get("meal_type") == meal_type
+         and r.get("logged_at") == logged_at),
+        None
+    )
+    if idx is None:
+        return False, "Meal record not found"
+
+    record = db[idx]
+
+    orig_dir = os.getcwd()
+    os.chdir(SRC_DIR)
+    try:
+        import fitbit_add_meal
+        from fitbit_token_manager import get_valid_token
+        access_token = get_valid_token()
+        if access_token:
+            for item in record.get("items", []):
+                log_id = item.get("log_id")
+                if log_id:
+                    fitbit_add_meal.delete_food_log(access_token, log_id)
+    finally:
+        os.chdir(orig_dir)
+
+    db.pop(idx)
+    with open(meal_file, "w") as f:
+        json.dump(db, f, indent=4)
+
+    return True, None
+
+
 def delete_report(filename):
     # Restrict to basename only, no path traversal
     filename = os.path.basename(filename)
@@ -721,6 +771,7 @@ class FitnessHandler(BaseHTTPRequestHandler):
     def do_DELETE(self):
         parsed = urlparse(self.path)
         path = parsed.path
+        qs = parse_qs(parsed.query)
 
         m = re.match(r'^/api/reports/([^/]+\.json)$', path)
         if m:
@@ -729,6 +780,23 @@ class FitnessHandler(BaseHTTPRequestHandler):
                 self.send_json({"status": "ok"})
             else:
                 self.send_json({"error": "Report not found"}, status=404)
+
+        elif path == "/api/meals":
+            date_str = qs.get("date", [None])[0]
+            meal_type = qs.get("meal_type", [None])[0]
+            logged_at = qs.get("logged_at", [None])[0]
+            if not (date_str and meal_type and logged_at):
+                self.send_json({"error": "Missing required params: date, meal_type, logged_at"}, status=400)
+                return
+            try:
+                ok, err = delete_meal(date_str, meal_type, logged_at)
+                if ok:
+                    self.send_json({"status": "ok"})
+                else:
+                    self.send_json({"error": err}, status=404)
+            except Exception as e:
+                self.send_json({"error": str(e)}, status=500)
+
         else:
             self.send_response(404)
             self.end_headers()

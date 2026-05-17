@@ -635,6 +635,29 @@ tbody td {
   margin-bottom: 8px;
 }
 
+.meal-delete-btn {
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.meal-delete-btn:hover {
+  background: rgba(255, 107, 107, 0.28);
+  border-color: #ff6b6b;
+}
+
+.meal-delete-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .meal-type-label {
   font-size: 0.75rem;
   font-weight: 700;

@@ -3323,5 +3323,66 @@
         "total_protein": 68.3,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T10:42:35.752563",
+        "date": "2026-05-17",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "3 eggs with no butter, 1 piece of bacon, 1/4 cup raspberries, 1/2 small orange",
+        "items": [
+            {
+                "foodName": "Egg, scrambled",
+                "calories": 268,
+                "protein": 18.2,
+                "totalCarbohydrate": 2.9,
+                "totalFat": 19.8,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38672370070
+            },
+            {
+                "foodName": "Bacon, cooked",
+                "calories": 43,
+                "protein": 3.0,
+                "totalCarbohydrate": 0.1,
+                "totalFat": 3.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673156423
+            },
+            {
+                "foodName": "Raspberries, raw",
+                "calories": 16,
+                "protein": 0.4,
+                "totalCarbohydrate": 3.7,
+                "totalFat": 0.2,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38671967233
+            },
+            {
+                "foodName": "Orange, raw",
+                "calories": 23,
+                "protein": 0.6,
+                "totalCarbohydrate": 5.8,
+                "totalFat": 0.1,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38672134152
+            }
+        ],
+        "total_calories": 350,
+        "total_protein": 22.2,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

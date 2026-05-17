@@ -804,10 +804,11 @@ function renderMeals() {
       setTimeout(() => renderMacroPie(chartId, protein, mealCarbs, mealFat), 0);
 
       return `
-        <div class="meal-entry">
+        <div class="meal-entry" data-date="${date}" data-meal-type="${meal.meal_type}" data-logged-at="${meal.logged_at || ''}">
           <div class="meal-entry-header">
             <span class="meal-type-label ${typeClass}">${meal.meal_type}</span>
             <span class="meal-cals">${meal.total_calories} kcal</span>
+            <button class="meal-delete-btn" onclick="deleteMeal(this)" title="Delete meal">✕</button>
           </div>
           <div class="meal-description">${meal.raw_description}</div>
           <div class="meal-items">${itemChips}</div>
@@ -1003,6 +1004,33 @@ function setLogMealStep(step) {
       el.className = 'log-meal-step';
     }
   });
+}
+
+async function deleteMeal(btn) {
+  const entry = btn.closest('.meal-entry');
+  const date = entry.dataset.date;
+  const mealType = entry.dataset.mealType;
+  const loggedAt = entry.dataset.loggedAt;
+
+  if (!confirm(`Delete ${mealType} on ${date}?`)) return;
+
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  try {
+    const params = new URLSearchParams({ date, meal_type: mealType, logged_at: loggedAt });
+    const res = await fetch(`/api/meals?${params}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || `Server error ${res.status}`);
+
+    const idx = allMeals.findIndex(m => m.date === date && m.meal_type === mealType && m.logged_at === loggedAt);
+    if (idx !== -1) allMeals.splice(idx, 1);
+    applyMealFilters();
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = '✕';
+    alert(`Failed to delete: ${err.message}`);
+  }
 }
 
 async function submitLogMeal() {

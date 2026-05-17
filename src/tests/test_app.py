@@ -603,7 +603,120 @@ class TestGoalMutations(unittest.TestCase):
         self.assertEqual(original, restored)
 
 
-# ── 6. delete_report ──────────────────────────────────────────────────────────
+# ── 6. delete_meal ───────────────────────────────────────────────────────────
+
+class TestDeleteMeal(unittest.TestCase):
+    _DATE = "2099-01-15"
+    _MEAL_TYPE = "dinner"
+    _LOGGED_AT = "2099-01-15T19:00:00"
+    _LOG_ID = 9988776655
+
+    def _meal_file_path(self):
+        return os.path.join(fitness_app.FITBIT_DATA_DIR, "2099", "01", "01-meals.json")
+
+    def _make_record(self, **overrides):
+        base = {
+            "logged_at": self._LOGGED_AT,
+            "date": self._DATE,
+            "meal_type": self._MEAL_TYPE,
+            "meal_type_id": 5,
+            "raw_description": "grilled chicken",
+            "items": [{"foodName": "Grilled Chicken", "calories": 300, "protein": 40.0, "log_id": self._LOG_ID}],
+            "total_calories": 300,
+            "total_protein": 40.0,
+            "all_uploaded": True,
+            "amended": False,
+        }
+        base.update(overrides)
+        return base
+
+    def setUp(self):
+        meal_dir = os.path.join(fitness_app.FITBIT_DATA_DIR, "2099", "01")
+        os.makedirs(meal_dir, exist_ok=True)
+        self._meal_file = self._meal_file_path()
+        with open(self._meal_file, "w") as f:
+            json.dump([self._make_record()], f)
+
+    def tearDown(self):
+        if os.path.exists(self._meal_file):
+            os.remove(self._meal_file)
+        # Remove temp year dir if empty
+        for d in [
+            os.path.join(fitness_app.FITBIT_DATA_DIR, "2099", "01"),
+            os.path.join(fitness_app.FITBIT_DATA_DIR, "2099"),
+        ]:
+            try:
+                os.rmdir(d)
+            except OSError:
+                pass
+
+    def _delete_with_mocked_fitbit(self, date=None, meal_type=None, logged_at=None):
+        from unittest.mock import patch, MagicMock
+        date = date or self._DATE
+        meal_type = meal_type or self._MEAL_TYPE
+        logged_at = logged_at or self._LOGGED_AT
+        mock_token = "fake-token"
+        with patch("fitbit_token_manager.get_valid_token", return_value=mock_token):
+            with patch("fitbit_add_meal.delete_food_log", return_value=True) as mock_del:
+                ok, err = fitness_app.delete_meal(date, meal_type, logged_at)
+        return ok, err, mock_del
+
+    def test_removes_record_from_json(self):
+        self._delete_with_mocked_fitbit()
+        with open(self._meal_file) as f:
+            db = json.load(f)
+        self.assertEqual(db, [])
+
+    def test_returns_true_on_success(self):
+        ok, err, _ = self._delete_with_mocked_fitbit()
+        self.assertTrue(ok)
+        self.assertIsNone(err)
+
+    def test_calls_fitbit_delete_for_each_item_with_log_id(self):
+        ok, err, mock_del = self._delete_with_mocked_fitbit()
+        mock_del.assert_called_once_with("fake-token", self._LOG_ID)
+
+    def test_returns_false_when_file_missing(self):
+        os.remove(self._meal_file)
+        ok, err = fitness_app.delete_meal(self._DATE, self._MEAL_TYPE, self._LOGGED_AT)
+        self.assertFalse(ok)
+        self.assertIn("not found", err)
+
+    def test_returns_false_when_record_missing(self):
+        ok, err = fitness_app.delete_meal(self._DATE, self._MEAL_TYPE, "1999-01-01T00:00:00")
+        self.assertFalse(ok)
+        self.assertIn("not found", err)
+
+    def test_returns_false_for_invalid_date(self):
+        ok, err = fitness_app.delete_meal("not-a-date", self._MEAL_TYPE, self._LOGGED_AT)
+        self.assertFalse(ok)
+        self.assertIn("Invalid date", err)
+
+    def test_only_deletes_matching_record_leaves_others(self):
+        other = self._make_record(meal_type="lunch", logged_at="2099-01-15T12:00:00")
+        with open(self._meal_file, "w") as f:
+            json.dump([self._make_record(), other], f)
+        self._delete_with_mocked_fitbit()
+        with open(self._meal_file) as f:
+            db = json.load(f)
+        self.assertEqual(len(db), 1)
+        self.assertEqual(db[0]["meal_type"], "lunch")
+
+    def test_skips_fitbit_delete_for_items_without_log_id(self):
+        no_log_id_record = self._make_record(
+            items=[{"foodName": "Apple", "calories": 80, "protein": 0.4}]
+        )
+        with open(self._meal_file, "w") as f:
+            json.dump([no_log_id_record], f)
+        from unittest.mock import patch
+        with patch("fitbit_token_manager.get_valid_token", return_value="tok"):
+            with patch("fitbit_add_meal.delete_food_log") as mock_del:
+                ok, err = fitness_app.delete_meal(self._DATE, self._MEAL_TYPE, self._LOGGED_AT)
+        mock_del.assert_not_called()
+        self.assertTrue(ok)
+
+
+# ── 7. delete_report ──────────────────────────────────────────────────────────
 
 class TestDeleteReport(unittest.TestCase):
     def setUp(self):
