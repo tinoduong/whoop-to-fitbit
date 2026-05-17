@@ -614,6 +614,10 @@ function setupDayModal() {
       .log-meal-error { margin-top: 12px; padding: 10px 14px; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); border-radius: 8px; color: #ff6b6b; font-size: 0.8rem; }
       .log-meal-modal-close { position: absolute; top: 16px; right: 20px; background: transparent; border: none; color: #8b90a8; font-size: 18px; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 6px; transition: color 0.15s, background 0.15s; }
       .log-meal-modal-close:hover { color: #e8eaf0; background: rgba(255,255,255,0.06); }
+      .log-meal-suggestions { position: absolute; top: 100%; left: 0; right: 0; z-index: 10; margin: 4px 0 0; padding: 4px 0; list-style: none; background: #1e2133; border: 1px solid #2e3250; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); max-height: 220px; overflow-y: auto; }
+      .log-meal-suggestions:empty { display: none; }
+      .log-meal-suggestions li { padding: 9px 14px; font-size: 0.83rem; color: #c8cbdf; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.1s, color 0.1s; }
+      .log-meal-suggestions li:hover, .log-meal-suggestions li.active { background: rgba(108,99,255,0.15); color: #e8eaf0; }
     `;
     document.head.appendChild(style);
   }

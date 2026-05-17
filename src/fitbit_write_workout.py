@@ -93,6 +93,8 @@ def sync_whoop_to_fitbit(start_filter_dt):
         year_path = os.path.join(whoop_root, year)
 
         for month in sorted(os.listdir(year_path)):
+            if not month.isdigit():
+                continue
             if int(year) == start_filter_dt.year and int(month) < start_filter_dt.month:
                 continue
 

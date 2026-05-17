@@ -931,7 +931,10 @@ function setupLogMealModal() {
           e.g. "dinner: 6oz grilled salmon, 1 cup rice, steamed broccoli"<br>
           or "update lunch today to add a cookie"
         </p>
-        <textarea id="logMealInput" placeholder="dinner: grilled chicken, roasted potatoes, glass of wine" rows="4"></textarea>
+        <div style="position:relative">
+          <textarea id="logMealInput" placeholder="dinner: grilled chicken, roasted potatoes, glass of wine" rows="4"></textarea>
+          <ul id="logMealSuggestions" class="log-meal-suggestions"></ul>
+        </div>
         <div id="logMealProgress" class="log-meal-progress" style="display:none">
           <div class="log-meal-step" id="lmStep1">1 · Parsing</div>
           <div class="log-meal-step" id="lmStep2">2 · Uploading</div>
@@ -963,8 +966,65 @@ function setupLogMealModal() {
     if (e.target === document.getElementById('logMealOverlay')) closeLogMealModal();
   });
   document.getElementById('logMealSubmitBtn').addEventListener('click', submitLogMeal);
-  document.getElementById('logMealInput').addEventListener('keydown', e => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') submitLogMeal();
+
+  const input = document.getElementById('logMealInput');
+  const suggestions = document.getElementById('logMealSuggestions');
+  let activeSuggestionIdx = -1;
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    suggestions.innerHTML = '';
+    activeSuggestionIdx = -1;
+    if (!q) return;
+
+    const freq = {};
+    allMeals.forEach(m => {
+      const d = m.raw_description || '';
+      if (d.toLowerCase().includes(q)) freq[d] = (freq[d] || 0) + 1;
+    });
+
+    const matches = Object.entries(freq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([d]) => d);
+
+    matches.forEach((text, i) => {
+      const li = document.createElement('li');
+      li.textContent = text;
+      li.addEventListener('mousedown', e => {
+        e.preventDefault();
+        input.value = text;
+        suggestions.innerHTML = '';
+      });
+      suggestions.appendChild(li);
+    });
+  });
+
+  input.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { submitLogMeal(); return; }
+    const items = suggestions.querySelectorAll('li');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeSuggestionIdx = Math.min(activeSuggestionIdx + 1, items.length - 1);
+      items.forEach((li, i) => li.classList.toggle('active', i === activeSuggestionIdx));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeSuggestionIdx = Math.max(activeSuggestionIdx - 1, -1);
+      items.forEach((li, i) => li.classList.toggle('active', i === activeSuggestionIdx));
+    } else if (e.key === 'Enter' && activeSuggestionIdx >= 0) {
+      e.preventDefault();
+      input.value = items[activeSuggestionIdx].textContent;
+      suggestions.innerHTML = '';
+      activeSuggestionIdx = -1;
+    } else if (e.key === 'Escape') {
+      suggestions.innerHTML = '';
+      activeSuggestionIdx = -1;
+    }
+  });
+
+  input.addEventListener('blur', () => {
+    setTimeout(() => { suggestions.innerHTML = ''; activeSuggestionIdx = -1; }, 150);
   });
 }
 

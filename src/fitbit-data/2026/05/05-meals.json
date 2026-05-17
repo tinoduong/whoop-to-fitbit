@@ -3384,5 +3384,30 @@
         "total_protein": 22.2,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T12:07:26.321041",
+        "date": "2026-05-17",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "pure protein chocolate peanut butter bar (20g protein, 200 calories)",
+        "items": [
+            {
+                "foodName": "Protein bar, chocolate peanut butter",
+                "calories": 200,
+                "protein": 20.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 8.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38672116492
+            }
+        ],
+        "total_calories": 200,
+        "total_protein": 20.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
