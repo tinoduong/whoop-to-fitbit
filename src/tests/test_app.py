@@ -552,5 +552,141 @@ class TestPostRoutes(unittest.TestCase):
         self.assertEqual(resp.status, 404)
 
 
+# ── 5. Goal mutations ─────────────────────────────────────────────────────────
+
+class TestGoalMutations(unittest.TestCase):
+    def setUp(self):
+        self._backup = _backup_goals_dir()
+
+    def tearDown(self):
+        _restore_goals_dir(self._backup)
+
+    def _get_first_goal_id(self):
+        return fitness_app.load_goals()['goals'][0]['id']
+
+    def test_close_goal_returns_true_for_valid_id(self):
+        self.assertTrue(fitness_app.close_goal(self._get_first_goal_id()))
+
+    def test_close_goal_sets_is_closed_flag(self):
+        goal_id = self._get_first_goal_id()
+        fitness_app.close_goal(goal_id)
+        reloaded = fitness_app.load_goals()
+        goal = next(g for g in reloaded['goals'] if g.get('id') == goal_id)
+        self.assertTrue(goal.get('is_closed'))
+
+    def test_close_goal_returns_false_for_missing_id(self):
+        self.assertFalse(fitness_app.close_goal(99999))
+
+    def test_reopen_goal_removes_is_closed_flag(self):
+        goal_id = self._get_first_goal_id()
+        fitness_app.close_goal(goal_id)
+        fitness_app.reopen_goal(goal_id)
+        reloaded = fitness_app.load_goals()
+        goal = next(g for g in reloaded['goals'] if g.get('id') == goal_id)
+        self.assertNotIn('is_closed', goal)
+
+    def test_reopen_goal_returns_true_for_valid_id(self):
+        goal_id = self._get_first_goal_id()
+        self.assertTrue(fitness_app.reopen_goal(goal_id))
+
+    def test_reopen_goal_returns_false_for_missing_id(self):
+        self.assertFalse(fitness_app.reopen_goal(99999))
+
+    def test_close_then_reopen_leaves_goal_unchanged(self):
+        goal_id = self._get_first_goal_id()
+        # Normalize to open state first so baseline is deterministic
+        fitness_app.reopen_goal(goal_id)
+        original = next(g for g in fitness_app.load_goals()['goals'] if g.get('id') == goal_id)
+        fitness_app.close_goal(goal_id)
+        fitness_app.reopen_goal(goal_id)
+        restored = next(g for g in fitness_app.load_goals()['goals'] if g.get('id') == goal_id)
+        self.assertEqual(original, restored)
+
+
+# ── 6. delete_report ──────────────────────────────────────────────────────────
+
+class TestDeleteReport(unittest.TestCase):
+    def setUp(self):
+        self._filename = 'report_goal999_2099-01-01.json'
+        self._filepath = os.path.join(fitness_app.REPORTS_DATA_DIR, self._filename)
+        with open(self._filepath, 'w') as f:
+            json.dump({'test': True}, f)
+
+    def tearDown(self):
+        if os.path.exists(self._filepath):
+            os.remove(self._filepath)
+
+    def test_deletes_valid_report_and_returns_true(self):
+        result = fitness_app.delete_report(self._filename)
+        self.assertTrue(result)
+        self.assertFalse(os.path.exists(self._filepath))
+
+    def test_returns_false_for_nonexistent_file(self):
+        self.assertFalse(fitness_app.delete_report('report_goal_missing_2099-01-01.json'))
+
+    def test_path_traversal_blocked(self):
+        # os.path.basename strips the path, leaving a non-report_ name
+        self.assertFalse(fitness_app.delete_report('../goals/goal_1_2026-03-02.json'))
+
+    def test_wrong_prefix_blocked(self):
+        self.assertFalse(fitness_app.delete_report('data_report_goal999_2099-01-01.json'))
+
+    def test_wrong_suffix_blocked(self):
+        self.assertFalse(fitness_app.delete_report('report_goal999_2099-01-01.txt'))
+
+
+# ── 7. _rolling_avg_bf ────────────────────────────────────────────────────────
+
+class TestRollingAvgBF(unittest.TestCase):
+    def test_returns_none_for_invalid_date(self):
+        self.assertIsNone(fitness_app._rolling_avg_bf([], 'not-a-date'))
+
+    def test_returns_none_for_empty_data(self):
+        self.assertIsNone(fitness_app._rolling_avg_bf([], '2026-05-17'))
+
+    def test_returns_none_when_no_fat_in_window(self):
+        data = [{'date': '2026-05-17', 'fat': None}]
+        self.assertIsNone(fitness_app._rolling_avg_bf(data, '2026-05-17'))
+
+    def test_single_entry_on_center_date(self):
+        data = [{'date': '2026-05-17', 'fat': 15.5}]
+        self.assertAlmostEqual(fitness_app._rolling_avg_bf(data, '2026-05-17'), 15.5)
+
+    def test_averages_entries_within_window(self):
+        # default window=7, half=3 → includes [center-3, center+3]
+        data = [
+            {'date': '2026-05-14', 'fat': 14.0},  # center - 3: included
+            {'date': '2026-05-17', 'fat': 16.0},  # center: included
+            {'date': '2026-05-20', 'fat': 18.0},  # center + 3: included
+        ]
+        result = fitness_app._rolling_avg_bf(data, '2026-05-17')
+        self.assertAlmostEqual(result, (14.0 + 16.0 + 18.0) / 3)
+
+    def test_excludes_entries_outside_window(self):
+        data = [
+            {'date': '2026-05-13', 'fat': 99.0},  # center - 4: excluded
+            {'date': '2026-05-17', 'fat': 15.0},  # center: included
+            {'date': '2026-05-21', 'fat': 99.0},  # center + 4: excluded
+        ]
+        self.assertAlmostEqual(fitness_app._rolling_avg_bf(data, '2026-05-17'), 15.0)
+
+    def test_skips_entries_with_no_fat(self):
+        data = [
+            {'date': '2026-05-17', 'fat': None},
+            {'date': '2026-05-18', 'fat': 16.0},
+        ]
+        self.assertAlmostEqual(fitness_app._rolling_avg_bf(data, '2026-05-17'), 16.0)
+
+    def test_custom_window(self):
+        # window=3, half=1 → includes [center-1, center+1]
+        data = [
+            {'date': '2026-05-15', 'fat': 99.0},  # center - 2: excluded
+            {'date': '2026-05-16', 'fat': 14.0},  # center - 1: included
+            {'date': '2026-05-17', 'fat': 16.0},  # center: included
+        ]
+        result = fitness_app._rolling_avg_bf(data, '2026-05-17', window=3)
+        self.assertAlmostEqual(result, (14.0 + 16.0) / 2)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

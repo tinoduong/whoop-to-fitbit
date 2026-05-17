@@ -1,16 +1,5 @@
 // ===== GOALS TAB =====
 
-
-function avgDailyWorkoutCals() {
-  if (!allWorkouts.length) return 0;
-  const now = new Date();
-  const cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - 30);
-  const recent = allWorkouts.filter(w => new Date(w.start_time) >= cutoff);
-  if (!recent.length) return 0;
-  const totalCals = recent.reduce((s, w) => s + (w.calories || 0), 0);
-  return Math.round(totalCals / 30);
-}
-
 // ===== WARNING SYSTEM =====
 
 function checkGoalWarnings() {

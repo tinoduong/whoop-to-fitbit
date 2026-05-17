@@ -325,11 +325,6 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-function formatTime(isoStr) {
-  const d = new Date(isoStr);
-  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-}
-
 function formatDuration(startIso, endIso) {
   const diff = (new Date(endIso) - new Date(startIso)) / 1000;
   const m = Math.floor(diff / 60);
