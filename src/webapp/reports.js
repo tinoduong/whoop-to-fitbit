@@ -82,14 +82,12 @@ function openReportModal() {
 
   const today = new Date().toISOString().substring(0, 10);
   const currentGoal = getCurrentGoal();
-  const goalInFlight = currentGoal && currentGoal.goal_date && currentGoal.goal_date >= today;
-
-  if (goalInFlight) {
+  if (currentGoal) {
     goalRow.style.display = 'block';
     useGoalCb.checked = true;
     startInput.value = currentGoal.saved_date;
     startInput.disabled = true;
-    endInput.value = today;
+    endInput.value = currentGoal.goal_date < today ? currentGoal.goal_date : today;
   } else {
     goalRow.style.display = 'none';
     useGoalCb.checked = false;

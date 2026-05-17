@@ -349,6 +349,9 @@ function renderTDEEPlan() {
         TDEE of <strong>${tdee} kcal</strong> (Mifflin-St Jeor, lightly active) minus a daily deficit of
         <strong>${deficit} kcal</strong> = <strong>${targetIntake} kcal/day</strong> base target.
         On workout days, add that day's burned calories to your target.${warning}
+        <br><br>
+        <strong>How TDEE is used in the calendar:</strong><br>
+        While a goal is active, TDEE is locked at the weight when the goal was saved (${savedLbs} lbs). Every day in the goal period uses these fixed values — past targets never change. Once the goal is closed, each calendar day uses the <strong>previous week's average weight</strong> to compute TDEE, so past days stay frozen and future days update as new weight data comes in.
       </div>
       ${historyHtml}
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
@@ -403,7 +406,10 @@ function renderTDEEPlan() {
     previewHtml += `<div class="tdee-stat highlight-green"><div class="stat-label">Effective Daily Budget</div><div class="stat-value">${tdee}</div><div class="stat-sub">set target weight + date for deficit</div></div>`;
   }
 
-  previewHtml += `</div>`;
+  previewHtml += `</div>
+    <div class="tdee-breakdown">
+      No active goal — the calendar computes TDEE from the <strong>previous week's average weight</strong> for each day. Past days are frozen; future days update as new weight data comes in. Hit Save to lock in a goal and fixed targets.
+    </div>`;
   container.innerHTML = previewHtml;
 }
 

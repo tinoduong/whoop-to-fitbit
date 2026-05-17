@@ -383,5 +383,36 @@
             "zone_four_milli": 669010,
             "zone_five_milli": 287000
         }
+    },
+    {
+        "id": "8d3581cb-5882-463e-9f0c-067c0ac48082",
+        "sport_name": "contrast-therapy",
+        "start_time": "2026-05-16T10:40:00",
+        "end_time": "2026-05-16T11:45:00",
+        "avg_heart_rate": 0,
+        "calories": 0,
+        "distance_meter": 0,
+        "max_heart_rate": 0,
+        "strain": 0,
+        "zone_durations": {}
+    },
+    {
+        "id": "711e3b18-5c0d-4570-b82e-f75715fcd099",
+        "sport_name": "running",
+        "start_time": "2026-05-16T12:58:31",
+        "end_time": "2026-05-16T13:44:20",
+        "avg_heart_rate": 155,
+        "calories": 600,
+        "distance_meter": 5552.0703,
+        "max_heart_rate": 182,
+        "strain": 15.392196,
+        "zone_durations": {
+            "zone_zero_milli": 62000,
+            "zone_one_milli": 333000,
+            "zone_two_milli": 314000,
+            "zone_three_milli": 469000,
+            "zone_four_milli": 1084000,
+            "zone_five_milli": 487000
+        }
     }
 ]

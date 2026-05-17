@@ -396,7 +396,8 @@ function buildDailyMap() {
 
 function getTargetIntakeForDate(date, workoutCalories) {
   const snap = getGoalForDate(date);
-  if (!snap) {
+  const isAfterClosedGoal = snap && snap.is_closed && snap.goal_date && date > snap.goal_date;
+  if (!snap || isAfterClosedGoal) {
     const fb = getMaintenanceFallback(date);
     const tdee = fb ? fb.tdee : 2000;
     return { targetIntake: tdee + workoutCalories, tdee: fb ? tdee : null, deficit: 0, isMaintenance: true };

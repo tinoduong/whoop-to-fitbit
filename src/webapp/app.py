@@ -331,9 +331,10 @@ def generate_report_data(start_date, end_date, goal_id=None):
     start_weight = weights_with_data[0]["weight_lbs"] if weights_with_data else None
     end_weight = weights_with_data[-1]["weight_lbs"] if weights_with_data else None
 
-    # BF% with 7-day rolling averages
+    # BF%: rolling average for start, latest single reading for end
     start_bf = _rolling_avg_bf(weight_data, start_date)
-    end_bf = _rolling_avg_bf(weight_data, end_date)
+    latest_with_fat = [w for w in weight_data if w.get("fat") is not None]
+    end_bf = latest_with_fat[-1]["fat"] if latest_with_fat else None
 
     # Lean mass
     start_lean = round(start_weight * (1 - start_bf / 100), 1) if start_weight and start_bf else None
@@ -623,9 +624,6 @@ class FitnessHandler(BaseHTTPRequestHandler):
             goal_id = data.get("goal_id")
             start_date = data.get("start_date")
             end_date = data.get("end_date")
-            if not start_date or not end_date:
-                self.send_json({"status": "error", "message": "start_date and end_date are required"}, status=400)
-                return
             report_data, error = generate_report_data(start_date, end_date, goal_id=goal_id)
             if error:
                 self.send_json({"status": "error", "message": error}, status=500)
