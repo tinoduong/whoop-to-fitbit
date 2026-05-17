@@ -971,30 +971,78 @@ function setupLogMealModal() {
   const suggestions = document.getElementById('logMealSuggestions');
   let activeSuggestionIdx = -1;
 
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    suggestions.innerHTML = '';
-    activeSuggestionIdx = -1;
-    if (!q) return;
+  // Strip leading quantity+unit from an item segment to get the food name portion.
+  // e.g. "1.56 oz roasted sweet potato" → "roasted sweet potato"
+  //      "1/4 cup non-fat greek yogurt" → "non-fat greek yogurt"
+  //      "3 eggs" → "eggs"
+  const QUANTITY_RE = /^[\d\s./x×]+(?:oz|ml|g|lb|cup|cups|tbsp|tbps|tsp|piece|pieces|slice|slices|pack|can|clove|cloves|handful|medium|large|small|links?|strips?)?\s*/i;
 
+  function stripQuantity(segment) {
+    return segment.replace(QUANTITY_RE, '').trim();
+  }
+
+  function getCurrentSegment(value) {
+    // Find the segment after the last comma (or after "dinner: " style prefix)
+    const lastComma = value.lastIndexOf(',');
+    const lastColon = value.lastIndexOf(':');
+    const sep = Math.max(lastComma, lastColon);
+    return sep >= 0 ? value.slice(sep + 1).trimStart() : value.trimStart();
+  }
+
+  function applySelection(value, selectedText) {
+    const lastComma = value.lastIndexOf(',');
+    const lastColon = value.lastIndexOf(':');
+    const sep = Math.max(lastComma, lastColon);
+    if (sep < 0) return selectedText;
+    // Preserve everything up to and including the separator, then append selection
+    const prefix = value.slice(0, sep + 1);
+    // Keep the quantity the user already typed in the current segment
+    const currentSeg = value.slice(sep + 1);
+    const quantityMatch = currentSeg.match(/^(\s*[\d\s./x×]+(?:oz|ml|g|lb|cup|cups|tbsp|tbps|tsp|piece|pieces|slice|slices|pack|can|clove|cloves|handful|medium|large|small|links?|strips?)?\s*)/i);
+    const quantity = quantityMatch ? quantityMatch[1] : ' ';
+    return prefix + quantity + selectedText;
+  }
+
+  // Build a frequency map of food name segments from all past meals
+  function buildFoodIndex() {
     const freq = {};
     allMeals.forEach(m => {
-      const d = m.raw_description || '';
-      if (d.toLowerCase().includes(q)) freq[d] = (freq[d] || 0) + 1;
+      const desc = m.raw_description || '';
+      // Split on commas and semicolons; skip the meal type prefix before the first colon
+      const colonIdx = desc.indexOf(':');
+      const itemsStr = colonIdx >= 0 ? desc.slice(colonIdx + 1) : desc;
+      itemsStr.split(/[,;]/).forEach(seg => {
+        const food = stripQuantity(seg.trim());
+        if (food.length > 2) freq[food] = (freq[food] || 0) + 1;
+      });
     });
+    return freq;
+  }
 
-    const matches = Object.entries(freq)
+  const foodIndex = buildFoodIndex();
+
+  input.addEventListener('input', () => {
+    suggestions.innerHTML = '';
+    activeSuggestionIdx = -1;
+
+    const seg = getCurrentSegment(input.value);
+    const q = stripQuantity(seg).toLowerCase();
+    if (q.length < 2) return;
+
+    const matches = Object.entries(foodIndex)
+      .filter(([name]) => name.toLowerCase().includes(q))
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6)
-      .map(([d]) => d);
+      .map(([name]) => name);
 
-    matches.forEach((text, i) => {
+    matches.forEach(text => {
       const li = document.createElement('li');
       li.textContent = text;
       li.addEventListener('mousedown', e => {
         e.preventDefault();
-        input.value = text;
+        input.value = applySelection(input.value, text);
         suggestions.innerHTML = '';
+        activeSuggestionIdx = -1;
       });
       suggestions.appendChild(li);
     });
@@ -1014,7 +1062,7 @@ function setupLogMealModal() {
       items.forEach((li, i) => li.classList.toggle('active', i === activeSuggestionIdx));
     } else if (e.key === 'Enter' && activeSuggestionIdx >= 0) {
       e.preventDefault();
-      input.value = items[activeSuggestionIdx].textContent;
+      input.value = applySelection(input.value, items[activeSuggestionIdx].textContent);
       suggestions.innerHTML = '';
       activeSuggestionIdx = -1;
     } else if (e.key === 'Escape') {
