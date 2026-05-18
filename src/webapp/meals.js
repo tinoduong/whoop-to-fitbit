@@ -768,6 +768,7 @@ function renderMeals() {
   renderAlcoholChart();
   const container = document.getElementById('mealsContainer');
   const paginationEl = document.getElementById('mealsPagination');
+  const dailyMap = buildDailyMap();
 
   if (mealsFiltered.length === 0) {
     container.innerHTML = '<div class="card"><div class="empty-state">No meals found</div></div>';
@@ -789,6 +790,13 @@ function renderMeals() {
       s + (m.items || []).reduce((si, i) => si + (i.totalFat || 0), 0), 0);
 
     const summaryPieId = `day-summary-pie-${date}`;
+    const woCals = (dailyMap[date] || {}).workoutCalories || 0;
+    const targetIntake = getTargetIntakeForDate(date, woCals).targetIntake;
+    const remaining = targetIntake ? targetIntake - totalCals : null;
+    const remainingColor = remaining === null ? '#8b90a8' : remaining >= 0 ? '#00d4aa' : '#ff6b6b';
+    const remainingLabel = remaining === null ? '' : remaining >= 0
+      ? `${remaining} left`
+      : `${Math.abs(remaining)} over`;
 
     const mealsHtml = dayMeals.map(meal => {
       const typeClass = `meal-${meal.meal_type}`;
@@ -839,6 +847,7 @@ function renderMeals() {
               <span class="macro-c">C: ${totalCarbs.toFixed(1)}g</span>
               <span class="macro-f">F: ${totalFat.toFixed(1)}g</span>
               <span class="meal-day-total-cals">🍽 ${totalCals} kcal</span>
+              ${remainingLabel ? `<span class="meal-day-remaining" style="color:${remainingColor}">${remainingLabel}</span>` : ''}
             </div>
             <div class="meal-day-pie-wrap">
               <canvas id="${summaryPieId}" width="52" height="52"></canvas>

@@ -1011,6 +1011,10 @@ tbody td {
   font-weight: 600;
   font-size: 0.85rem;
 }
+.meal-day-remaining {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
 .meal-day-pie-wrap {
   flex-shrink: 0;
 }

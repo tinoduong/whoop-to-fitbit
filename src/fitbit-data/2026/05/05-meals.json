@@ -3409,5 +3409,238 @@
         "total_protein": 20.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T14:25:28.228840",
+        "date": "2026-05-17",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 1 oz pomegranate seeds, 1/4 cup blueberries",
+        "items": [
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 36,
+                "protein": 6.2,
+                "totalCarbohydrate": 2.2,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38672582168
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38672444508
+            },
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38672729752
+            }
+        ],
+        "total_calories": 80,
+        "total_protein": 7.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T15:41:44.328405",
+        "date": "2026-05-17",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "starkest tuna creations (110 cal ,15 g protein), 1.5 oz french bread",
+        "items": [
+            {
+                "foodName": "Tuna, canned in water",
+                "calories": 110,
+                "protein": 15.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 2.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673252632
+            },
+            {
+                "foodName": "French bread",
+                "calories": 113,
+                "protein": 3.8,
+                "totalCarbohydrate": 21.6,
+                "totalFat": 1.4,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673448634
+            }
+        ],
+        "total_calories": 223,
+        "total_protein": 18.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T18:13:01.831243",
+        "date": "2026-05-17",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "3 Bonchon wings (85 cal and 5.6 g protein each), 1 Bonchon Drumstick (161 cal and 11.2 g protein each), 1 cup bonchon fried rice (410 cal and 8.4 gram protein per cup)",
+        "items": [
+            {
+                "foodName": "Chicken Wings, fried",
+                "calories": 255,
+                "protein": 16.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 17.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673955853
+            },
+            {
+                "foodName": "Chicken Drumstick, fried",
+                "calories": 161,
+                "protein": 11.2,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 10.8,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38674565294
+            },
+            {
+                "foodName": "Fried Rice",
+                "calories": 410,
+                "protein": 8.4,
+                "totalCarbohydrate": 52.0,
+                "totalFat": 18.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673798737
+            }
+        ],
+        "total_calories": 826,
+        "total_protein": 36.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T18:17:30.680501",
+        "date": "2026-05-17",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "Muscle Milk Pro 33 (200 cal, 33 g protein)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Pro 33 protein shake",
+                "calories": 200,
+                "protein": 33.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 3.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38674712878
+            }
+        ],
+        "total_calories": 200,
+        "total_protein": 33.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-17T20:11:43.585963",
+        "date": "2026-05-18",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "7.26 oz roasted skinless chicken breast, 1.94 oz roasted sweet potato, .70 oz roasted egg plant, 1.26 oz pomegranate seeds, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Chicken Breast, roasted, skinless",
+                "calories": 340,
+                "protein": 63.8,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.4,
+                "amount": 7.26,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38674026794
+            },
+            {
+                "foodName": "Sweet Potato, roasted",
+                "calories": 98,
+                "protein": 2.2,
+                "totalCarbohydrate": 22.7,
+                "totalFat": 0.2,
+                "amount": 1.94,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38674262742
+            },
+            {
+                "foodName": "Eggplant, roasted",
+                "calories": 8,
+                "protein": 0.3,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 0.1,
+                "amount": 0.7,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673565123
+            },
+            {
+                "foodName": "Pomegranate Seeds, raw",
+                "calories": 30,
+                "protein": 0.6,
+                "totalCarbohydrate": 7.5,
+                "totalFat": 0.4,
+                "amount": 1.26,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38674606766
+            },
+            {
+                "foodName": "Arugula, raw",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1.0,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38673849900
+            }
+        ],
+        "total_calories": 481,
+        "total_protein": 67.4,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
