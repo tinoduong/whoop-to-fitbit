@@ -136,6 +136,43 @@ function offsetDate(dateStr, days) {
   return d.toISOString().slice(0, 10);
 }
 
+function generateDateRange(startDate, endDate) {
+  const dates = [];
+  const cur = new Date(startDate + 'T00:00:00');
+  const end = new Date(endDate + 'T00:00:00');
+  while (cur <= end) {
+    dates.push(cur.toISOString().slice(0, 10));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return dates;
+}
+
+function interpolateSeries(allDates, valueByDate) {
+  const knownDates = allDates.filter(d => valueByDate[d] != null);
+  if (!knownDates.length) return { values: allDates.map(() => null), isInterpolated: allDates.map(() => false) };
+  const values = [], isInterpolated = [];
+  for (const date of allDates) {
+    if (valueByDate[date] != null) {
+      values.push(valueByDate[date]);
+      isInterpolated.push(false);
+    } else {
+      const prev = [...knownDates].reverse().find(d => d < date);
+      const next = knownDates.find(d => d > date);
+      if (prev && next) {
+        const t0 = new Date(prev + 'T00:00:00').getTime();
+        const t1 = new Date(next + 'T00:00:00').getTime();
+        const t = new Date(date + 'T00:00:00').getTime();
+        const ratio = (t - t0) / (t1 - t0);
+        values.push(Math.round((valueByDate[prev] + ratio * (valueByDate[next] - valueByDate[prev])) * 10) / 10);
+      } else {
+        values.push(prev ? valueByDate[prev] : valueByDate[next]);
+      }
+      isInterpolated.push(true);
+    }
+  }
+  return { values, isInterpolated };
+}
+
 // ===== URL HELPERS =====
 function pushUrl(updates) {
   const params = new URLSearchParams(window.location.search);

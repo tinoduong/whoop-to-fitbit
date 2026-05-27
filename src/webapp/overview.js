@@ -185,9 +185,18 @@ function renderWeightChart() {
   const ctx = document.getElementById('weightChart').getContext('2d');
   const filtered = filterWeightByRange(currentChartRange);
 
-  const labels = filtered.map(w => w.date);
-  const weightData = filtered.map(w => kgToLbs(w.weight));
-  const fatData = filtered.map(w => w.fat);
+  const rawDates = filtered.map(w => w.date);
+  const labels = rawDates.length >= 2
+    ? generateDateRange(rawDates[0], rawDates[rawDates.length - 1])
+    : rawDates;
+
+  const weightByDate = {}, fatByDate = {};
+  filtered.forEach(w => {
+    weightByDate[w.date] = kgToLbs(w.weight);
+    if (w.fat != null) fatByDate[w.date] = w.fat;
+  });
+  const { values: weightData, isInterpolated: weightInterp } = interpolateSeries(labels, weightByDate);
+  const { values: fatData, isInterpolated: fatInterp } = interpolateSeries(labels, fatByDate);
 
   const weightTrend = linReg(weightData);
   const fatTrend = linReg(fatData);
@@ -224,8 +233,14 @@ function renderWeightChart() {
       backgroundColor: 'rgba(108,99,255,0.1)',
       tension: 0.3,
       yAxisID: 'yWeight',
-      pointRadius: 4,
+      pointRadius: weightData.map((_, i) => weightInterp[i] ? 3 : 4),
       pointHoverRadius: 6,
+      pointBackgroundColor: weightData.map((_, i) => weightInterp[i] ? 'transparent' : '#6c63ff'),
+      pointBorderColor: weightData.map((_, i) => weightInterp[i] ? 'rgba(108,99,255,0.45)' : '#6c63ff'),
+      segment: {
+        borderColor: ctx => (weightInterp[ctx.p0DataIndex] || weightInterp[ctx.p1DataIndex]) ? 'rgba(108,99,255,0.35)' : '#6c63ff',
+        borderDash: ctx => (weightInterp[ctx.p0DataIndex] || weightInterp[ctx.p1DataIndex]) ? [4, 4] : [],
+      },
     },
     {
       label: 'Weight trend',
@@ -244,8 +259,14 @@ function renderWeightChart() {
       backgroundColor: 'rgba(0,212,170,0.1)',
       tension: 0.3,
       yAxisID: 'yFat',
-      pointRadius: 4,
+      pointRadius: fatData.map((_, i) => fatInterp[i] ? 3 : 4),
       pointHoverRadius: 6,
+      pointBackgroundColor: fatData.map((_, i) => fatInterp[i] ? 'transparent' : '#00d4aa'),
+      pointBorderColor: fatData.map((_, i) => fatInterp[i] ? 'rgba(0,212,170,0.4)' : '#00d4aa'),
+      segment: {
+        borderColor: ctx => (fatInterp[ctx.p0DataIndex] || fatInterp[ctx.p1DataIndex]) ? 'rgba(0,212,170,0.35)' : '#00d4aa',
+        borderDash: ctx => (fatInterp[ctx.p0DataIndex] || fatInterp[ctx.p1DataIndex]) ? [4, 4] : [],
+      },
     },
     {
       label: 'Body Fat trend',
@@ -939,17 +960,18 @@ function renderBodyCompRatioChart() {
   const baseFatMass = baseWeightLbs * (base.fat / 100);
   const baseLeanMass = baseWeightLbs * (1 - base.fat / 100);
 
-  const labels = valid.map(e => e.date);
-  const fatLostPcts = valid.map(entry => {
+  const fatLostByDate = {}, leanLostByDate = {};
+  valid.forEach(entry => {
     const weightLbs = kgToLbs(entry.weight);
     const fatMass = weightLbs * (entry.fat / 100);
-    return Math.round(((baseFatMass - fatMass) / baseFatMass) * 1000) / 10;
-  });
-  const leanLostPcts = valid.map(entry => {
-    const weightLbs = kgToLbs(entry.weight);
     const leanMass = weightLbs * (1 - entry.fat / 100);
-    return Math.round(((baseLeanMass - leanMass) / baseLeanMass) * 1000) / 10;
+    fatLostByDate[entry.date] = Math.round(((baseFatMass - fatMass) / baseFatMass) * 1000) / 10;
+    leanLostByDate[entry.date] = Math.round(((baseLeanMass - leanMass) / baseLeanMass) * 1000) / 10;
   });
+
+  const labels = generateDateRange(valid[0].date, valid[valid.length - 1].date);
+  const { values: fatLostPcts, isInterpolated: fatLostInterp } = interpolateSeries(labels, fatLostByDate);
+  const { values: leanLostPcts, isInterpolated: leanLostInterp } = interpolateSeries(labels, leanLostByDate);
 
   function linReg(data) {
     const pts = data.map((y, x) => ({ x, y })).filter(p => p.y != null);
@@ -1029,11 +1051,16 @@ function renderBodyCompRatioChart() {
           data: fatLostPcts,
           borderColor: '#E24B4A',
           backgroundColor: 'transparent',
-          pointRadius: 3,
+          pointRadius: fatLostPcts.map((_, i) => fatLostInterp[i] ? 2 : 3),
           pointHoverRadius: 5,
+          pointBackgroundColor: fatLostPcts.map((_, i) => fatLostInterp[i] ? 'transparent' : '#E24B4A'),
+          pointBorderColor: fatLostPcts.map((_, i) => fatLostInterp[i] ? 'rgba(226,75,74,0.4)' : '#E24B4A'),
           tension: 0.3,
           fill: false,
-          spanGaps: true,
+          segment: {
+            borderColor: ctx => (fatLostInterp[ctx.p0DataIndex] || fatLostInterp[ctx.p1DataIndex]) ? 'rgba(226,75,74,0.35)' : '#E24B4A',
+            borderDash: ctx => (fatLostInterp[ctx.p0DataIndex] || fatLostInterp[ctx.p1DataIndex]) ? [4, 4] : [],
+          },
           yAxisID: 'yPct',
         },
         {
@@ -1042,11 +1069,16 @@ function renderBodyCompRatioChart() {
           borderColor: '#1D9E75',
           backgroundColor: 'transparent',
           borderDash: [6, 4],
-          pointRadius: 3,
+          pointRadius: leanLostPcts.map((_, i) => leanLostInterp[i] ? 2 : 3),
           pointHoverRadius: 5,
+          pointBackgroundColor: leanLostPcts.map((_, i) => leanLostInterp[i] ? 'transparent' : '#1D9E75'),
+          pointBorderColor: leanLostPcts.map((_, i) => leanLostInterp[i] ? 'rgba(29,158,117,0.4)' : '#1D9E75'),
           tension: 0.3,
           fill: false,
-          spanGaps: true,
+          segment: {
+            borderColor: ctx => (leanLostInterp[ctx.p0DataIndex] || leanLostInterp[ctx.p1DataIndex]) ? 'rgba(29,158,117,0.35)' : '#1D9E75',
+            borderDash: ctx => (leanLostInterp[ctx.p0DataIndex] || leanLostInterp[ctx.p1DataIndex]) ? [4, 4] : [],
+          },
           yAxisID: 'yPct',
         },
         {

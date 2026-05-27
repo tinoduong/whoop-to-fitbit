@@ -69,18 +69,24 @@ function renderIntensityTrends() {
     }
   });
   const strainDates = Object.keys(strainByDate).sort();
-  const strainLabels = strainDates.map(d => {
+  const actualStrainVals = strainDates.map(d => Math.round(strainByDate[d] * 10) / 10);
+
+  const avgStrain = actualStrainVals.length ? (actualStrainVals.reduce((a, b) => a + b, 0) / actualStrainVals.length).toFixed(1) : '—';
+  const peakStrain = actualStrainVals.length ? Math.max(...actualStrainVals).toFixed(1) : '—';
+  const peakDate = strainDates[actualStrainVals.indexOf(Math.max(...actualStrainVals))];
+  const peakLabel = peakDate ? new Date(peakDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—';
+  const highStrainDays = actualStrainVals.filter(s => s >= 13).length;
+
+  const allStrainDates = strainDates.length >= 2
+    ? generateDateRange(strainDates[0], strainDates[strainDates.length - 1])
+    : strainDates;
+  const strainByDateRounded = Object.fromEntries(strainDates.map((d, i) => [d, actualStrainVals[i]]));
+  const strainVals = allStrainDates.map(d => strainByDateRounded[d] ?? 0);
+  const strainLabels = allStrainDates.map(d => {
     const dt = new Date(d + 'T00:00:00');
     return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
-  const strainVals = strainDates.map(d => Math.round(strainByDate[d] * 10) / 10);
   const strainTrend = linReg(strainVals);
-
-  const avgStrain = strainVals.length ? (strainVals.reduce((a, b) => a + b, 0) / strainVals.length).toFixed(1) : '—';
-  const peakStrain = strainVals.length ? Math.max(...strainVals).toFixed(1) : '—';
-  const peakIdx = strainVals.indexOf(Math.max(...strainVals));
-  const peakLabel = strainLabels[peakIdx] || '—';
-  const highStrainDays = strainVals.filter(s => s >= 13).length;
   const trendSlope = strainVals.length >= 2 ? (strainTrend[strainTrend.length - 1] - strainTrend[0]).toFixed(1) : null;
   const trendColor = trendSlope > 0 ? '#1D9E75' : trendSlope < 0 ? '#E24B4A' : '#8b90a8';
   const trendLabel = trendSlope > 0 ? `+${trendSlope}` : trendSlope;

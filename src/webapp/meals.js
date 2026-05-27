@@ -177,10 +177,14 @@ function renderProteinChart() {
     if (!byDate[meal.date]) byDate[meal.date] = 0;
     byDate[meal.date] += meal.total_protein || 0;
   });
-  const dates = Object.keys(byDate).sort();
-  const proteinVals = dates.map(d => Math.round(byDate[d] * 10) / 10);
+  const loggedDates = Object.keys(byDate).sort();
+  const dates = loggedDates.length >= 2
+    ? generateDateRange(loggedDates[0], loggedDates[loggedDates.length - 1])
+    : loggedDates;
+  const proteinByDate = Object.fromEntries(loggedDates.map(d => [d, Math.round(byDate[d] * 10) / 10]));
+  const proteinVals = dates.map(d => proteinByDate[d] ?? 0);
 
-  const daysLogged = dates.length;
+  const daysLogged = loggedDates.length;
   const avg = daysLogged ? (proteinVals.reduce((a, b) => a + b, 0) / daysLogged).toFixed(1) : '—';
   const metGoalDays = proteinGoal ? proteinVals.filter(v => v >= proteinGoal).length : 0;
   const pctMet = daysLogged ? Math.round((metGoalDays / daysLogged) * 100) : 0;
@@ -232,10 +236,7 @@ function renderProteinChart() {
 
   if (proteinChart) proteinChart.destroy();
 
-  const labels = dates.map(d => {
-    const dt = new Date(d + 'T00:00:00');
-    return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  });
+  const labels = dates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
 
   const barColors = proteinVals.map(v =>
     !proteinGoal ? 'rgba(108,99,255,0.65)' :
@@ -374,21 +375,25 @@ function renderCalorieChart() {
     if (!byDate[meal.date]) byDate[meal.date] = 0;
     byDate[meal.date] += meal.total_calories || 0;
   });
-  const dates = Object.keys(byDate).sort();
+  const loggedCalDates = Object.keys(byDate).sort();
+  const dates = loggedCalDates.length >= 2
+    ? generateDateRange(loggedCalDates[0], loggedCalDates[loggedCalDates.length - 1])
+    : loggedCalDates;
+  const intakeByDate = Object.fromEntries(loggedCalDates.map(d => [d, Math.round(byDate[d])]));
+  const intakeVals = dates.map(d => intakeByDate[d] ?? 0);
 
-  const intakeVals = dates.map(d => Math.round(byDate[d]));
   const goalVals = dates.map(d => {
     const woCals = (dailyMap[d] || {}).workoutCalories || 0;
     return getTargetIntakeForDate(d, woCals).targetIntake;
   });
 
-  const daysLogged = dates.length;
-  const avgIntake = daysLogged ? Math.round(intakeVals.reduce((a, b) => a + b, 0) / daysLogged) : 0;
-  const avgGoal = daysLogged ? Math.round(goalVals.reduce((a, b) => a + b, 0) / daysLogged) : 0;
+  const daysLogged = loggedCalDates.length;
+  const avgIntake = daysLogged ? Math.round(intakeVals.reduce((a, b) => a + b, 0) / dates.length) : 0;
+  const avgGoal = daysLogged ? Math.round(goalVals.reduce((a, b) => a + b, 0) / dates.length) : 0;
   const daysUnder = intakeVals.filter((v, i) => v <= goalVals[i]).length;
   const pctUnder = daysLogged ? Math.round((daysUnder / daysLogged) * 100) : 0;
   const avgDelta = daysLogged
-    ? Math.round(intakeVals.reduce((s, v, i) => s + (v - goalVals[i]), 0) / daysLogged)
+    ? Math.round(intakeVals.reduce((s, v, i) => s + (v - goalVals[i]), 0) / dates.length)
     : 0;
 
   const tickColor = '#8b90a8';
@@ -442,10 +447,7 @@ function renderCalorieChart() {
 
   if (calorieChart) calorieChart.destroy();
 
-  const labels = dates.map(d => {
-    const dt = new Date(d + 'T00:00:00');
-    return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  });
+  const labels = dates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
 
   const columnShadePlugin = {
     id: 'columnShade',
@@ -1012,15 +1014,32 @@ function setupLogMealModal() {
     return prefix + quantity + selectedText;
   }
 
+  // Split on commas/semicolons that are NOT inside parentheses
+  function splitOutsideParens(str) {
+    const segments = [];
+    let depth = 0, start = 0;
+    for (let i = 0; i < str.length; i++) {
+      const c = str[i];
+      if (c === '(') depth++;
+      else if (c === ')') depth = Math.max(0, depth - 1);
+      else if ((c === ',' || c === ';') && depth === 0) {
+        segments.push(str.slice(start, i));
+        start = i + 1;
+      }
+    }
+    segments.push(str.slice(start));
+    return segments;
+  }
+
   // Build a frequency map of food name segments from all past meals
   function buildFoodIndex() {
     const freq = {};
     allMeals.forEach(m => {
       const desc = m.raw_description || '';
-      // Split on commas and semicolons; skip the meal type prefix before the first colon
+      // Skip the meal type prefix before the first colon
       const colonIdx = desc.indexOf(':');
       const itemsStr = colonIdx >= 0 ? desc.slice(colonIdx + 1) : desc;
-      itemsStr.split(/[,;]/).forEach(seg => {
+      splitOutsideParens(itemsStr).forEach(seg => {
         const food = stripQuantity(seg.trim());
         if (food.length > 2) freq[food] = (freq[food] || 0) + 1;
       });
