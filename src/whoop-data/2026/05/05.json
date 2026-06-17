@@ -578,5 +578,131 @@
         "max_heart_rate": 0,
         "strain": 0,
         "zone_durations": {}
+    },
+    {
+        "id": "0f98bedc-6668-45f9-ab51-ae6d421cfc6d",
+        "sport_name": "running",
+        "start_time": "2026-05-30T07:29:31",
+        "end_time": "2026-05-30T08:15:17",
+        "avg_heart_rate": 161,
+        "calories": 661,
+        "distance_meter": 5948.38,
+        "max_heart_rate": 191,
+        "strain": 16.393213,
+        "zone_durations": {
+            "zone_zero_milli": 96000,
+            "zone_one_milli": 73000,
+            "zone_two_milli": 177000,
+            "zone_three_milli": 449000,
+            "zone_four_milli": 1200000,
+            "zone_five_milli": 751000
+        }
+    },
+    {
+        "id": "a6143a78-605c-4c92-b1d9-8b762f81e352",
+        "sport_name": "activity",
+        "start_time": "2026-05-30T09:00:00",
+        "end_time": "2026-05-30T10:08:59",
+        "avg_heart_rate": 118,
+        "calories": 309,
+        "distance_meter": null,
+        "max_heart_rate": 144,
+        "strain": 7.6215158,
+        "zone_durations": {
+            "zone_zero_milli": 324000,
+            "zone_one_milli": 3761010,
+            "zone_two_milli": 54000,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "77de1ee7-dd8c-456c-8806-02d78745b528",
+        "sport_name": "activity",
+        "start_time": "2026-05-30T19:14:00",
+        "end_time": "2026-05-30T19:53:59",
+        "avg_heart_rate": 109,
+        "calories": 112,
+        "distance_meter": null,
+        "max_heart_rate": 137,
+        "strain": 5.2525754,
+        "zone_durations": {
+            "zone_zero_milli": 1197000,
+            "zone_one_milli": 1202010,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "2ce01639-99ec-4f33-ad91-70b6eebc24f6",
+        "sport_name": "running",
+        "start_time": "2026-05-31T09:35:16",
+        "end_time": "2026-05-31T10:08:35",
+        "avg_heart_rate": 137,
+        "calories": 298,
+        "distance_meter": 2.567007,
+        "max_heart_rate": 163,
+        "strain": 9.338719,
+        "zone_durations": {
+            "zone_zero_milli": 105000,
+            "zone_one_milli": 432000,
+            "zone_two_milli": 1191000,
+            "zone_three_milli": 256000,
+            "zone_four_milli": 15000,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "33552ebc-3058-4d01-aedd-36c98d9f4b27",
+        "sport_name": "contrast-therapy",
+        "start_time": "2026-05-31T11:20:00",
+        "end_time": "2026-05-31T12:25:00",
+        "avg_heart_rate": 0,
+        "calories": 0,
+        "distance_meter": 0,
+        "max_heart_rate": 0,
+        "strain": 0,
+        "zone_durations": {}
+    },
+    {
+        "id": "0a7042ac-7424-41d7-9e8c-48b90ac1021c",
+        "sport_name": "walking",
+        "start_time": "2026-05-31T14:48:00",
+        "end_time": "2026-05-31T15:15:59",
+        "avg_heart_rate": 99,
+        "calories": 32,
+        "distance_meter": null,
+        "max_heart_rate": 123,
+        "strain": 4.08167,
+        "zone_durations": {
+            "zone_zero_milli": 1607000,
+            "zone_one_milli": 72000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
+    },
+    {
+        "id": "2b524462-f803-4a9d-a358-42ff4eb9e9a1",
+        "sport_name": "walking",
+        "start_time": "2026-05-31T20:13:00",
+        "end_time": "2026-05-31T20:40:59",
+        "avg_heart_rate": 97,
+        "calories": 31,
+        "distance_meter": null,
+        "max_heart_rate": 121,
+        "strain": 4.029508,
+        "zone_durations": {
+            "zone_zero_milli": 1581000,
+            "zone_one_milli": 98000,
+            "zone_two_milli": 0,
+            "zone_three_milli": 0,
+            "zone_four_milli": 0,
+            "zone_five_milli": 0
+        }
     }
 ]

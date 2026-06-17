@@ -10,6 +10,33 @@ log = get_logger("fitbit_log_meal")
 
 ANTHROPIC_CONFIG_PATH = os.path.join("meta-data", "anthropic.json")
 
+def extract_json(text, array=False):
+    """Extract the first JSON array or object from text that may contain prose."""
+    start_char, end_char = ('[', ']') if array else ('{', '}')
+    start = text.find(start_char)
+    if start == -1:
+        return None
+    depth, in_string, escape_next = 0, False, False
+    for i, ch in enumerate(text[start:], start):
+        if escape_next:
+            escape_next = False
+            continue
+        if ch == '\\' and in_string:
+            escape_next = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if ch == start_char:
+            depth += 1
+        elif ch == end_char:
+            depth -= 1
+            if depth == 0:
+                return text[start:i + 1]
+    return None
+
 def load_anthropic_key():
     with open(ANTHROPIC_CONFIG_PATH, 'r') as f:
         return json.load(f)["api_key"]
@@ -70,7 +97,7 @@ def call_claude(prompt, max_tokens=1000):
         "content-type": "application/json"
     }
     body = {
-        "model": "claude-sonnet-4-20250514",
+        "model": "claude-sonnet-4-6",
         "max_tokens": max_tokens,
         "messages": [{"role": "user", "content": prompt}]
     }
@@ -112,8 +139,12 @@ Return ONLY valid JSON, no explanation, no markdown."""
     raw = call_claude(prompt, max_tokens=500)
     if not raw:
         return None
+    candidate = extract_json(raw, array=False)
+    if not candidate:
+        log.error(f"No JSON object found in Claude intent response.\nRaw: {raw}")
+        return None
     try:
-        return json.loads(raw)
+        return json.loads(candidate)
     except json.JSONDecodeError as e:
         log.error(f"Failed to parse Claude intent response: {e}\nRaw: {raw}")
         return None
@@ -136,8 +167,12 @@ Return ONLY valid JSON, no explanation, no markdown."""
     raw = call_claude(prompt, max_tokens=300)
     if not raw:
         return None
+    candidate = extract_json(raw, array=False)
+    if not candidate:
+        log.error(f"No JSON object found in Claude amendment response.\nRaw: {raw}")
+        return None
     try:
-        return json.loads(raw)
+        return json.loads(candidate)
     except json.JSONDecodeError as e:
         log.error(f"Failed to parse amendment resolution: {e}\nRaw: {raw}")
         return None
@@ -157,7 +192,9 @@ For EACH food item, follow this exact methodology:
 5. Round calories to the nearest integer; protein, carbs, fat to 1 decimal place
 
 Reference USDA per-100g values (cooked weight unless noted):
+- Chicken breast, grilled, skinless: 165 kcal, 31.0g P, 0.0g C, 3.6g F
 - Chicken breast, roasted, skinless: 165 kcal, 31.0g P, 0.0g C, 3.6g F
+- Chicken thigh, grilled, skinless: 179 kcal, 24.8g P, 0.0g C, 8.0g F
 - Chicken thigh, roasted, skinless: 179 kcal, 24.8g P, 0.0g C, 8.0g F
 - Beef ground 85/15, pan-broiled: 215 kcal, 26.1g P, 0.0g C, 11.8g F
 - Beef steak (sirloin), broiled: 207 kcal, 28.7g P, 0.0g C, 9.7g F
@@ -178,7 +215,7 @@ Reference USDA per-100g values (cooked weight unless noted):
 - Banana, raw: 89 kcal, 1.1g P, 23.0g C, 0.3g F
 - Blueberries, raw: 57 kcal, 0.7g P, 14.5g C, 0.3g F
 
-For items not in this list, use your best USDA-grounded estimate for that preparation method and scale the same way.
+For items in this list, you MUST use exactly the values shown — do not substitute or approximate. For items not in this list, use your best USDA-grounded estimate for that preparation method and scale the same way.
 
 Return ONLY a valid JSON array — no explanation, no markdown. Each item must have:
 - foodName (string, include preparation method, e.g. "Chicken Breast, roasted")
@@ -198,8 +235,12 @@ Result: [{{"foodName": "Chicken Breast, roasted", "calories": 234, "protein": 43
     raw = call_claude(prompt, max_tokens=1500)
     if not raw:
         return None
+    candidate = extract_json(raw, array=True)
+    if not candidate:
+        log.error(f"No JSON array found in Claude meal response.\nRaw: {raw}")
+        return None
     try:
-        return json.loads(raw)
+        return json.loads(candidate)
     except json.JSONDecodeError as e:
         log.error(f"Failed to parse Claude meal response: {e}\nRaw: {raw}")
         return None

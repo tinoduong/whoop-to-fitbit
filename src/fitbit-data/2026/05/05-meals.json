@@ -4944,5 +4944,843 @@
         "total_protein": 33.0,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-05-27T21:08:45.843612",
+        "date": "2026-05-28",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "7.3 oz roasted skinless chicken breast, 0.68 oz roasted eggplant, 0.82 oz roasted sweet potato, 1.24 oz pomegranate seeds, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Chicken Breast, roasted",
+                "calories": 341,
+                "protein": 64.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.4,
+                "amount": 7.3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38736101366
+            },
+            {
+                "foodName": "Eggplant, roasted",
+                "calories": 7,
+                "protein": 0.2,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 0.1,
+                "amount": 0.68,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38737205640
+            },
+            {
+                "foodName": "Sweet Potato, roasted",
+                "calories": 22,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.1,
+                "totalFat": 0.1,
+                "amount": 0.82,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38736022619
+            },
+            {
+                "foodName": "Pomegranate Seeds",
+                "calories": 29,
+                "protein": 0.6,
+                "totalCarbohydrate": 6.5,
+                "totalFat": 0.4,
+                "amount": 1.24,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38736873084
+            },
+            {
+                "foodName": "Arugula, raw",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38736169998
+            }
+        ],
+        "total_calories": 404,
+        "total_protein": 65.9,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-28T19:04:36.409215",
+        "date": "2026-05-28",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "Wegmans steak bowl (800 cal, 31 grams protein)",
+        "items": [
+            {
+                "foodName": "Beef Steak, broiled",
+                "calories": 248,
+                "protein": 34.4,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 11.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38746367937
+            },
+            {
+                "foodName": "White Rice, cooked",
+                "calories": 182,
+                "protein": 3.8,
+                "totalCarbohydrate": 40.0,
+                "totalFat": 0.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38746564226
+            },
+            {
+                "foodName": "Mixed Vegetables, cooked",
+                "calories": 70,
+                "protein": 3.0,
+                "totalCarbohydrate": 14.0,
+                "totalFat": 0.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38747311628
+            },
+            {
+                "foodName": "Steak Bowl Sauce",
+                "calories": 300,
+                "protein": -10.2,
+                "totalCarbohydrate": 12.0,
+                "totalFat": 27.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": false,
+                "status_code": 400,
+                "log_id": null,
+                "error": "{\"errors\":[{\"errorType\":\"validation\",\"fieldName\":\"protein\",\"message\":\"Protein should be >= 0.\"}]}"
+            }
+        ],
+        "total_calories": 500,
+        "total_protein": 41.2,
+        "all_uploaded": false,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-28T19:06:24.039531",
+        "date": "2026-05-28",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "pure protein chocolate peanut butter bar (20g protein, 200 calories)",
+        "items": [
+            {
+                "foodName": "Protein bar, chocolate peanut butter",
+                "calories": 200,
+                "protein": 20.0,
+                "totalCarbohydrate": 15.0,
+                "totalFat": 8.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38746820155
+            }
+        ],
+        "total_calories": 200,
+        "total_protein": 20.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-28T20:04:38.577736",
+        "date": "2026-05-28",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 1/4 cup blueberries, 1 oz pomegranate seeds",
+        "items": [
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 34,
+                "protein": 5.9,
+                "totalCarbohydrate": 2.1,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38747731190
+            },
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.3,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38748298693
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38748416639
+            }
+        ],
+        "total_calories": 78,
+        "total_protein": 6.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-28T20:55:41.954242",
+        "date": "2026-05-29",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "7.2oz roasted skinless chicken breast, 1 oz pomegranate seeds, 1 cup arugula",
+        "items": [
+            {
+                "foodName": "Chicken Breast, roasted, skinless",
+                "calories": 337,
+                "protein": 63.3,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.4,
+                "amount": 7.2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38749273252
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38747936372
+            },
+            {
+                "foodName": "Arugula, raw",
+                "calories": 5,
+                "protein": 0.6,
+                "totalCarbohydrate": 0.9,
+                "totalFat": 0.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38748742642
+            }
+        ],
+        "total_calories": 365,
+        "total_protein": 64.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-29T19:59:27.151751",
+        "date": "2026-05-29",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5.5 oz cooked ribeye steak, 3 oz roasted potato, 1/2 tbsp butter",
+        "items": [
+            {
+                "foodName": "Ribeye Steak, cooked",
+                "calories": 426,
+                "protein": 44.7,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 25.9,
+                "amount": 5.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38754754785
+            },
+            {
+                "foodName": "Potato, roasted",
+                "calories": 79,
+                "protein": 2.1,
+                "totalCarbohydrate": 18.4,
+                "totalFat": 0.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38754597559
+            },
+            {
+                "foodName": "Butter, salted",
+                "calories": 51,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 5.8,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38754597561
+            }
+        ],
+        "total_calories": 556,
+        "total_protein": 46.8,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-29T21:24:53.422768",
+        "date": "2026-05-29",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "1/2 cup non-fat greek yogurt, 1 oz pomegranate seeds, 2 Tates cookie (70 cal each)",
+        "items": [
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 36,
+                "protein": 6.1,
+                "totalCarbohydrate": 2.2,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38755749651
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38755366240
+            },
+            {
+                "foodName": "Cookies, chocolate chip",
+                "calories": 140,
+                "protein": 1.8,
+                "totalCarbohydrate": 18.0,
+                "totalFat": 7.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38755454770
+            }
+        ],
+        "total_calories": 199,
+        "total_protein": 8.4,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-30T10:25:03.834510",
+        "date": "2026-05-30",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "1 belgain waffle (250 cal, 5 g protein), 1/4 cup blueberries, 1/2 cup non-fat greek yogurt",
+        "items": [
+            {
+                "foodName": "Belgian Waffle",
+                "calories": 250,
+                "protein": 5.0,
+                "totalCarbohydrate": 28.1,
+                "totalFat": 12.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38756611894
+            },
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38756415418
+            },
+            {
+                "foodName": "Greek yogurt, plain, nonfat",
+                "calories": 72,
+                "protein": 12.4,
+                "totalCarbohydrate": 4.4,
+                "totalFat": 0.5,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38757172269
+            }
+        ],
+        "total_calories": 343,
+        "total_protein": 17.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-30T16:30:31.085558",
+        "date": "2026-05-30",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "4.1 oz roasted skinless chicken breast, 1 hofbrauhaus original beer (150 calories)",
+        "items": [
+            {
+                "foodName": "Chicken Breast, roasted",
+                "calories": 192,
+                "protein": 36.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 4.2,
+                "amount": 4.1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759231048
+            },
+            {
+                "foodName": "Beer, Hofbrauhaus Original",
+                "calories": 150,
+                "protein": 1.7,
+                "totalCarbohydrate": 12.6,
+                "totalFat": 0.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38758327065
+            }
+        ],
+        "total_calories": 342,
+        "total_protein": 37.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-30T21:10:49.824397",
+        "date": "2026-05-30",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "5 oz bbq pulled pork, 1 slice of lemon meringue pie, 1/2 cup potato salad (no mayo), 2 oz corn bread, 1 cup baked beans, 1/2 corn on the cob, 4 hofbrauhaus original beer (150 calories each), 1 cup nachos, 1tbsp Wegman's guacamole",
+        "items": [
+            {
+                "foodName": "Pork, pulled, barbecued",
+                "calories": 372,
+                "protein": 37.1,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 8.1,
+                "amount": 5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38760174460
+            },
+            {
+                "foodName": "Pie, lemon meringue",
+                "calories": 303,
+                "protein": 4.7,
+                "totalCarbohydrate": 53.4,
+                "totalFat": 8.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759761728
+            },
+            {
+                "foodName": "Potato salad, without mayonnaise",
+                "calories": 104,
+                "protein": 2.3,
+                "totalCarbohydrate": 20.1,
+                "totalFat": 2.0,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759977859
+            },
+            {
+                "foodName": "Cornbread",
+                "calories": 203,
+                "protein": 4.6,
+                "totalCarbohydrate": 28.6,
+                "totalFat": 8.5,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38760076062
+            },
+            {
+                "foodName": "Beans, baked",
+                "calories": 155,
+                "protein": 5.5,
+                "totalCarbohydrate": 22.0,
+                "totalFat": 5.4,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38761104287
+            },
+            {
+                "foodName": "Corn, sweet, cooked",
+                "calories": 96,
+                "protein": 3.4,
+                "totalCarbohydrate": 21.0,
+                "totalFat": 1.3,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759673183
+            },
+            {
+                "foodName": "Beer, Hofbrauhaus Original",
+                "calories": 600,
+                "protein": 7.0,
+                "totalCarbohydrate": 50.6,
+                "totalFat": 0.0,
+                "amount": 4,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759439657
+            },
+            {
+                "foodName": "Nachos with cheese",
+                "calories": 346,
+                "protein": 9.8,
+                "totalCarbohydrate": 36.0,
+                "totalFat": 19.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759614472
+            },
+            {
+                "foodName": "Guacamole, Wegman's",
+                "calories": 24,
+                "protein": 0.3,
+                "totalCarbohydrate": 1.2,
+                "totalFat": 2.2,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38759908986
+            }
+        ],
+        "total_calories": 2203,
+        "total_protein": 74.7,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-31T09:21:47.519261",
+        "date": "2026-05-31",
+        "meal_type": "breakfast",
+        "meal_type_id": 1,
+        "raw_description": "Egg, scrambled, Olive oil, Strawberries, raw, Cantaloupe melon, raw, Cottage cheese, low fat",
+        "items": [
+            {
+                "foodName": "Egg, scrambled",
+                "calories": 268,
+                "protein": 18.2,
+                "totalCarbohydrate": 2.9,
+                "totalFat": 19.8,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38763122451
+            },
+            {
+                "foodName": "Olive oil",
+                "calories": 11,
+                "protein": 0.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 1.3,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38762107232
+            },
+            {
+                "foodName": "Strawberries, raw",
+                "calories": 20,
+                "protein": 0.4,
+                "totalCarbohydrate": 4.9,
+                "totalFat": 0.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38762976788
+            },
+            {
+                "foodName": "Cantaloupe melon, raw",
+                "calories": 14,
+                "protein": 0.3,
+                "totalCarbohydrate": 3.4,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38762929007
+            },
+            {
+                "foodName": "Cottage cheese, low fat",
+                "calories": 34,
+                "protein": 4.7,
+                "totalCarbohydrate": 1.4,
+                "totalFat": 1.0,
+                "amount": 1.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38762254470
+            }
+        ],
+        "total_calories": 347,
+        "total_protein": 23.6,
+        "all_uploaded": true,
+        "amended": true,
+        "previous_version": {
+            "logged_at": "2026-05-31T09:21:08.505137",
+            "raw_description": "3 scrambled eggs with no butter, 1/4 tsp olive oil, 1/2 cup strawberries, 1/4 cup cantalope melon",
+            "total_calories": 313,
+            "total_protein": 18.9
+        }
+    },
+    {
+        "logged_at": "2026-05-31T13:22:19.469644",
+        "date": "2026-05-31",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "2 oz gala apple, 1/4 cup blueberries",
+        "items": [
+            {
+                "foodName": "Apple, raw, Gala",
+                "calories": 30,
+                "protein": 0.2,
+                "totalCarbohydrate": 7.8,
+                "totalFat": 0.1,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38764093795
+            },
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.4,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38764475239
+            }
+        ],
+        "total_calories": 51,
+        "total_protein": 0.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-31T15:23:43.121868",
+        "date": "2026-05-31",
+        "meal_type": "lunch",
+        "meal_type_id": 3,
+        "raw_description": "2 pints beer, 3 oysters, 1/2 hamburger with cheese and onions, 3 oz fried calamari, 3 oz French fries",
+        "items": [
+            {
+                "foodName": "Beer, regular",
+                "calories": 304,
+                "protein": 3.5,
+                "totalCarbohydrate": 25.5,
+                "totalFat": 0.0,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38765673750
+            },
+            {
+                "foodName": "Oysters, cooked",
+                "calories": 41,
+                "protein": 5.9,
+                "totalCarbohydrate": 1.5,
+                "totalFat": 1.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38764839136
+            },
+            {
+                "foodName": "Hamburger with cheese, cooked",
+                "calories": 154,
+                "protein": 11.0,
+                "totalCarbohydrate": 2.0,
+                "totalFat": 11.2,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38765349624
+            },
+            {
+                "foodName": "Calamari, fried",
+                "calories": 231,
+                "protein": 16.2,
+                "totalCarbohydrate": 8.5,
+                "totalFat": 14.5,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38765064600
+            },
+            {
+                "foodName": "French fries, fried",
+                "calories": 274,
+                "protein": 3.4,
+                "totalCarbohydrate": 35.3,
+                "totalFat": 13.1,
+                "amount": 3,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38765693482
+            }
+        ],
+        "total_calories": 1004,
+        "total_protein": 40.0,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-31T19:49:20.122583",
+        "date": "2026-05-31",
+        "meal_type": "dinner",
+        "meal_type_id": 5,
+        "raw_description": "2 cups arugula, 1 wegman's albacore tuna pack (19g protein, 80cal), 1 oz pomegranate seeds, 1 oz low fat cottage cheese",
+        "items": [
+            {
+                "foodName": "Arugula, raw",
+                "calories": 50,
+                "protein": 5.2,
+                "totalCarbohydrate": 7.4,
+                "totalFat": 1.3,
+                "amount": 2,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38767326265
+            },
+            {
+                "foodName": "Tuna, albacore, canned in water",
+                "calories": 80,
+                "protein": 19.0,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 0.7,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38767188661
+            },
+            {
+                "foodName": "Pomegranate seeds, raw",
+                "calories": 23,
+                "protein": 0.5,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.3,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38767090401
+            },
+            {
+                "foodName": "Cottage cheese, low fat",
+                "calories": 20,
+                "protein": 2.8,
+                "totalCarbohydrate": 0.9,
+                "totalFat": 0.6,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38767021699
+            }
+        ],
+        "total_calories": 173,
+        "total_protein": 27.5,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-05-31T19:53:15.077647",
+        "date": "2026-05-31",
+        "meal_type": "snack",
+        "meal_type_id": 4,
+        "raw_description": "Muscle Milk Pro 33 (200 cal, 33 g protein)",
+        "items": [
+            {
+                "foodName": "Muscle Milk Pro 33, protein drink",
+                "calories": 200,
+                "protein": 33.0,
+                "totalCarbohydrate": 3.0,
+                "totalFat": 6.0,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 201,
+                "log_id": 38767169146
+            }
+        ],
+        "total_calories": 200,
+        "total_protein": 33.0,
+        "all_uploaded": true,
+        "amended": false
     }
 ]
