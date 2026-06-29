@@ -13,7 +13,7 @@ fi
 
 echo "Starting Fitness Dashboard at http://localhost:$PORT"
 cd "$SCRIPT_DIR"
-python3 app.py &
+../venv/bin/python app.py &
 SERVER_PID=$!
 
 sleep 0.8

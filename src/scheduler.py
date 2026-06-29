@@ -1,8 +1,9 @@
 """
 scheduler.py — Runs every hour to:
-  1. Refresh Fitbit + WHOOP tokens
+  1. Refresh Google Health + WHOOP tokens
   2. Fetch new WHOOP workouts
-  3. Sync any new workouts to Fitbit
+  3. Sync any new workouts to Google Health API
+  4. Sync weight data from Google Health API
 
 Handles laptop sleep/wake:
   - Checks elapsed time every 60 s; if ≥1 h has passed since the last run
@@ -20,7 +21,7 @@ import os
 import sys
 from datetime import datetime, timezone
 
-from fitbit_token_manager import get_valid_token, AuthRequired as FitbitAuthRequired
+from google_token_manager import get_credentials, AuthRequired as GoogleAuthRequired
 from whoop_token_manager import AuthRequired as WhoopAuthRequired
 from whoop_fetch_activity import get_workout_summary_programmatic
 from fitbit_write_workout import sync_whoop_to_fitbit
@@ -102,12 +103,9 @@ def run_sync():
     log.info("=" * 60)
     log.info("Scheduler: starting sync cycle")
 
-    # 1. Refresh Fitbit token (non-interactive — raises FitbitAuthRequired if manual auth needed)
-    log.info("Refreshing Fitbit token...")
-    fitbit_token = get_valid_token(interactive=False)
-    if not fitbit_token:
-        log.error("Could not obtain Fitbit token — skipping this cycle.")
-        return False
+    # 1. Ensure Google Health token is valid (auto-refreshes; raises GoogleAuthRequired if re-auth needed)
+    log.info("Refreshing Google Health token...")
+    get_credentials(interactive=False)
 
     # 2. Determine start date: day after the latest locally stored WHOOP workout,
     #    so we catch everything missed while the laptop was closed.
@@ -115,15 +113,15 @@ def run_sync():
     log.info(f"Refreshing WHOOP token and fetching workouts from {start_dt.strftime('%Y-%m-%d')}...")
     new_workouts = get_workout_summary_programmatic(start_dt)
 
-    # 3. Sync new WHOOP workouts → Fitbit only if there are new workouts to register
+    # 3. Sync new WHOOP workouts → Google Health API only if there are new workouts
     if new_workouts:
-        log.info(f"Syncing WHOOP → Fitbit (from {start_dt.strftime('%Y-%m-%d')})...")
+        log.info(f"Syncing WHOOP → Google Health API (from {start_dt.strftime('%Y-%m-%d')})...")
         sync_whoop_to_fitbit(start_dt)
     else:
-        log.info("No new WHOOP workouts — skipping Fitbit API call.")
+        log.info("No new WHOOP workouts — skipping workout sync.")
 
-    # 4. Fetch and store Fitbit weight data
-    log.info("Fetching and storing Fitbit weight data...")
+    # 4. Fetch and store weight data
+    log.info("Fetching and storing weight data...")
     fetch_weight_data()
 
     now = time.time()
@@ -152,7 +150,7 @@ def main():
 
             try:
                 run_sync()
-            except (FitbitAuthRequired, WhoopAuthRequired) as e:
+            except (GoogleAuthRequired, WhoopAuthRequired) as e:
                 log.error(f"Manual authentication required — stopping scheduler.\n  → {e}")
                 log.error(
                     "Fix: re-authenticate by running the relevant token manager script, "

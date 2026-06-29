@@ -239,13 +239,10 @@ def delete_meal(date_str, meal_type, logged_at):
     os.chdir(SRC_DIR)
     try:
         import fitbit_add_meal
-        from fitbit_token_manager import get_valid_token
-        access_token = get_valid_token()
-        if access_token:
-            for item in record.get("items", []):
-                log_id = item.get("log_id")
-                if log_id:
-                    fitbit_add_meal.delete_food_log(access_token, log_id)
+        for item in record.get("items", []):
+            log_id = item.get("log_id")
+            if log_id:
+                fitbit_add_meal.delete_food_log(None, log_id)
     finally:
         os.chdir(orig_dir)
 

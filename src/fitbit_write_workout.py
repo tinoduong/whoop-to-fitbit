@@ -2,23 +2,26 @@ import os
 import json
 import requests
 import sys
-from datetime import datetime
-from fitbit_token_manager import get_valid_token
+from datetime import datetime, timezone, timedelta
+from google_token_manager import get_headers
 from logger import get_logger
 
 log = get_logger("fitbit_write_workout")
 
+BASE_URL = "https://health.googleapis.com/v4"
+
 ACTIVITY_MAP = {
-    "running": "90009",
-    "walking": "90013",
-    "hiking": "90011",
-    "biking": "90001",
-    "swimming": "1071",
-    "weightlifting": "2131",
-    "hiit": "11040",
-    "circuit_training": "3016",
-    "treadmill": "90019",
-    "workout": "3000"
+    "running": "RUNNING",
+    "walking": "WALKING",
+    "hiking": "HIKING",
+    "biking": "BIKING",
+    "swimming": "SWIMMING",
+    "weightlifting": "WEIGHTLIFTING",
+    "hiit": "HIIT",
+    "circuit_training": "CIRCUIT_TRAINING",
+    "treadmill": "TREADMILL",
+    "workout": "WORKOUT",
+    "contrast-therapy": "OTHER",
 }
 
 def parse_start_argument():
@@ -31,57 +34,46 @@ def parse_start_argument():
         log.error("Invalid date argument. Use YYYY-MM-DD format.")
         sys.exit(1)
 
-def convert_whoop_to_fitbit(workout):
+def convert_whoop_to_google(workout):
     try:
-        start_dt = datetime.fromisoformat(workout["start_time"]).replace(tzinfo=None)
-        end_dt = datetime.fromisoformat(workout["end_time"]).replace(tzinfo=None)
-        duration_ms = int((end_dt - start_dt).total_seconds() * 1000)
+        start_dt = datetime.fromisoformat(workout["start_time"]).astimezone(timezone.utc)
+        end_dt = datetime.fromisoformat(workout["end_time"]).astimezone(timezone.utc)
 
-        cals = workout.get("calories", 0)
         sport = workout.get("sport_name", "").lower()
+        cals = float(workout.get("calories", 0))
         raw_dist = workout.get("distance_meter")
-        dist_m = float(raw_dist) if raw_dist is not None else 0.0
+        dist_mm = float(raw_dist) * 1000 if raw_dist else None
 
-        base_id = ACTIVITY_MAP.get(sport, ACTIVITY_MAP["workout"])
-        final_id = base_id
-        use_distance = False
+        exercise_type = ACTIVITY_MAP.get(sport, "WORKOUT")
+        display_name = sport.replace("-", " ").title()
 
-        if base_id in ["90009", "90013", "90011"]:
-            if dist_m > 500:
-                use_distance = True
-            else:
-                final_id = "90019"
+        metrics = {"caloriesKcal": cals}
+        if dist_mm:
+            metrics["distanceMillimeters"] = dist_mm
 
-        payload = {
-            "manualCalories": int(cals),
-            "startTime": start_dt.strftime("%H:%M"),
-            "date": start_dt.strftime("%Y-%m-%d"),
-            "durationMillis": duration_ms
+        return {
+            "exercise": {
+                "interval": {
+                    "startTime": start_dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "endTime": end_dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "startUtcOffset": "-14400s",
+                    "endUtcOffset": "-14400s",
+                },
+                "exerciseType": exercise_type,
+                "displayName": display_name,
+                "metricsSummary": metrics,
+            }
         }
-
-        if sport == "hiit":
-            payload["activityName"] = "HIIT"
-        else:
-            payload["activityId"] = final_id
-
-        if use_distance:
-            payload["distance"] = round(dist_m / 1000, 3)
-            payload["distanceUnit"] = "Kilometer"
-
-        return payload
     except Exception as e:
         log.error(f"Conversion error for workout {workout.get('id')}: {e}")
         return None
 
 def sync_whoop_to_fitbit(start_filter_dt):
     whoop_root, fitbit_root = "whoop-data", "fitbit-data"
+    headers = get_headers()
+    headers["Content-Type"] = "application/json"
 
-    access_token = get_valid_token()
-    if not access_token:
-        log.error("Could not obtain a valid Fitbit token. Aborting.")
-        sys.exit(1)
-
-    log.info(f"Syncing WHOOP → Fitbit (from {start_filter_dt.strftime('%Y-%m-%d')})...")
+    log.info(f"Syncing WHOOP → Google Health API (from {start_filter_dt.strftime('%Y-%m-%d')})...")
 
     total_uploaded = 0
     total_skipped = 0
@@ -128,28 +120,25 @@ def sync_whoop_to_fitbit(start_filter_dt):
                     total_skipped += 1
                     continue
 
-                payload = convert_whoop_to_fitbit(workout)
+                payload = convert_whoop_to_google(workout)
                 if not payload:
                     total_errors += 1
                     continue
 
                 log.info(f"Uploading: {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}")
 
-                headers = {
-                    "Authorization": f"Bearer {access_token}"
-                }
-
                 try:
-                    resp = requests.post("https://api.fitbit.com/1/user/-/activities.json", headers=headers, params=payload)
-
-                    if resp.status_code in [200, 201]:
+                    resp = requests.post(
+                        f"{BASE_URL}/users/me/dataTypes/exercise/dataPoints",
+                        headers=headers,
+                        json=payload,
+                    )
+                    if resp.status_code == 200:
                         log.info(f"Upload successful: {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}")
-                        # log.info(f"API payload: {payload}")
-                        # log.info(f"API response: {resp.text}")
                         new_ids_successfully_synced.append({"id": w_id})
                         total_uploaded += 1
                     else:
-                        log.error(f"Upload failed ({resp.status_code}) for {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}: {resp.text}")
+                        log.error(f"Upload failed ({resp.status_code}) for {workout['sport_name']} | {w_start_dt.strftime('%Y-%m-%d %H:%M')}: {resp.text[:200]}")
                         total_errors += 1
                 except Exception as e:
                     log.error(f"Connection error uploading {workout.get('sport_name')}: {e}")

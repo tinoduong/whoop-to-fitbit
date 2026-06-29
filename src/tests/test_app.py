@@ -655,10 +655,8 @@ class TestDeleteMeal(unittest.TestCase):
         date = date or self._DATE
         meal_type = meal_type or self._MEAL_TYPE
         logged_at = logged_at or self._LOGGED_AT
-        mock_token = "fake-token"
-        with patch("fitbit_token_manager.get_valid_token", return_value=mock_token):
-            with patch("fitbit_add_meal.delete_food_log", return_value=True) as mock_del:
-                ok, err = fitness_app.delete_meal(date, meal_type, logged_at)
+        with patch("fitbit_add_meal.delete_food_log", return_value=True) as mock_del:
+            ok, err = fitness_app.delete_meal(date, meal_type, logged_at)
         return ok, err, mock_del
 
     def test_removes_record_from_json(self):
@@ -674,7 +672,7 @@ class TestDeleteMeal(unittest.TestCase):
 
     def test_calls_fitbit_delete_for_each_item_with_log_id(self):
         ok, err, mock_del = self._delete_with_mocked_fitbit()
-        mock_del.assert_called_once_with("fake-token", self._LOG_ID)
+        mock_del.assert_called_once_with(None, self._LOG_ID)
 
     def test_returns_false_when_file_missing(self):
         os.remove(self._meal_file)
@@ -709,9 +707,8 @@ class TestDeleteMeal(unittest.TestCase):
         with open(self._meal_file, "w") as f:
             json.dump([no_log_id_record], f)
         from unittest.mock import patch
-        with patch("fitbit_token_manager.get_valid_token", return_value="tok"):
-            with patch("fitbit_add_meal.delete_food_log") as mock_del:
-                ok, err = fitness_app.delete_meal(self._DATE, self._MEAL_TYPE, self._LOGGED_AT)
+        with patch("fitbit_add_meal.delete_food_log") as mock_del:
+            ok, err = fitness_app.delete_meal(self._DATE, self._MEAL_TYPE, self._LOGGED_AT)
         mock_del.assert_not_called()
         self.assertTrue(ok)
 

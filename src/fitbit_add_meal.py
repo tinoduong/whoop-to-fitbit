@@ -2,8 +2,8 @@ import os
 import json
 import sys
 import requests
-from datetime import datetime
-from fitbit_token_manager import get_valid_token
+from datetime import datetime, timezone, timedelta
+from google_token_manager import get_headers
 from logger import get_logger
 
 log = get_logger("fitbit_log_meal")
@@ -42,14 +42,16 @@ def load_anthropic_key():
         return json.load(f)["api_key"]
 
 ANTHROPIC_API_KEY = load_anthropic_key()
+BASE_URL = "https://health.googleapis.com/v4"
+
 MEAL_TYPE_MAP = {
-    "breakfast": 1,
-    "morning snack": 2,
-    "lunch": 3,
-    "afternoon snack": 4,
-    "dinner": 5,
-    "snack": 4,
-    "anytime": 7
+    "breakfast": "BREAKFAST",
+    "morning snack": "BEFORE_LUNCH",
+    "lunch": "LUNCH",
+    "afternoon snack": "BEFORE_DINNER",
+    "dinner": "DINNER",
+    "snack": "SNACK",
+    "anytime": "ANYTIME",
 }
 
 # ─── Storage ────────────────────────────────────────────────────────────────
@@ -232,7 +234,7 @@ calories = round((141.7/100) × 165) = 234
 protein  = round((141.7/100) × 31.0, 1) = 43.9
 Result: [{{"foodName": "Chicken Breast, roasted", "calories": 234, "protein": 43.9, "totalCarbohydrate": 0.0, "totalFat": 5.1, "amount": 5, "unitId": 304}}]"""
 
-    raw = call_claude(prompt, max_tokens=1500)
+    raw = call_claude(prompt, max_tokens=4000)
     if not raw:
         return None
     candidate = extract_json(raw, array=True)
@@ -245,54 +247,51 @@ Result: [{{"foodName": "Chicken Breast, roasted", "calories": 234, "protein": 43
         log.error(f"Failed to parse Claude meal response: {e}\nRaw: {raw}")
         return None
 
-# ─── Fitbit API ──────────────────────────────────────────────────────────────
+# ─── Google Health API ───────────────────────────────────────────────────────
 
-def upload_food_item(access_token, item, meal_type_id, date_str):
-    """
-    POST /1/user/-/foods/log.json
-    All params passed as query string per Fitbit API spec.
-    Nutrition param names are plain (protein, totalCarbohydrate, totalFat) —
-    the (g)/(mg) in the docs table are unit labels only, not part of the param name.
-    """
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Accept": "application/json"
-    }
+def upload_food_item(item, meal_type_id, date_str):
+    headers = get_headers()
+    headers["Content-Type"] = "application/json"
 
-    params = {
-        "foodName": item["foodName"],
-        "calories": int(item["calories"]),
-        "mealTypeId": meal_type_id,
-        "unitId": item.get("unitId", 304),
-        "amount": item.get("amount", 1),
-        "date": date_str
-    }
+    now = datetime.now(timezone.utc)
+    start = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    end = (now + timedelta(minutes=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    nutrients = []
     if item.get("protein") is not None:
-        params["protein"] = round(item["protein"], 1)
+        nutrients.append({"nutrient": "PROTEIN", "quantity": {"grams": round(item["protein"], 1)}})
     if item.get("totalCarbohydrate") is not None:
-        params["totalCarbohydrate"] = round(item["totalCarbohydrate"], 1)
-    if item.get("totalFat") is not None:
-        params["totalFat"] = round(item["totalFat"], 1)
+        nutrients.append({"nutrient": "CARBOHYDRATES", "quantity": {"grams": round(item["totalCarbohydrate"], 1)}})
+
+    payload = {
+        "nutritionLog": {
+            "interval": {
+                "startTime": start,
+                "endTime": end,
+                "startUtcOffset": "-14400s",
+                "endUtcOffset": "-14400s",
+            },
+            "foodDisplayName": item["foodName"],
+            "mealType": meal_type_id,
+            "energy": {"kcal": float(item["calories"])},
+            "totalCarbohydrate": {"grams": round(item.get("totalCarbohydrate", 0), 1)},
+            "totalFat": {"grams": round(item.get("totalFat", 0), 1)},
+            "nutrients": nutrients,
+        }
+    }
 
     log_id = None
     try:
         resp = requests.post(
-            "https://api.fitbit.com/1/user/-/foods/log.json",
+            f"{BASE_URL}/users/me/dataTypes/nutrition-log/dataPoints",
             headers=headers,
-            params=params,
-            timeout=15
+            json=payload,
+            timeout=15,
         )
-        success = resp.status_code in [200, 201]
-
+        success = resp.status_code == 200
         if success:
-            try:
-                log_id = resp.json().get("foodLog", {}).get("logId")
-            except (ValueError, KeyError) as e:
-                log.warning(f"Could not extract logId from response: {e}")
-
+            log_id = resp.json().get("response", {}).get("name")
         return success, resp.status_code, resp.text, log_id
-
     except requests.exceptions.Timeout:
         log.error(f"Timeout uploading '{item['foodName']}'")
         return False, None, "Timeout", None
@@ -300,16 +299,19 @@ def upload_food_item(access_token, item, meal_type_id, date_str):
         log.error(f"Request error uploading '{item['foodName']}': {e}")
         return False, None, str(e), None
 
+
 def delete_food_log(access_token, log_id):
-    """DELETE /1/user/-/foods/log/{log-id}.json"""
-    headers = {"Authorization": f"Bearer {access_token}"}
+    """Accepts access_token for API compatibility but uses google_token_manager internally."""
+    headers = get_headers()
+    headers["Content-Type"] = "application/json"
     try:
-        resp = requests.delete(
-            f"https://api.fitbit.com/1/user/-/foods/log/{log_id}.json",
+        resp = requests.post(
+            f"{BASE_URL}/users/me/dataTypes/nutrition-log/dataPoints:batchDelete",
             headers=headers,
-            timeout=15
+            json={"names": [log_id]},
+            timeout=15,
         )
-        if resp.status_code == 204:
+        if resp.status_code == 200:
             return True
         log.warning(f"Delete returned unexpected status {resp.status_code} for logId {log_id}: {resp.text}")
         return False
@@ -322,12 +324,12 @@ def delete_food_log(access_token, log_id):
 
 # ─── Core Logic ──────────────────────────────────────────────────────────────
 
-def upload_items(access_token, items, meal_type_id, date_str):
-    """Upload a list of parsed food items to Fitbit. Returns enriched item records."""
+def upload_items(items, meal_type_id, date_str):
+    """Upload a list of parsed food items to Google Health API. Returns enriched item records."""
     results = []
     for item in items:
         success, status_code, response_text, log_id = upload_food_item(
-            access_token, item, meal_type_id, date_str
+            item, meal_type_id, date_str
         )
         item_record = {
             **item,
@@ -372,7 +374,7 @@ def build_meal_record(date_str, meal_type, meal_type_id, description, item_recor
 
 # ─── Handlers ────────────────────────────────────────────────────────────────
 
-def handle_log(access_token, meal_type, meal_type_id, description, date_str, db, db_path):
+def handle_log(meal_type, meal_type_id, description, date_str, db, db_path):
     log.info(f"Parsing meal with Claude: '{description}'")
     items = parse_meal_with_claude(description, meal_type)
     if not items:
@@ -380,7 +382,7 @@ def handle_log(access_token, meal_type, meal_type_id, description, date_str, db,
         return
 
     log.info(f"Parsed {len(items)} food items.")
-    item_records = upload_items(access_token, items, meal_type_id, date_str)
+    item_records = upload_items(items, meal_type_id, date_str)
 
     record = build_meal_record(date_str, meal_type, meal_type_id, description, item_records)
     db.append(record)
@@ -389,7 +391,7 @@ def handle_log(access_token, meal_type, meal_type_id, description, date_str, db,
     log.info(f"Meal saved to {db_path}")
     log.info(f"Total: {record['total_calories']} kcal | {record['total_protein']}g protein")
 
-def handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db, db_path):
+def handle_update(meal_type, meal_type_id, amendment, date_str, db, db_path):
     idx, existing = find_meal_record(db, meal_type, date_str)
     if existing is None:
         log.error(f"No existing {meal_type} found for {date_str}. Cannot update.")
@@ -398,7 +400,6 @@ def handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db
     log.info(f"Found existing {meal_type} for {date_str} with {len(existing['items'])} items.")
     log.info(f"Amendment: '{amendment}'")
 
-    # Ask Claude to resolve which items to keep and what new items to add
     existing_names = [item["foodName"] for item in existing["items"]]
     resolution = resolve_amendment_with_claude(existing_names, amendment)
     if not resolution:
@@ -414,11 +415,10 @@ def handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db
     ]
     items_to_add_desc = resolution.get("add", "").strip()
 
-    # Delete all existing Fitbit log entries
-    log.info(f"Deleting {len(existing['items'])} items from Fitbit...")
+    log.info(f"Deleting {len(existing['items'])} items from Google Health API...")
     for item in existing["items"]:
         if item.get("log_id"):
-            deleted = delete_food_log(access_token, item["log_id"])
+            deleted = delete_food_log(None, item["log_id"])
             if deleted:
                 log.info(f"Deleted: {item['foodName']} (logId: {item['log_id']})")
             else:
@@ -426,20 +426,18 @@ def handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db
         else:
             log.warning(f"No logId stored for '{item['foodName']}' — skipping delete.")
 
-    # Strip stale upload metadata before re-uploading kept items
     clean_kept = [
         {k: v for k, v in item.items() if k not in ("uploaded", "status_code", "log_id", "error")}
         for item in items_to_keep
     ]
-    all_item_records = upload_items(access_token, clean_kept, meal_type_id, date_str)
+    all_item_records = upload_items(clean_kept, meal_type_id, date_str)
 
-    # Parse and upload any new additions
     if items_to_add_desc:
         log.info(f"Parsing new items to add: '{items_to_add_desc}'")
         new_items = parse_meal_with_claude(items_to_add_desc, meal_type)
         if new_items:
             log.info(f"Parsed {len(new_items)} new items.")
-            all_item_records += upload_items(access_token, new_items, meal_type_id, date_str)
+            all_item_records += upload_items(new_items, meal_type_id, date_str)
         else:
             log.warning("Could not parse new items to add.")
 
@@ -471,13 +469,8 @@ def process(user_input):
     description = intent_data.get("description", user_input)
     amendment = intent_data.get("amendment")
 
-    meal_type_id = MEAL_TYPE_MAP.get(meal_type.lower(), 7)
+    meal_type_id = MEAL_TYPE_MAP.get(meal_type.lower(), "ANYTIME")
     log_dt = datetime.strptime(date_str, "%Y-%m-%d")
-
-    access_token = get_valid_token()
-    if not access_token:
-        log.error("Could not obtain Fitbit token. Aborting.")
-        sys.exit(1)
 
     db_path = get_meal_db_path(log_dt)
     db = load_meal_db(db_path)
@@ -486,9 +479,9 @@ def process(user_input):
         if not amendment:
             log.error("Update intent detected but no amendment description found.")
             return
-        handle_update(access_token, meal_type, meal_type_id, amendment, date_str, db, db_path)
+        handle_update(meal_type, meal_type_id, amendment, date_str, db, db_path)
     else:
-        handle_log(access_token, meal_type, meal_type_id, description, date_str, db, db_path)
+        handle_log(meal_type, meal_type_id, description, date_str, db, db_path)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

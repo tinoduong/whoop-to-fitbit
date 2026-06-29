@@ -11,6 +11,10 @@ class AuthRequired(Exception):
     """Raised when interactive re-authentication is needed but not possible."""
     pass
 
+class TransientError(Exception):
+    """Raised when a token refresh fails due to a temporary server/network issue."""
+    pass
+
 CONFIG_PATH = os.path.join("./meta-data", "config.json")
 
 def load_config():
@@ -38,10 +42,14 @@ def get_valid_token(interactive=True):
 
     # If we have a refresh token, try to use it
     if config.get('refresh_token'):
-        token = refresh_token(config)
+        try:
+            token = refresh_token(config)
+        except TransientError as e:
+            log.warning(f"Transient error refreshing Fitbit token: {e}. Keeping existing tokens.")
+            return None
         if token:
             return token
-        # Refresh failed — clear tokens and fall through to manual auth
+        # Refresh failed with an auth error — clear tokens and fall through to manual auth
         log.warning("Refresh failed. Clearing tokens and starting fresh login...")
         clear_tokens(config)
         config = load_config()  # reload after clearing
@@ -65,9 +73,18 @@ def manual_auth(config):
     log.info("No valid tokens. Starting manual Fitbit authorization...")
     print(f"\nGo to this URL to authorize Fitbit:\n{auth_url}")
     webbrowser.open(auth_url)
-    full_url = input("\nPaste the redirected URL here: ").strip()
-    code = full_url.split("code=")[1].split("#")[0]
-    return exchange(config, {"grant_type": "authorization_code", "code": code, "redirect_uri": config['redirect_uri']})
+
+    while True:
+        full_url = input("\nPaste the redirected URL here: ").strip()
+        if "code=" not in full_url:
+            print("That URL doesn't contain a code. Try again, or press Ctrl+C to cancel.")
+            continue
+        code = full_url.split("code=")[1].split("&")[0].split("#")[0]
+        token = exchange(config, {"grant_type": "authorization_code", "code": code, "redirect_uri": config['redirect_uri']})
+        if token:
+            return token
+        print("Code was rejected (may have expired). Please restart and try again.")
+        return None
 
 def refresh_token(config):
     log.info("Refreshing Fitbit access token...")
@@ -81,6 +98,8 @@ def exchange(config, payload):
         data = res.json()
         return save_tokens(config, data['access_token'], data['refresh_token'])
     log.error(f"Token exchange failed ({res.status_code}): {res.text[:200]}")
+    if res.status_code >= 500:
+        raise TransientError(f"Fitbit API temporarily unavailable ({res.status_code})")
     return None
 
 if __name__ == "__main__":
