@@ -6527,5 +6527,139 @@
         "total_protein": 84.7,
         "all_uploaded": true,
         "amended": false
+    },
+    {
+        "logged_at": "2026-06-29T19:40:10.706053",
+        "date": "2026-06-30",
+        "meal_type": "lunch",
+        "meal_type_id": "LUNCH",
+        "raw_description": "7.48 oz grilled skinless chicken breast, 0.84 oz roasted acorn squash, 0.78 oz roasted egg plant, 0.92 oz roasted beets, 0.84 oz pomegranate seeds, 1 cup raw arugula",
+        "items": [
+            {
+                "foodName": "Chicken Breast, grilled, skinless",
+                "calories": 349,
+                "protein": 65.6,
+                "totalCarbohydrate": 0.0,
+                "totalFat": 7.6,
+                "amount": 7.48,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/4100363602747426954"
+            },
+            {
+                "foodName": "Acorn Squash, roasted",
+                "calories": 18,
+                "protein": 0.4,
+                "totalCarbohydrate": 4.5,
+                "totalFat": 0.1,
+                "amount": 0.84,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/3249225674153918553"
+            },
+            {
+                "foodName": "Eggplant, roasted",
+                "calories": 17,
+                "protein": 0.6,
+                "totalCarbohydrate": 3.5,
+                "totalFat": 0.2,
+                "amount": 0.78,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/1678589772006535842"
+            },
+            {
+                "foodName": "Beets, roasted",
+                "calories": 21,
+                "protein": 0.7,
+                "totalCarbohydrate": 4.8,
+                "totalFat": 0.1,
+                "amount": 0.92,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/1778475421180644441"
+            },
+            {
+                "foodName": "Pomegranate Seeds, raw",
+                "calories": 21,
+                "protein": 0.4,
+                "totalCarbohydrate": 4.7,
+                "totalFat": 0.3,
+                "amount": 0.84,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/3875947472001274085"
+            },
+            {
+                "foodName": "Arugula, raw",
+                "calories": 5,
+                "protein": 0.5,
+                "totalCarbohydrate": 0.7,
+                "totalFat": 0.1,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/6961216647473319177"
+            }
+        ],
+        "total_calories": 431,
+        "total_protein": 68.2,
+        "all_uploaded": true,
+        "amended": false
+    },
+    {
+        "logged_at": "2026-06-29T19:52:49.062517",
+        "date": "2026-06-29",
+        "meal_type": "snack",
+        "meal_type_id": "SNACK",
+        "raw_description": "1/2 cup non-fat greek yogurt, 1/4 cup blueberries, 1 Tates cookie (70 cal)",
+        "items": [
+            {
+                "foodName": "Greek Yogurt, plain, nonfat",
+                "calories": 67,
+                "protein": 11.5,
+                "totalCarbohydrate": 4.1,
+                "totalFat": 0.5,
+                "amount": 0.5,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/8799329172858129913"
+            },
+            {
+                "foodName": "Blueberries, raw",
+                "calories": 21,
+                "protein": 0.3,
+                "totalCarbohydrate": 5.2,
+                "totalFat": 0.1,
+                "amount": 0.25,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/1620769265010488590"
+            },
+            {
+                "foodName": "Tate's Bake Shop Cookie",
+                "calories": 70,
+                "protein": 1.0,
+                "totalCarbohydrate": 9.0,
+                "totalFat": 3.5,
+                "amount": 1,
+                "unitId": 304,
+                "uploaded": true,
+                "status_code": 200,
+                "log_id": "users/4041865388056538694/dataTypes/nutrition-log/dataPoints/2308399262760803112"
+            }
+        ],
+        "total_calories": 158,
+        "total_protein": 12.8,
+        "all_uploaded": true,
+        "amended": false
     }
 ]

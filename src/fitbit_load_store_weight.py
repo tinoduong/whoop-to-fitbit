@@ -28,7 +28,13 @@ def save_weight_data(entry):
         data = {"weight": []}
 
     new_log_id = entry.get("logId")
-    if any(item.get("logId") == new_log_id for item in data["weight"]):
+    existing = next((item for item in data["weight"] if item.get("logId") == new_log_id), None)
+    if existing is not None:
+        if "fat" in entry and "fat" not in existing:
+            existing["fat"] = entry["fat"]
+            with open(file_path, 'w') as f:
+                json.dump(data, f, indent=4)
+            return "updated"
         return False
 
     data["weight"].append(entry)
@@ -39,30 +45,67 @@ def save_weight_data(entry):
     return True
 
 
-def parse_data_point(dp):
+def _extract_log_id(name):
+    part = name.split("/")[-1]
+    return int(part) if part.isdigit() else part
+
+
+def _extract_civil_date(sample_time):
+    civil_date = sample_time.get("civilTime", {}).get("date", {})
+    return f"{civil_date.get('year'):04d}-{civil_date.get('month'):02d}-{civil_date.get('day'):02d}"
+
+
+def fetch_body_fat(headers, date_filter_prefix, start_date_arg, today_str):
+    if start_date_arg:
+        fat_filter = (
+            f'body_fat.sample_time.civil_time >= "{start_date_arg}" AND '
+            f'body_fat.sample_time.civil_time < "{today_str}"'
+        )
+    else:
+        fat_filter = f'body_fat.sample_time.civil_time >= "{today_str}"'
+
+    url = f"{BASE_URL}/users/me/dataTypes/body-fat/dataPoints"
+    res = requests.get(url, headers=headers, params={"filter": fat_filter})
+    if res.status_code != 200:
+        log.warning(f"Could not fetch body fat data ({res.status_code}): {res.text}")
+        return {}
+
+    fat_by_log_id = {}
+    for dp in res.json().get("dataPoints", []):
+        log_id = _extract_log_id(dp.get("name", ""))
+        pct = dp.get("bodyFat", {}).get("percentage")
+        if pct is not None:
+            fat_by_log_id[log_id] = round(pct, 3)
+    return fat_by_log_id
+
+
+def parse_data_point(dp, fat_by_log_id=None):
     weight_data = dp.get("weight", {})
     weight_grams = weight_data.get("weightGrams")
     if weight_grams is None:
         return None
 
     weight_kg = round(weight_grams / 1000, 1)
-    sample_time = weight_data.get("sampleTime", {})
-    civil_date = sample_time.get("civilTime", {}).get("date", {})
-    date_str = f"{civil_date.get('year'):04d}-{civil_date.get('month'):02d}-{civil_date.get('day'):02d}"
+    date_str = _extract_civil_date(weight_data.get("sampleTime", {}))
+    log_id = _extract_log_id(dp.get("name", ""))
 
-    # Extract the numeric ID from the resource name for dedup compatibility with old Fitbit entries
-    name = dp.get("name", "")
-    log_id = int(name.split("/")[-1]) if name.split("/")[-1].isdigit() else name
-
-    return {
+    entry = {
         "date": date_str,
         "weight": weight_kg,
         "logId": log_id,
     }
 
+    if fat_by_log_id and log_id in fat_by_log_id:
+        entry["fat"] = fat_by_log_id[log_id]
+
+    return entry
+
 
 def fetch_data(start_date_arg=None):
     headers = get_headers()
+
+    from datetime import timedelta
+    tomorrow_str = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
 
     if start_date_arg:
         if len(start_date_arg) == 7:
@@ -70,16 +113,18 @@ def fetch_data(start_date_arg=None):
         if len(start_date_arg) != 10:
             log.error("Invalid date format. Use YYYY-MM or YYYY-MM-DD.")
             return
-        today_str = datetime.now().strftime("%Y-%m-%d")
+        today_str = tomorrow_str
         date_filter = (
             f'weight.sample_time.civil_time >= "{start_date_arg}" AND '
-            f'weight.sample_time.civil_time <= "{today_str}"'
+            f'weight.sample_time.civil_time < "{today_str}"'
         )
-        log.info(f"Fetching weight data from {start_date_arg} to {today_str}...")
+        log.info(f"Fetching weight data from {start_date_arg} to today...")
     else:
         today_str = datetime.now().strftime("%Y-%m-%d")
         date_filter = f'weight.sample_time.civil_time >= "{today_str}"'
         log.info("Fetching today's weight data...")
+
+    fat_by_log_id = fetch_body_fat(headers, date_filter, start_date_arg, tomorrow_str if start_date_arg else today_str)
 
     url = f"{BASE_URL}/users/me/dataTypes/weight/dataPoints"
     res = requests.get(url, headers=headers, params={"filter": date_filter})
@@ -91,22 +136,28 @@ def fetch_data(start_date_arg=None):
             return
 
         added_count = 0
+        updated_count = 0
         skipped_dup_count = 0
 
         for dp in data_points:
-            entry = parse_data_point(dp)
+            entry = parse_data_point(dp, fat_by_log_id)
             if not entry:
                 continue
-            if save_weight_data(entry):
+            result = save_weight_data(entry)
+            fat_str = f" | {entry['fat']}% fat" if entry.get("fat") is not None else ""
+            if result is True:
                 added_count += 1
-                log.info(f"Saved weight entry: {entry['date']} | {entry['weight']} kg")
+                log.info(f"Saved weight entry: {entry['date']} | {entry['weight']} kg{fat_str}")
+            elif result == "updated":
+                updated_count += 1
+                log.info(f"Updated fat for: {entry['date']} | {entry['fat']}%")
             else:
                 skipped_dup_count += 1
                 log.debug(f"Skipped duplicate weight entry: {entry['date']} | logId={entry['logId']}")
 
         log.info(
             f"Weight sync complete. Processed: {len(data_points)} | "
-            f"Added: {added_count} | "
+            f"Added: {added_count} | Updated: {updated_count} | "
             f"Skipped (duplicate): {skipped_dup_count}"
         )
 

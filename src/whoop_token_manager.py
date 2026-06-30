@@ -16,6 +16,11 @@ class AuthRequired(Exception):
     pass
 
 
+class TransientError(Exception):
+    """Raised on transient server errors (5xx) — tokens should NOT be cleared."""
+    pass
+
+
 class WhoopTokenManager:
     def __init__(self, config_path='meta-data/whconfig.json'):
         self.config_path = config_path
@@ -100,6 +105,9 @@ class WhoopTokenManager:
             self._save_config()
             log.info("WHOOP tokens refreshed and saved to whconfig.json")
             return True
+        elif response.status_code >= 500:
+            log.warning(f"WHOOP token endpoint transient error ({response.status_code}) — tokens preserved.")
+            raise TransientError(f"WHOOP token endpoint returned {response.status_code}")
         else:
             log.error(f"WHOOP token request failed ({response.status_code}): {response.text[:200]}")
             return False
@@ -127,7 +135,10 @@ class WhoopTokenManager:
         # Token is missing or expiring within 5 minutes — try to refresh
         token_expiring = time.time() >= (self.config.get('expires_at', 0) - 300)
         if not self.config.get('access_token') or token_expiring:
-            success = self.refresh_access_token()
+            try:
+                success = self.refresh_access_token()
+            except TransientError as e:
+                raise AuthRequired(f"WHOOP token refresh temporarily unavailable: {e}")
             if not success:
                 if not interactive:
                     self._clear_tokens()
